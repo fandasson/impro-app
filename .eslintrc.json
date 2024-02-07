@@ -1,27 +1,26 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"],
-  "rules": {
-    "no-restricted-imports": [
-      "warn",
-      {
-        "patterns": [
-          {
-            "group": [".*"],
-            "message": "Relative imports are not allowed, use absolute import instead."
-          }
+    "extends": ["next/core-web-vitals", "prettier"],
+    "rules": {
+        "no-restricted-imports": [
+            "warn",
+            {
+                "patterns": [
+                    {
+                        "group": [".*"],
+                        "message": "Relative imports are not allowed, use absolute import instead."
+                    }
+                ]
+            }
+        ],
+        "import/no-absolute-path": "off",
+        "import/order": [
+            "warn",
+            {
+                "alphabetize": {
+                    "order": "asc"
+                },
+                "newlines-between": "always"
+            }
         ]
-      }
-    ],
-    "import/no-absolute-path": "off",
-    "import/order": [
-      "warn",
-      {
-        "alphabetize": {
-          "order": "asc"
-        },
-        "newlines-between": "always"
-      }
-    ]
-  }
+    }
 }
-
