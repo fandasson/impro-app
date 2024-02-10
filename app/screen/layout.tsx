@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
 
 import "@/styles/globals.css";
+import { Container } from "@/components/ui/Container";
 
 export default function ScreenLayout({
     children,
 }: Readonly<{
     children: ReactNode;
 }>) {
-    return <main className={"container flex h-screen items-center justify-center"}>{children}</main>;
+    return <Container>{children}</Container>;
 }
