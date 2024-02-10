@@ -1,7 +1,9 @@
+import { Container } from "@/components/ui/Container";
+
 export default async function Index() {
     return (
-        <main>
-            <h2 className="mb-4 text-4xl font-bold">TODO</h2>
-        </main>
+        <Container>
+            <h2 className="text-3xl font-bold">Prázdno...</h2>
+        </Container>
     );
 }
