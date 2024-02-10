@@ -79,13 +79,13 @@ export type Database = {
           colors: string[] | null
           finish_at: string | null
           id: number
-          multiple: boolean | null
+          index_order: number
+          multiple: boolean
           name: string
           names: string[] | null
           performance_id: number
           present_answers: boolean | null
           question: string
-          question_order: number
           state: Database["public"]["Enums"]["question-state"]
           time_limit: number
           type: Database["public"]["Enums"]["question-type"]
@@ -94,13 +94,13 @@ export type Database = {
           colors?: string[] | null
           finish_at?: string | null
           id?: number
-          multiple?: boolean | null
+          index_order: number
+          multiple?: boolean
           name: string
           names?: string[] | null
           performance_id: number
           present_answers?: boolean | null
           question: string
-          question_order: number
           state: Database["public"]["Enums"]["question-state"]
           time_limit: number
           type: Database["public"]["Enums"]["question-type"]
@@ -109,13 +109,13 @@ export type Database = {
           colors?: string[] | null
           finish_at?: string | null
           id?: number
-          multiple?: boolean | null
+          index_order?: number
+          multiple?: boolean
           name?: string
           names?: string[] | null
           performance_id?: number
           present_answers?: boolean | null
           question?: string
-          question_order?: number
           state?: Database["public"]["Enums"]["question-state"]
           time_limit?: number
           type?: Database["public"]["Enums"]["question-type"]
@@ -138,8 +138,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      "performance-state": "draft" | "intro" | "life" | "archived"
-      "question-state": "draft" | "active" | "archived"
+      "performance-state": "draft" | "intro" | "life" | "finished"
+      "question-state": "draft" | "active" | "answered"
       "question-type": "color-pick" | "name-pick" | "text" | "match"
     }
     CompositeTypes: {
