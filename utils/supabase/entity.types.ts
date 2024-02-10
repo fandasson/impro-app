@@ -138,7 +138,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      "performance-state": "draft" | "intro" | "questions" | "archived"
+      "performance-state": "draft" | "intro" | "life" | "archived"
       "question-state": "draft" | "active" | "archived"
       "question-type": "color-pick" | "name-pick" | "text" | "match"
     }
