@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 
 import { EmptyScreen } from "@/app/screen/EmptyScreen";
 import { EmptyScreen } from "@/components/screens/EmptyScreen";
+import { Intro } from "@/components/screens/Intro";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function ScreenIndex() {
@@ -19,7 +20,9 @@ export default async function ScreenIndex() {
         return <EmptyScreen />;
     }
 
-    const url = `${process.env.BASE_URL}/${performance.url_slug}`;
+    if (performance.state === "intro") {
+        return <Intro performance={performance} />;
+    }
 
     return (
         <div className={"flex flex-col items-center gap-8"}>
