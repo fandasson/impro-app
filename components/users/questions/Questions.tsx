@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TextQuestion } from "@/components/audience/questions/TextQuestion";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
+import { TextQuestion } from "@/components/users/questions/TextQuestion";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {

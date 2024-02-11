@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-import { UserProvider } from "@/components/audience/UserContext";
+import { UserProvider } from "@/components/users/UserContext";
 
 export default function RootLayout({
     children,

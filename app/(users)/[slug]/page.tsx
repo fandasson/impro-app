@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { Intro } from "@/components/audience/Intro";
-import { NoQuestion } from "@/components/audience/NoQuestion";
-import { Questions } from "@/components/audience/questions/Questions";
+import { Intro } from "@/components/users/Intro";
+import { NoQuestion } from "@/components/users/NoQuestion";
+import { Questions } from "@/components/users/questions/Questions";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function PerformanceView({ params }: { params: { slug: string } }) {
