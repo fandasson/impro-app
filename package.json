@@ -15,6 +15,7 @@
         "format:fix": "prettier --cache --write --log-level warn ."
     },
     "dependencies": {
+        "@radix-ui/react-label": "^2.0.2",
         "@supabase/ssr": "latest",
         "@supabase/supabase-js": "latest",
         "class-variance-authority": "^0.7.0",
