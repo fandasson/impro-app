@@ -34,9 +34,9 @@ export default async function Performances() {
                             <TableCell>{formatDate(performance.date)}</TableCell>
                             <TableCell>{performance.state}</TableCell>
                             <TableCell>
-                                <Link href={`/admin/performances/${performance.id}`}>
-                                    <Button>Otevřít</Button>
-                                </Link>
+                                <Button asChild>
+                                    <Link href={`/admin/performances/${performance.id}`}>Otevřít</Link>
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}

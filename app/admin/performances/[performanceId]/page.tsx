@@ -30,7 +30,7 @@ export default async function PerformanceDetail({ params }: { params: { performa
 
     return (
         <>
-            <h1 className="mb-4 text-4xl font-bold">
+            <h1 className="mb-4 text-2xl font-bold">
                 {performance.name} {formatDate(performance.date)}
             </h1>
             <QuestionsList>
