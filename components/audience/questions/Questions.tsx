@@ -13,7 +13,7 @@ export const Questions = ({ question }: Props) => {
 
     switch (question.type) {
         case "text":
-            component = <TextQuestion />;
+            component = <TextQuestion questionId={question.id} />;
             break;
     }
 
