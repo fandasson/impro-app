@@ -1,15 +1,11 @@
-import { cookies } from "next/headers";
-
+import { fetchAnswers } from "@/api/answers.api";
 import { Badge } from "@/components/ui/Badge";
-import { createClient } from "@/utils/supabase/server";
 
 type Props = {
     questionId: number;
 };
 export const QuestionAnswers = async ({ questionId }: Props) => {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { data: answers } = await supabase.from("answers").select("*").eq("question_id", questionId);
+    const { data: answers } = await fetchAnswers(questionId);
 
     if (!answers) {
         return null;
