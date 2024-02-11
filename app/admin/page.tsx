@@ -1,9 +1,9 @@
-import { format } from "date-fns";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
+import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Performances() {
@@ -12,7 +12,7 @@ export default async function Performances() {
     const { data: performances, error } = await supabase.from("performances").select("*");
 
     if (performances === null) {
-        throw new Error("Error when fetching performances.");
+        throw new Error(`Error when fetching performances: ${error.message}`);
     }
 
     return (
@@ -31,7 +31,7 @@ export default async function Performances() {
                     {performances.map((performance) => (
                         <TableRow key={performance.id}>
                             <TableCell>{performance.name}</TableCell>
-                            <TableCell>{format(new Date(performance.date), "dd. MM. yyyy")}</TableCell>
+                            <TableCell>{formatDate(performance.date)}</TableCell>
                             <TableCell>{performance.state}</TableCell>
                             <TableCell>
                                 <Link href={`/admin/performances/${performance.id}`}>
