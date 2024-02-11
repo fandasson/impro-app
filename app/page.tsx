@@ -1,9 +1,9 @@
-import { Container } from "@/components/ui/Container";
+import { CenteredContainer } from "@/components/ui/layout/CenteredContainer";
 
 export default async function Index() {
     return (
-        <Container>
+        <CenteredContainer>
             <h2 className="text-3xl font-bold">Prázdno...</h2>
-        </Container>
+        </CenteredContainer>
     );
 }

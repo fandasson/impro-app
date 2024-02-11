@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
 
-import "@/styles/globals.css";
-import { Container } from "@/components/ui/Container";
+import { CenteredContainer } from "@/components/ui/layout/CenteredContainer";
 
 export default function ScreenLayout({
     children,
 }: Readonly<{
     children: ReactNode;
 }>) {
-    return <Container>{children}</Container>;
+    return <CenteredContainer>{children}</CenteredContainer>;
 }
