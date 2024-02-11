@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 
-import { QuestionHeadline } from "@/components/screens/QuestionHeadline";
-import { Timer } from "@/components/screens/Timer";
-import { QuestionAnswers } from "@/components/screens/answers/QuestionAnswers";
+import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
+import { Timer } from "@/components/audience/Timer";
+import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
 import { Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 

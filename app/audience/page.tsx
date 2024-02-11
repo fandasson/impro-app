@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 
-import { EmptyScreen } from "@/components/screens/EmptyScreen";
-import { Intro } from "@/components/screens/Intro";
-import { Question } from "@/components/screens/Question";
+import { EmptyScreen } from "@/components/audience/EmptyScreen";
+import { Intro } from "@/components/audience/Intro";
+import { Question } from "@/components/audience/Question";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function ScreenIndex() {
