@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
 import { QuestionItem, QuestionsList } from "@/components/admin/questions";
 import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
@@ -30,9 +31,12 @@ export default async function PerformanceDetail({ params }: { params: { performa
 
     return (
         <>
-            <h1 className="mb-4 text-2xl font-bold">
-                {performance.name} {formatDate(performance.date)}
-            </h1>
+            <div className={"flex justify-between"}>
+                <h1 className="mb-4 text-2xl font-bold">
+                    {performance.name} {formatDate(performance.date)}
+                </h1>
+                <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
+            </div>
             <QuestionsList>
                 {questions.map((question) => (
                     <QuestionItem key={question.id} {...question} />
