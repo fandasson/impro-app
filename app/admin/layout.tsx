@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { TabletContainer } from "@/components/ui/layout/TabletContainer";
 
-export default function RootLayout({
+export default function AdminLayout({
     children,
 }: Readonly<{
     children: ReactNode;
