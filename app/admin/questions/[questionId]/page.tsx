@@ -36,7 +36,6 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                 <div className={"pl-4"}></div>
             </article>
             <aside className={"mt-4"}>
-                <h3 className={"mb-4 font-medium not-italic text-gray-400"}>Odpovědi</h3>
                 <Answers question={question} />
             </aside>
         </>
