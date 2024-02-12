@@ -6,7 +6,7 @@ type Props = {
     performance: Tables<"performances">;
 };
 export const Intro = ({ performance }: Props) => {
-    const url = `${process.env.BASE_URL}/${performance.url_slug}`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${performance.url_slug}`;
     return (
         <div className={"flex flex-col items-center gap-8"}>
             <h1 className={"text-center text-xl"}>{performance.name}</h1>
