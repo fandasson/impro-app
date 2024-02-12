@@ -20,12 +20,12 @@ export const Intro = ({ performance }: Props) => {
                 bgColor={"#000000"}
                 fgColor={"#FFFFFF"}
                 size={256}
-                imageSettings={{
-                    src: "/qr-logo.png",
-                    width: 54, // 540 * 0.1
-                    height: 83, // 830 * 0.1
-                    excavate: false,
-                }}
+                // imageSettings={{
+                //     src: "/qr-logo.png",
+                //     width: 54, // 540 * 0.1
+                //     height: 83, // 830 * 0.1
+                //     excavate: false,
+                // }}
             />
             <pre className={"font-mono text-xl"}>{url}</pre>
         </div>
