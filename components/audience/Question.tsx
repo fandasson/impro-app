@@ -1,25 +1,20 @@
-import { cookies } from "next/headers";
+import { useEffect, useState } from "react";
 
+import { fetchActiveQuestion } from "@/api/questions.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { Timer } from "@/components/audience/Timer";
 import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
 import { Tables } from "@/utils/supabase/entity.types";
-import { createClient } from "@/utils/supabase/server";
 
 type Props = {
-    performance: Tables<"performances">;
+    performanceId: number;
 };
-export const Question = async ({ performance }: Props) => {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { data: question } = await supabase
-        .from("questions")
-        .select("*")
-        .eq("performance_id", performance.id)
-        .eq("state", "active")
-        .order("index_order", { ascending: true })
-        .limit(1)
-        .single();
+export const Question = ({ performanceId }: Props) => {
+    const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
+
+    useEffect(() => {
+        fetchActiveQuestion(performanceId).then((response) => setQuestion(response.data));
+    }, [performanceId]);
 
     if (!question) {
         return null;

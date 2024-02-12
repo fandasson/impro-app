@@ -1,11 +1,9 @@
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
 
-import { Intro } from "@/components/audience/Intro";
-import { Question } from "@/components/audience/Question";
+import { AudienceIndex } from "@/components/audience/AudienceIndex";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function ScreenIndex() {
+export default async function AudienceView() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { data: performance } = await supabase
@@ -16,16 +14,8 @@ export default async function ScreenIndex() {
         .single();
 
     if (!performance) {
-        notFound();
+        return null;
     }
 
-    if (performance.state === "intro") {
-        return <Intro performance={performance} />;
-    }
-
-    if (performance.state === "life") {
-        return <Question performance={performance} />;
-    }
-
-    // FIXME handle other states
+    return <AudienceIndex defaultPerformance={performance} />;
 }

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { Intro } from "@/components/users/Intro";
-import { Questions } from "@/components/users/questions/Questions";
+import { Intro } from "@/components/audience/Intro";
+import { Question } from "@/components/audience/Question";
 import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -12,7 +12,7 @@ type Props = {
     defaultPerformance: Tables<"performances">;
 };
 
-export const UserIndex = ({ defaultPerformance }: Props) => {
+export const AudienceIndex = ({ defaultPerformance }: Props) => {
     const [performance, setPerformance] = useState(defaultPerformance);
 
     // @ts-ignore
@@ -42,11 +42,6 @@ export const UserIndex = ({ defaultPerformance }: Props) => {
     }
 
     if (performance.state === "life") {
-        // if (!question) {
-        //     return <NoQuestion />;
-        // }
-
-        // return <Questions question={question} />;
-        return <Questions performanceId={defaultPerformance.id} />;
+        return <Question performanceId={defaultPerformance.id} />;
     }
 };
