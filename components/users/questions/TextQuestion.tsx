@@ -6,7 +6,6 @@ import { submitAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Textarea";
-import { useUserId } from "@/components/users/UserContext";
 
 type Props = {
     questionId: number;
@@ -16,7 +15,6 @@ type Inputs = {
     answer: string;
 };
 export const TextQuestion = (props: Props) => {
-    const userId = useUserId();
     const {
         register,
         handleSubmit,
@@ -26,7 +24,6 @@ export const TextQuestion = (props: Props) => {
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         await submitAnswer({
             question_id: props.questionId,
-            user_id: userId,
             value: data.answer,
         });
         reset();
