@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
+import { RemoveAnswersButton } from "@/components/admin/answers/RemoveAnswersButton";
 import { Badge } from "@/components/ui/Badge";
 import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
@@ -12,6 +13,20 @@ type Props = {
 };
 export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
     const [answers, setAnswers] = useState(initialAnswers);
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+
+    const toggleSelect = (id: number) => {
+        if (selectedAnswers.includes(id)) {
+            setSelectedAnswers(selectedAnswers.filter((a) => a !== id));
+        } else {
+            setSelectedAnswers([...selectedAnswers, id]);
+        }
+    };
+
+    const handleRemove = () => {
+        setAnswers((prevState) => prevState.filter((a) => !selectedAnswers.includes(a.id)));
+        setSelectedAnswers([]);
+    };
 
     // @ts-ignore
     useEffect(() => {
@@ -31,15 +46,26 @@ export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
             .subscribe();
 
         return () => supabase.removeChannel(channel);
-    }, [questionId]);
+    }, [setAnswers, answers, questionId]);
 
     return (
-        <div className={"flex flex-wrap gap-4"}>
-            {answers.map((answer) => (
-                <Badge className={"text-md px-3.5 py-2"} key={answer.id} variant="outline">
-                    {answer.value}
-                </Badge>
-            ))}
+        <div className={"flex flex-col items-center"}>
+            <div className={"mb-8 flex flex-wrap gap-4"}>
+                {answers.map((answer) => {
+                    const selected = selectedAnswers.includes(answer.id);
+                    return (
+                        <Badge
+                            className={"text-md po cursor-pointer px-3.5 py-2"}
+                            key={answer.id}
+                            variant={`${selected ? "default" : "outline"}`}
+                            onClick={() => toggleSelect(answer.id)}
+                        >
+                            {answer.value}
+                        </Badge>
+                    );
+                })}
+            </div>
+            <RemoveAnswersButton answersIds={selectedAnswers} callback={handleRemove} />
         </div>
     );
 };

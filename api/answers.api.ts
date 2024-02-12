@@ -11,3 +11,9 @@ export const fetchAnswers = async (questionId: number): Promise<AnswersResponse>
     const supabase = createClient(cookieStore);
     return supabase.from("answers").select("*").eq("question_id", questionId);
 };
+
+export const removeAnswers = async (answersIds: number[]): Promise<void> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    await supabase.from("answers").delete().in("id", answersIds).throwOnError();
+};
