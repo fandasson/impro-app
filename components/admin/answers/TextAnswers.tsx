@@ -1,15 +1,37 @@
-import { fetchAnswers } from "@/api/answers.api";
+"use client";
+import { useEffect, useState } from "react";
+
 import { Badge } from "@/components/ui/Badge";
+import { CHANNEL_DATABASE } from "@/utils/constants.utils";
+import { createClient } from "@/utils/supabase/client";
+import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
     questionId: number;
+    answers: Tables<"answers">[];
 };
-export const TextAnswers = async ({ questionId }: Props) => {
-    const { data: answers } = await fetchAnswers(questionId);
+export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
+    const [answers, setAnswers] = useState(initialAnswers);
 
-    if (!answers) {
-        return null;
-    }
+    // @ts-ignore
+    useEffect(() => {
+        const supabase = createClient();
+        const channel = supabase
+            .channel(CHANNEL_DATABASE)
+            .on<Tables<"answers">>(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "answers",
+                    filter: "question_id=eq." + questionId,
+                },
+                (payload) => setAnswers([...answers, payload.new]),
+            )
+            .subscribe();
+
+        return () => supabase.removeChannel(channel);
+    }, [questionId]);
 
     return (
         <div className={"flex flex-wrap gap-4"}>
