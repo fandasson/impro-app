@@ -1,9 +1,7 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { Intro } from "@/components/users/Intro";
-import { NoQuestion } from "@/components/users/NoQuestion";
-import { Questions } from "@/components/users/questions/Questions";
+import { UserIndex } from "@/components/users/UserIndex";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function PerformanceView({ params }: { params: { slug: string } }) {
@@ -21,23 +19,5 @@ export default async function PerformanceView({ params }: { params: { slug: stri
         notFound();
     }
 
-    if (performance.state === "intro") {
-        return <Intro performance={performance} />;
-    }
-
-    if (performance.state === "life") {
-        const { data: question } = await supabase
-            .from("questions")
-            .select("*")
-            .eq("performance_id", performance.id)
-            .eq("state", "active")
-            .limit(1)
-            .single();
-
-        if (!question) {
-            return <NoQuestion />;
-        }
-
-        return <Questions question={question} />;
-    }
+    return <UserIndex defaultPerformance={performance} />;
 }
