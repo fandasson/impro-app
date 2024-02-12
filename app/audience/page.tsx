@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
-import { EmptyScreen } from "@/components/audience/EmptyScreen";
 import { Intro } from "@/components/audience/Intro";
 import { Question } from "@/components/audience/Question";
 import { createClient } from "@/utils/supabase/server";
@@ -16,7 +16,7 @@ export default async function ScreenIndex() {
         .single();
 
     if (!performance) {
-        return <EmptyScreen />;
+        notFound();
     }
 
     if (performance.state === "intro") {
