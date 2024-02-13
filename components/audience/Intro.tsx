@@ -15,18 +15,7 @@ export const Intro = ({ performance }: Props) => {
                 <br />
                 Skenujte 👇
             </h2>
-            <QRCodeSVG
-                value={url}
-                bgColor={"#000000"}
-                fgColor={"#FFFFFF"}
-                size={256}
-                // imageSettings={{
-                //     src: "/qr-logo.png",
-                //     width: 54, // 540 * 0.1
-                //     height: 83, // 830 * 0.1
-                //     excavate: false,
-                // }}
-            />
+            <QRCodeSVG value={url} bgColor={"#000000"} fgColor={"#FFFFFF"} size={256} />
             <pre className={"font-mono text-xl"}>{url}</pre>
         </div>
     );
