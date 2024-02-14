@@ -9,7 +9,7 @@ export const Intro = ({ performance }: Props) => {
         <MobileContainer>
             <div className={"flex flex-col items-center gap-8"}>
                 <h1 className={"text-center text-xl"}>{performance.name}</h1>
-                <p>{performance.intro_text}</p>
+                <div className="flex flex-col gap-4" dangerouslySetInnerHTML={{ __html: performance.intro_text }} />
             </div>
         </MobileContainer>
     );
