@@ -24,6 +24,7 @@ export const Questions = ({ performanceId }: Props) => {
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
+            // FIXME change channel name
             .channel("anotherTest")
             .on<Tables<"questions">>(
                 "postgres_changes",
@@ -61,7 +62,7 @@ export const Questions = ({ performanceId }: Props) => {
         <MobileContainer className={""}>
             <div className={"grid grid-flow-col gap-4"}>
                 <div>{question.question}</div>
-                <div>?</div>
+                <div></div>
             </div>
             {component}
         </MobileContainer>
