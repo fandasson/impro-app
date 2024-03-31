@@ -119,6 +119,36 @@ export type Database = {
         }
         Relationships: []
       }
+      question_players: {
+        Row: {
+          player_id: number
+          question_id: number
+        }
+        Insert: {
+          player_id: number
+          question_id: number
+        }
+        Update: {
+          player_id?: number
+          question_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_players_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions: {
         Row: {
           colors: string[] | null
@@ -147,7 +177,7 @@ export type Database = {
           present_answers?: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
-          time_limit: number
+          time_limit?: number
           type: Database["public"]["Enums"]["question-type"]
         }
         Update: {
