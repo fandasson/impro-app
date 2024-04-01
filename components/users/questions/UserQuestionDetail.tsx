@@ -4,6 +4,7 @@ import { fetchActiveQuestion } from "@/api/questions.api";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
+import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -24,8 +25,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            // FIXME change channel name
-            .channel("anotherTest")
+            .channel(CHANNEL_DATABASE)
             .on<Tables<"questions">>(
                 "postgres_changes",
                 {
