@@ -12,6 +12,7 @@
                 ]
             }
         ],
+        "react/display-name": "off",
         "import/no-absolute-path": "off",
         "import/order": [
             "warn",
