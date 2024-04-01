@@ -3,10 +3,11 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-import { Enums, Tables } from "@/utils/supabase/entity.types";
+import { Question } from "@/api/types.api";
+import { Enums } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
-type QuestionResponse = PostgrestSingleResponse<Tables<"questions">>;
+type QuestionResponse = PostgrestSingleResponse<Question>;
 export const fetchActiveQuestion = async (performanceId: number): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
     return supabase
@@ -20,7 +21,7 @@ export const fetchActiveQuestion = async (performanceId: number): Promise<Questi
 
 export const fetchQuestion = async (questionId: number): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("questions").select("*").eq("id", questionId).single();
+    return supabase.from("questions").select("*, players (name)").eq("id", questionId).single();
 };
 
 export const setQuestionState = async (

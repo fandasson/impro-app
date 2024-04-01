@@ -38,6 +38,45 @@ export type Database = {
           },
         ]
       }
+      answers_match: {
+        Row: {
+          id: number
+          player_id: number
+          question_id: number
+          user_id: string
+          value: string
+        }
+        Insert: {
+          id?: number
+          player_id: number
+          question_id: number
+          user_id: string
+          value: string
+        }
+        Update: {
+          id?: number
+          player_id?: number
+          question_id?: number
+          user_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answers_match_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answers_match_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       performance_players: {
         Row: {
           performance_id: number
