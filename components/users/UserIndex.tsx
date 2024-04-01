@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Intro } from "@/components/users/Intro";
-import { Questions } from "@/components/users/questions/Questions";
+import { UserQuestionDetail } from "@/components/users/questions/UserQuestionDetail";
 import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -46,7 +46,6 @@ export const UserIndex = ({ defaultPerformance }: Props) => {
         //     return <NoQuestion />;
         // }
 
-        // return <Questions question={question} />;
-        return <Questions performanceId={defaultPerformance.id} />;
+        return <UserQuestionDetail performanceId={defaultPerformance.id} />;
     }
 };

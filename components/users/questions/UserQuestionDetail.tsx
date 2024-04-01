@@ -12,7 +12,7 @@ type Props = {
     performanceId: number;
 };
 
-export const Questions = ({ performanceId }: Props) => {
+export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
 
