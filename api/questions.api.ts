@@ -4,6 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import { Player, Question } from "@/api/types.api";
+import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { Enums, Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
@@ -19,6 +20,34 @@ export const fetchActiveQuestion = async (performanceId: number): Promise<Questi
         .eq("state", "active")
         .limit(1)
         .single();
+};
+
+export const checkUserAlreadyAnswered = async (questionId: number): Promise<boolean> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const userId = cookieStore.get(COOKIE_USER_ID)?.value;
+
+    if (!userId) {
+        throw new Error("User not found");
+    }
+
+    const responseAnswers = await supabase
+        .from("answers")
+        .select("*", { count: "exact", head: true })
+        .eq("question_id", questionId)
+        .eq("user_id", userId);
+
+    if (responseAnswers.count) {
+        return true;
+    }
+
+    const responseAnswersMatch = await supabase
+        .from("answers_match")
+        .select("id", { count: "exact", head: true })
+        .eq("question_id", questionId)
+        .eq("user_id", userId);
+
+    return !!responseAnswersMatch.count;
 };
 
 export const fetchQuestion = async (questionId: number): Promise<QuestionDetailResponse> => {

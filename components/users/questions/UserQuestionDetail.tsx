@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { fetchActiveQuestion } from "@/api/questions.api";
+import { checkUserAlreadyAnswered, fetchActiveQuestion } from "@/api/questions.api";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
+import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
+import { Loading } from "@/components/users/Loading";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
@@ -9,17 +11,32 @@ import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    // question: Tables<"questions">;
     performanceId: number;
 };
 
 export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
+    const [loading, setLoading] = useState(true);
+    const [alreadyAnswered, setAlreadyAnswered] = useState(false);
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
 
     useEffect(() => {
-        fetchActiveQuestion(performanceId).then((response) => setQuestion(response.data));
+        // only setting the loading state to true; fetchUserAnswer will set it to false
+        setLoading(true);
+        fetchActiveQuestion(performanceId)
+            .then((response) => setQuestion(response.data))
+            .catch(() => setLoading(false));
     }, [performanceId]);
+
+    useEffect(() => {
+        if (question) {
+            checkUserAlreadyAnswered(question.id)
+                .then((response) => {
+                    setAlreadyAnswered(response);
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [question]);
 
     // @ts-ignore
     useEffect(() => {
@@ -48,8 +65,16 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         return () => supabase.removeChannel(channel);
     }, [performanceId]);
 
+    if (loading) {
+        return <Loading />;
+    }
+
     if (!question) {
         return <NoQuestion />;
+    }
+
+    if (alreadyAnswered && !question.multiple) {
+        return <AlreadyAnswered />;
     }
 
     switch (question.type) {
