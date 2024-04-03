@@ -1,6 +1,8 @@
 "use client";
 import React, { PropsWithChildren, useCallback, useEffect, useState } from "react";
 
+import { storeUserId } from "@/store";
+
 export const AuthUser = ({ children }: PropsWithChildren) => {
     const [userId, setUserId] = useState<string | null>(null);
 
@@ -16,6 +18,7 @@ export const AuthUser = ({ children }: PropsWithChildren) => {
                 if (response.ok) {
                     response.text().then((userId) => {
                         setUserId(userId);
+                        storeUserId(userId);
                     });
                 }
             });
