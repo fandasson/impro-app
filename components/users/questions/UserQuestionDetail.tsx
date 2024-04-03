@@ -9,7 +9,7 @@ import { Loading } from "@/components/users/Loading";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
-import { markQuestionAsAnswered, useStore } from "@/store";
+import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -19,7 +19,7 @@ type Props = {
 
 export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
-    const [loading, setLoading] = useState(true);
+    const loading = useStore((state) => state.loading);
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
     const alreadyAnswered = useStore((state) => (question ? state.answeredQuestions[question.id] : false));
 

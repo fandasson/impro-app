@@ -13,7 +13,7 @@ import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
 import { Character } from "@/components/users/questions/MatchQuestion/Character";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
-import { markQuestionAsAnswered } from "@/store";
+import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
 import { sluggifyString } from "@/utils/string.utils";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -25,8 +25,8 @@ export const MatchQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<Player[] | null>(null);
     const [draggingCharacter, setDraggingCharacter] = useState<UniqueIdentifier | null>(null);
     const [matches, setMatches] = useState<Record<number, string>>({});
-    const [isLoading, setIsLoading] = useState(false);
     const [isPending, startTransition] = useTransition();
+    const isLoading = useStore((state) => state.loading);
     const router = useRouter();
 
     useEffect(() => {
@@ -74,14 +74,14 @@ export const MatchQuestion = ({ question }: Props) => {
     };
 
     const handleSubmit = async () => {
-        setIsLoading(true);
+        setLoading(true);
         const data: MatchAnswer[] = Object.entries(matches).map(([key, value]) => ({
             player_id: parseInt(key),
             question_id: question.id,
             value: value,
         }));
         await submitMatchAnswer(data);
-        setIsLoading(false);
+        setLoading(false);
         markQuestionAsAnswered(question.id);
         startTransition(() => {
             router.refresh();
