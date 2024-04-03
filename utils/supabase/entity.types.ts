@@ -77,36 +77,6 @@ export type Database = {
           },
         ]
       }
-      performance_players: {
-        Row: {
-          performance_id: number
-          player_id: number
-        }
-        Insert: {
-          performance_id: number
-          player_id: number
-        }
-        Update: {
-          performance_id?: number
-          player_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "performance_players_performance_id_fkey"
-            columns: ["performance_id"]
-            isOneToOne: false
-            referencedRelation: "performances"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "performance_players_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       performances: {
         Row: {
           available_colors: string[] | null
@@ -143,6 +113,36 @@ export type Database = {
         }
         Relationships: []
       }
+      performances_players: {
+        Row: {
+          performance_id: number
+          player_id: number
+        }
+        Insert: {
+          performance_id: number
+          player_id: number
+        }
+        Update: {
+          performance_id?: number
+          player_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_players_performance_id_fkey"
+            columns: ["performance_id"]
+            isOneToOne: false
+            referencedRelation: "performances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "performance_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           id: number
@@ -157,36 +157,6 @@ export type Database = {
           name?: string
         }
         Relationships: []
-      }
-      question_players: {
-        Row: {
-          player_id: number
-          question_id: number
-        }
-        Insert: {
-          player_id: number
-          question_id: number
-        }
-        Update: {
-          player_id?: number
-          question_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "question_players_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "question_players_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       questions: {
         Row: {
@@ -240,6 +210,36 @@ export type Database = {
             columns: ["performance_id"]
             isOneToOne: false
             referencedRelation: "performances"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions_players: {
+        Row: {
+          player_id: number
+          question_id: number
+        }
+        Insert: {
+          player_id: number
+          question_id: number
+        }
+        Update: {
+          player_id?: number
+          question_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_players_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
             referencedColumns: ["id"]
           },
         ]
