@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
 import { fetchActiveQuestion } from "@/api/questions.api";
-import { Question } from "@/api/types.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { Timer } from "@/components/audience/Timer";
 import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
+import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
     performanceId: number;
 };
 export const AudienceQuestionDetail = ({ performanceId }: Props) => {
-    const [question, setQuestion] = useState<Question | null>(null);
+    const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
 
     useEffect(() => {
         fetchActiveQuestion(performanceId).then((response) => setQuestion(response.data));

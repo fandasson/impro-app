@@ -11,6 +11,7 @@
         "start": "next start",
         "lint": "next lint",
         "types:gen": "supabase gen types typescript --project-id meudxrcsglqhfsylqmhs --schema public > utils/supabase/entity.types.ts",
+        "types:check": "tsc --noEmit",
         "format:check": "prettier --cache --check --log-level warn .",
         "format:fix": "prettier --cache --write --log-level warn ."
     },
