@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { MatchAnswer } from "@/api/types.api";
+import { MatchAnswerCreate } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { TablesInsert } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
@@ -23,7 +23,7 @@ export const submitAnswer = async (answer: Answer) => {
     console.log("submit-answer", response);
 };
 
-export const submitMatchAnswer = async (answers: MatchAnswer[]) => {
+export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;

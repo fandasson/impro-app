@@ -7,7 +7,7 @@ import { useEffect, useState, useTransition } from "react";
 
 import { fetchMatchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
-import { MatchAnswer, Player } from "@/api/types.api";
+import { MatchAnswerCreate, Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
@@ -87,7 +87,7 @@ export const MatchQuestion = ({ question }: Props) => {
 
     const handleSubmit = async () => {
         setLoading(true);
-        const data: MatchAnswer[] = Object.entries(matches).map(([key, value]) => ({
+        const data: MatchAnswerCreate[] = Object.entries(matches).map(([key, value]) => ({
             player_id: parseInt(key),
             question_id: question.id,
             value: value,
