@@ -1,6 +1,6 @@
 "use client";
 
-import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -28,6 +28,18 @@ export const MatchQuestion = ({ question }: Props) => {
     const [isPending, startTransition] = useTransition();
     const isLoading = useStore((state) => state.loading);
     const router = useRouter();
+
+    const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+    const touchSensor = useSensor(TouchSensor, {
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+    const sensors = useSensors(mouseSensor, touchSensor);
 
     useEffect(() => {
         fetchMatchQuestionPlayers(question.id).then((response) => setPlayers(response));
@@ -97,7 +109,7 @@ export const MatchQuestion = ({ question }: Props) => {
     const canBeSubmitted = players?.every((player) => matches[player.id] !== undefined) ?? false;
     return (
         <>
-            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"flex gap-4"}>
                     {question.names &&
                         question.names.map((name) => {
