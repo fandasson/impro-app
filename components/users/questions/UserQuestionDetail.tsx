@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 
 import { checkUserAlreadyAnswered, fetchActiveQuestion } from "@/api/questions.api";
@@ -7,6 +9,7 @@ import { Loading } from "@/components/users/Loading";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
+import { markQuestionAsAnswered, useStore } from "@/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -17,8 +20,8 @@ type Props = {
 export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
     const [loading, setLoading] = useState(true);
-    const [alreadyAnswered, setAlreadyAnswered] = useState(false);
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
+    const alreadyAnswered = useStore((state) => (question ? state.answeredQuestions[question.id] : false));
 
     useEffect(() => {
         // only setting the loading state to true; fetchUserAnswer will set it to false
@@ -32,7 +35,9 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         if (question) {
             checkUserAlreadyAnswered(question.id)
                 .then((response) => {
-                    setAlreadyAnswered(response);
+                    if (response) {
+                        markQuestionAsAnswered(question.id);
+                    }
                 })
                 .finally(() => setLoading(false));
         }
@@ -42,7 +47,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel(CHANNEL_DATABASE)
+            .channel("anotherTest")
             .on<Tables<"questions">>(
                 "postgres_changes",
                 {

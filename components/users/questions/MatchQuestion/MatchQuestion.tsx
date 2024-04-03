@@ -2,15 +2,18 @@
 
 import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
 import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 import { fetchMatchQuestionPlayers } from "@/api/questions.api";
-import { Player } from "@/api/types.api";
+import { submitMatchAnswer } from "@/api/submit-answer";
+import { MatchAnswer, Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
 import { Character } from "@/components/users/questions/MatchQuestion/Character";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
+import { markQuestionAsAnswered } from "@/store";
 import { sluggifyString } from "@/utils/string.utils";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -18,14 +21,13 @@ type Props = {
     question: Tables<"questions">;
 };
 
-type Inputs = {
-    answer: string;
-};
 export const MatchQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<Player[] | null>(null);
     const [draggingCharacter, setDraggingCharacter] = useState<UniqueIdentifier | null>(null);
-
     const [matches, setMatches] = useState<Record<number, string>>({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     useEffect(() => {
         fetchMatchQuestionPlayers(question.id).then((response) => setPlayers(response));
@@ -71,13 +73,27 @@ export const MatchQuestion = ({ question }: Props) => {
         setDraggingCharacter(null);
     };
 
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        const data: MatchAnswer[] = Object.entries(matches).map(([key, value]) => ({
+            player_id: parseInt(key),
+            question_id: question.id,
+            value: value,
+        }));
+        await submitMatchAnswer(data);
+        setIsLoading(false);
+        markQuestionAsAnswered(question.id);
+        startTransition(() => {
+            router.refresh();
+        });
+    };
+
     const renderDraggingCharacter = (id: UniqueIdentifier) => {
         const name = findName(id);
         if (name) {
             return <Character name={name} />;
         }
     };
-
     const canBeSubmitted = players?.every((player) => matches[player.id] !== undefined) ?? false;
     return (
         <>
@@ -105,8 +121,8 @@ export const MatchQuestion = ({ question }: Props) => {
                     {draggingCharacter ? renderDraggingCharacter(draggingCharacter) : null}
                 </DragOverlay>
             </DndContext>
-            <Button type={"submit"} disabled={!canBeSubmitted}>
-                Odeslat
+            <Button type={"submit"} disabled={!canBeSubmitted || isPending || isLoading} onClick={handleSubmit}>
+                {isPending ? "Odesílám..." : "Odeslat"}
             </Button>
         </>
     );
