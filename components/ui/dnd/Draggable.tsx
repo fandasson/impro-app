@@ -10,7 +10,13 @@ export const Draggable = (props: Props) => {
     });
 
     return (
-        <div ref={setNodeRef} style={{ touchAction: "manipulation" }} {...listeners} {...attributes}>
+        <div
+            ref={setNodeRef}
+            style={{ touchAction: "manipulation" }}
+            className={"select-none"}
+            {...listeners}
+            {...attributes}
+        >
             {props.children}
         </div>
     );
