@@ -249,7 +249,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_match_results: {
+        Args: {
+          question_id_param: number
+        }
+        Returns: {
+          player_id: number
+          value: string
+          count: number
+        }[]
+      }
+      get_value_counts_by_player: {
+        Args: {
+          question_id_param: number
+        }
+        Returns: {
+          player_id: number
+          value: string
+          count: number
+        }[]
+      }
     }
     Enums: {
       "performance-state": "draft" | "intro" | "life" | "finished"
