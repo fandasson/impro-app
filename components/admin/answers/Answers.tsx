@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { fetchAnswers } from "@/api/answers.api";
 import { setQuestionVisibility } from "@/api/questions.api";
 import { Question } from "@/api/types.api";
+import { PlayerPickAnswers } from "@/components/admin/answers/PlayerPickAnswers";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 import { Switch } from "@/components/ui/Switch";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -31,6 +32,9 @@ export const Answers = ({ question }: Props) => {
     switch (question.type) {
         case "text":
             component = <TextAnswers questionId={question.id} answers={answers ?? []} />;
+            break;
+        case "player-pick":
+            component = <PlayerPickAnswers question={question} answers={answers ?? []} />;
             break;
     }
 
