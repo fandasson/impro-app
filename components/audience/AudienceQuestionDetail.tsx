@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { fetchActiveQuestion } from "@/api/questions.api";
+import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
 import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
@@ -14,7 +14,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
 
     useEffect(() => {
-        fetchActiveQuestion(performanceId).then((response) => setQuestion(response.data));
+        fetchActiveOrLockedQuestion(performanceId).then((response) => setQuestion(response.data));
     }, [performanceId]);
 
     // @ts-ignore
@@ -31,7 +31,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
                     filter: `id=eq.${question?.id || -1}`,
                 },
                 (payload) => {
-                    if (payload.new?.state === "active") {
+                    if (["active", "locked"].includes(payload.new?.state)) {
                         setQuestion(payload.new);
                     } else {
                         setQuestion(null);

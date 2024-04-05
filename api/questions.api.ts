@@ -22,6 +22,17 @@ export const fetchActiveQuestion = async (performanceId: number): Promise<Questi
         .single();
 };
 
+export const fetchActiveOrLockedQuestion = async (performanceId: number): Promise<QuestionResponse> => {
+    const supabase = createClient(cookies());
+    return supabase
+        .from("questions")
+        .select("*")
+        .eq("performance_id", performanceId)
+        .or("state.eq.active,state.eq.locked")
+        .limit(1)
+        .single();
+};
+
 export const checkUserAlreadyAnswered = async (questionId: number): Promise<boolean> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
