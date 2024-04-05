@@ -8,6 +8,7 @@ import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { Loading } from "@/components/users/Loading";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
+import { PlayerPickQuestion } from "@/components/users/questions/PlayerPickQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
 import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
 import { createClient } from "@/utils/supabase/client";
@@ -92,6 +93,9 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         case "text":
             component = <TextQuestion questionId={question.id} />;
             break;
+        case "player-pick":
+            component = <PlayerPickQuestion question={question} />;
+            break;
         case "match":
             component = <MatchQuestion question={question} />;
             break;
@@ -101,7 +105,6 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         <MobileContainer className={""}>
             <div className={"grid grid-flow-col gap-4"}>
                 <h2 className={"text-lg font-medium"}>{question.question}</h2>
-                {/*<div>time</div>*/}
             </div>
             {component}
         </MobileContainer>
