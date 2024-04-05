@@ -2,15 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 
-import { checkUserAlreadyAnswered, fetchActiveQuestion } from "@/api/questions.api";
+import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
-import { Loading } from "@/components/users/Loading";
 import { NoQuestion } from "@/components/users/NoQuestion";
+import { PlayerPickAnswers } from "@/components/users/answers/PlayerPickAnswers";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { PlayerPickQuestion } from "@/components/users/questions/PlayerPickQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
-import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
+import { setLoading, useStore } from "@/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -27,7 +27,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
     useEffect(() => {
         // only setting the loading state to true; fetchUserAnswer will set it to false
         setLoading(true);
-        fetchActiveQuestion(performanceId)
+        fetchActiveOrLockedQuestion(performanceId)
             .then((response) => {
                 if (!response.data) {
                     setLoading(false);
@@ -35,21 +35,23 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
                 }
                 setQuestion(response.data);
             })
-            .catch(() => setLoading(false));
+            .finally(() => setLoading(false));
     }, [performanceId]);
 
-    useEffect(() => {
-        if (question) {
-            checkUserAlreadyAnswered(question.id)
-                .then((response) => {
-                    if (response) {
-                        markQuestionAsAnswered(question.id);
-                    }
-                })
-                .finally(() => setLoading(false));
-        }
-    }, [question]);
+    // FIXME: was causing issues with infinite loop
+    // useEffect(() => {
+    //     if (question) {
+    //         checkUserAlreadyAnswered(question.id)
+    //             .then((response) => {
+    //                 if (response) {
+    //                     markQuestionAsAnswered(question.id);
+    //                 }
+    //             })
+    //             .finally(() => setLoading(false));
+    //     }
+    // }, [question]);
 
+    console.log(question);
     // @ts-ignore
     useEffect(() => {
         const supabase = createClient();
@@ -61,11 +63,12 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
                     event: "UPDATE",
                     schema: "public",
                     table: "questions",
+                    // todo use question.id instead
                     filter: "performance_id=eq." + performanceId,
                 },
                 (payload) => {
                     const newQuestion = payload.new;
-                    if (newQuestion?.state === "active") {
+                    if (["active", "locked"].includes(newQuestion?.state)) {
                         setQuestion(newQuestion);
                     } else {
                         setQuestion(null);
@@ -75,11 +78,12 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
             .subscribe();
 
         return () => supabase.removeChannel(channel);
+        // todo use question.id instead
     }, [performanceId]);
 
-    if (loading) {
-        return <Loading />;
-    }
+    // if (loading) {
+    //     return <Loading />;
+    // }
 
     if (!question) {
         return <NoQuestion />;
@@ -94,7 +98,12 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
             component = <TextQuestion questionId={question.id} />;
             break;
         case "player-pick":
-            component = <PlayerPickQuestion question={question} />;
+            if (question.state === "active") {
+                component = <PlayerPickQuestion question={question} />;
+            }
+            if (question.state === "locked") {
+                component = <PlayerPickAnswers questionId={question.id} />;
+            }
             break;
         case "match":
             component = <MatchQuestion question={question} />;
