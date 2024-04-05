@@ -30,8 +30,10 @@ export const TextQuestion = (props: Props) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Label htmlFor={"answer"}>Vaše odpověď</Label>
+        <form onSubmit={handleSubmit(onSubmit)} className={"flex flex-col gap-4"}>
+            <Label htmlFor={"answer"} className={"font-medium"}>
+                Vaše odpověď
+            </Label>
             <Textarea
                 autoFocus={true}
                 placeholder={"Nebojte se psát, co vás napadne... je to anonymní ;-) "}
