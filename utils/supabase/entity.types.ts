@@ -273,7 +273,12 @@ export type Database = {
     Enums: {
       "performance-state": "draft" | "intro" | "life" | "finished"
       "question-state": "draft" | "active" | "answered"
-      "question-type": "color-pick" | "name-pick" | "text" | "match"
+      "question-type":
+        | "color-pick"
+        | "name-pick"
+        | "text"
+        | "match"
+        | "player-pick"
     }
     CompositeTypes: {
       [_ in never]: never
