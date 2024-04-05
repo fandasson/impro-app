@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import { RemoveAnswersButton } from "@/components/admin/answers/RemoveAnswersButton";
 import { Badge } from "@/components/ui/Badge";
-import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -14,6 +13,10 @@ type Props = {
 export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
     const [answers, setAnswers] = useState(initialAnswers);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+
+    useEffect(() => {
+        setAnswers(initialAnswers);
+    }, [initialAnswers]);
 
     const toggleSelect = (id: number) => {
         if (selectedAnswers.includes(id)) {
@@ -32,7 +35,7 @@ export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel(CHANNEL_DATABASE)
+            .channel("text-answers")
             .on<Tables<"answers">>(
                 "postgres_changes",
                 {
