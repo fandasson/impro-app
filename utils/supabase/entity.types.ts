@@ -161,7 +161,6 @@ export type Database = {
       questions: {
         Row: {
           colors: string[] | null
-          finish_at: string | null
           id: number
           index_order: number
           multiple: boolean
@@ -171,12 +170,10 @@ export type Database = {
           present_answers: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
-          time_limit: number
           type: Database["public"]["Enums"]["question-type"]
         }
         Insert: {
           colors?: string[] | null
-          finish_at?: string | null
           id?: number
           index_order: number
           multiple?: boolean
@@ -186,12 +183,10 @@ export type Database = {
           present_answers?: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
-          time_limit?: number
           type: Database["public"]["Enums"]["question-type"]
         }
         Update: {
           colors?: string[] | null
-          finish_at?: string | null
           id?: number
           index_order?: number
           multiple?: boolean
@@ -201,7 +196,6 @@ export type Database = {
           present_answers?: boolean | null
           question?: string
           state?: Database["public"]["Enums"]["question-state"]
-          time_limit?: number
           type?: Database["public"]["Enums"]["question-type"]
         }
         Relationships: [
