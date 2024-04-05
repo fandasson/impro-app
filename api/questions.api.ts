@@ -68,3 +68,8 @@ export const setQuestionState = async (
     const supabase = createClient(cookies());
     return supabase.from("questions").update({ state }).eq("id", questionId).select().single();
 };
+
+export const setQuestionVisibility = async (questionId: number, visibility: boolean): Promise<QuestionResponse> => {
+    const supabase = createClient(cookies());
+    return supabase.from("questions").update({ present_answers: visibility }).eq("id", questionId).select().single();
+};

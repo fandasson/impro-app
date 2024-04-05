@@ -32,7 +32,11 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
                     filter: `id=eq.${question?.id || -1}`,
                 },
                 (payload) => {
-                    setQuestion(payload.new);
+                    if (payload.new?.state === "active") {
+                        setQuestion(payload.new);
+                    } else {
+                        setQuestion(null);
+                    }
                 },
             )
             .subscribe();
@@ -41,7 +45,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
     }, [question]);
 
     if (!question) {
-        return null;
+        return <></>;
     }
 
     let component = null;

@@ -1,5 +1,4 @@
 import { ChevronLeft } from "lucide-react";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -8,11 +7,8 @@ import { QuestionMatch } from "@/app/admin/questions/[questionId]/QuestionMatch"
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionStateToggle } from "@/components/admin/questions/QuestionStateToggle";
 import { Button } from "@/components/ui/Button";
-import { createClient } from "@/utils/supabase/server";
 
 export default async function QuestionDetail({ params }: { params: { questionId: string } }) {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
     const questionId = parseInt(params.questionId);
     const { data: question } = await fetchQuestion(questionId);
 
