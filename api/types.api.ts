@@ -11,3 +11,4 @@ export type MatchAnswerCreate = Omit<TablesInsert<"answers_match">, "user_id">;
 
 // ALIASES
 export type Player = Tables<"players">;
+export type Answer = Tables<"answers">;

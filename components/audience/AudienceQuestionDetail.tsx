@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
+import { PlayerPickAnswers } from "@/components/audience/answers/PlayerPickAnswers";
 import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -51,6 +52,9 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
     switch (question.type) {
         case "text":
             component = <QuestionAnswers questionId={question.id} />;
+            break;
+        case "player-pick":
+            component = <PlayerPickAnswers questionId={question.id} />;
             break;
         case "match":
             component = <MatchQuestionAnswers questionId={question.id} />;
