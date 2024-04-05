@@ -266,7 +266,7 @@ export type Database = {
     }
     Enums: {
       "performance-state": "draft" | "intro" | "life" | "finished"
-      "question-state": "draft" | "active" | "answered"
+      "question-state": "draft" | "active" | "locked" | "answered"
       "question-type":
         | "color-pick"
         | "name-pick"

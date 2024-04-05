@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, UserCheck } from "lucide-react";
+import { EyeOff, Lock, Pencil, UserCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { fetchQuestion, setQuestionState } from "@/api/questions.api";
@@ -39,7 +39,10 @@ export const QuestionStateToggle = ({ questionId, defaultState }: Props) => {
                 <EyeOff />
             </ToggleGroupItem>
             <ToggleGroupItem value="active" title={"Aktivní otázka"}>
-                <Eye className={"stroke-destructive"} />
+                <Pencil className={"stroke-destructive"} />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="locked" title={"Aktivní otázka bez možnosti hlasovat"}>
+                <Lock className={"stroke-destructive"} />
             </ToggleGroupItem>
             <ToggleGroupItem value="answered" title={"Zobrazená otázka"}>
                 <UserCheck />
