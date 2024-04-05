@@ -27,7 +27,13 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         // only setting the loading state to true; fetchUserAnswer will set it to false
         setLoading(true);
         fetchActiveQuestion(performanceId)
-            .then((response) => setQuestion(response.data))
+            .then((response) => {
+                if (!response.data) {
+                    setLoading(false);
+                    return;
+                }
+                setQuestion(response.data);
+            })
             .catch(() => setLoading(false));
     }, [performanceId]);
 
