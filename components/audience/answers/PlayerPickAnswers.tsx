@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { fetchAnswers } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
 import { Answer, Player } from "@/api/types.api";
-import { setLoading, useStore } from "@/store";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
@@ -13,18 +12,16 @@ type Props = {
 export const PlayerPickAnswers = ({ questionId }: Props) => {
     const [answers, setAnswers] = useState<Answer[] | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
-    const isLoading = useStore((state) => state.loading);
 
     useEffect(() => {
-        setLoading(true);
         const _fetchResults = fetchAnswers(questionId).then((response) => setAnswers(response.data));
         const _fetchQuestion = fetchQuestion(questionId).then((response) => {
             setPlayers(response.data?.players || []);
         });
-        Promise.all([_fetchResults, _fetchQuestion]).finally(() => setLoading(false));
+        Promise.all([_fetchResults, _fetchQuestion]);
     }, [questionId]);
 
-    if (!answers || !players || isLoading) {
+    if (!answers || !players) {
         return null;
     }
 

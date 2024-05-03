@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { fetchMatchingQuestionResults } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
 import { MatchAnswerResults, Player } from "@/api/types.api";
-import { setLoading, useStore } from "@/store";
 
 type Props = {
     questionId: number;
@@ -12,18 +11,16 @@ type Props = {
 export const MatchQuestionAnswers = ({ questionId }: Props) => {
     const [answers, setAnswers] = useState<MatchAnswerResults[] | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
-    const isLoading = useStore((state) => state.loading);
 
     useEffect(() => {
-        setLoading(true);
         const _fetchResults = fetchMatchingQuestionResults(questionId).then((response) => setAnswers(response));
         const _fetchQuestion = fetchQuestion(questionId).then((response) => {
             setPlayers(response.data?.players || []);
         });
-        Promise.all([_fetchResults, _fetchQuestion]).finally(() => setLoading(false));
+        Promise.all([_fetchResults, _fetchQuestion]);
     }, [questionId]);
 
-    if (!answers || !players || isLoading) {
+    if (!answers || !players) {
         return null;
     }
 
