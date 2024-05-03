@@ -1,7 +1,7 @@
-import { Question } from "@/api/types.api";
+import { QuestionWithPlayers } from "@/api/types.api";
 
 type Props = {
-    question: Question;
+    question: QuestionWithPlayers;
 };
 export const QuestionMatch = ({ question }: Props) => {
     if (question.type !== "match") {

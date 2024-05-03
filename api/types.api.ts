@@ -1,6 +1,6 @@
 import { Tables, TablesInsert } from "@/utils/supabase/entity.types";
 
-export type Question = Tables<"questions"> & { players: Tables<"players">[] };
+export type QuestionWithPlayers = Tables<"questions"> & { players: Tables<"players">[] };
 
 export type MatchAnswerResults = {
     player_id: number;

@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { Answer, Question } from "@/api/types.api";
+import { Answer, QuestionWithPlayers } from "@/api/types.api";
 import { cn } from "@/utils/styling.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    question: Question;
+    question: QuestionWithPlayers;
     answers: Answer[];
 };
 export const PlayerPickAnswers = ({ question, answers: initialAnswers }: Props) => {

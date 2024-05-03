@@ -4,14 +4,14 @@ import React, { useEffect, useState } from "react";
 
 import { fetchAnswers } from "@/api/answers.api";
 import { setQuestionVisibility } from "@/api/questions.api";
-import { Question } from "@/api/types.api";
+import { QuestionWithPlayers } from "@/api/types.api";
 import { PlayerPickAnswers } from "@/components/admin/answers/PlayerPickAnswers";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 import { Switch } from "@/components/ui/Switch";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    question: Question;
+    question: QuestionWithPlayers;
 };
 
 export const Answers = ({ question }: Props) => {
