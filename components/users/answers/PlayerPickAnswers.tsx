@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchAnswers } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
 import { Answer, Player } from "@/api/types.api";
-import { setLoading } from "@/store";
+import { setLoading } from "@/store/users.store";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {

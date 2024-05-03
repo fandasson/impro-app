@@ -11,7 +11,7 @@ import { MatchAnswerCreate, Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Droppable } from "@/components/ui/dnd/Droppable";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
-import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
+import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
@@ -23,7 +23,7 @@ export const MatchQuestion = ({ question }: Props) => {
     const [draggingCharacter, setDraggingCharacter] = useState<UniqueIdentifier | null>(null);
     const [matches, setMatches] = useState<Record<number, string>>({});
     const [isPending, startTransition] = useTransition();
-    const isLoading = useStore((state) => state.loading);
+    const isLoading = useUsersStore((state) => state.loading);
     const router = useRouter();
 
     const mouseSensor = useSensor(MouseSensor, {

@@ -1,7 +1,7 @@
 "use client";
 import React, { PropsWithChildren, useCallback, useEffect, useState } from "react";
 
-import { storeUserId } from "@/store";
+import { storeUserId } from "@/store/users.store";
 
 export const AuthUser = ({ children }: PropsWithChildren) => {
     const [userId, setUserId] = useState<string | null>(null);

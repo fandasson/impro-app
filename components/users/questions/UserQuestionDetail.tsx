@@ -10,7 +10,7 @@ import { PlayerPickAnswers } from "@/components/users/answers/PlayerPickAnswers"
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { PlayerPickQuestion } from "@/components/users/questions/PlayerPickQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
-import { setLoading, useStore } from "@/store";
+import { setLoading, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -20,9 +20,9 @@ type Props = {
 
 export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
-    const loading = useStore((state) => state.loading);
+    const loading = useUsersStore((state) => state.loading);
     const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
-    const alreadyAnswered = useStore((state) => (question ? state.answeredQuestions[question.id] : false));
+    const alreadyAnswered = useUsersStore((state) => (question ? state.answeredQuestions[question.id] : false));
 
     useEffect(() => {
         // only setting the loading state to true; fetchUserAnswer will set it to false

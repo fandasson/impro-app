@@ -6,15 +6,15 @@ type Store = {
     loading: boolean;
 };
 
-export const useStore = create<Store>()((set) => ({
+export const useUsersStore = create<Store>()((set) => ({
     answeredQuestions: {},
     loading: false,
 }));
 
-export const storeUserId = (userId: string) => useStore.setState({ userId });
+export const storeUserId = (userId: string) => useUsersStore.setState({ userId });
 export const markQuestionAsAnswered = (questionId: number) =>
-    useStore.setState((state) => ({
+    useUsersStore.setState((state) => ({
         answeredQuestions: { ...state.answeredQuestions, [questionId]: true },
     }));
 
-export const setLoading = (loading: boolean) => useStore.setState({ loading });
+export const setLoading = (loading: boolean) => useUsersStore.setState({ loading });
