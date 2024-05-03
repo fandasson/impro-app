@@ -79,8 +79,6 @@ export type Database = {
       }
       performances: {
         Row: {
-          available_colors: string[] | null
-          available_names: string[] | null
           date: string
           id: number
           intro_text: string
@@ -90,8 +88,6 @@ export type Database = {
           url_slug: string
         }
         Insert: {
-          available_colors?: string[] | null
-          available_names?: string[] | null
           date: string
           id?: number
           intro_text: string
@@ -101,8 +97,6 @@ export type Database = {
           url_slug: string
         }
         Update: {
-          available_colors?: string[] | null
-          available_names?: string[] | null
           date?: string
           id?: number
           intro_text?: string
@@ -160,12 +154,10 @@ export type Database = {
       }
       questions: {
         Row: {
-          colors: string[] | null
           id: number
           index_order: number
           multiple: boolean
           name: string
-          names: string[] | null
           performance_id: number
           present_answers: boolean | null
           question: string
@@ -173,25 +165,21 @@ export type Database = {
           type: Database["public"]["Enums"]["question-type"]
         }
         Insert: {
-          colors?: string[] | null
           id?: number
           index_order: number
           multiple?: boolean
           name: string
-          names?: string[] | null
           performance_id: number
           present_answers?: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
-          type: Database["public"]["Enums"]["question-type"]
+          type?: Database["public"]["Enums"]["question-type"]
         }
         Update: {
-          colors?: string[] | null
           id?: number
           index_order?: number
           multiple?: boolean
           name?: string
-          names?: string[] | null
           performance_id?: number
           present_answers?: boolean | null
           question?: string
@@ -267,12 +255,7 @@ export type Database = {
     Enums: {
       "performance-state": "draft" | "intro" | "life" | "finished"
       "question-state": "draft" | "active" | "locked" | "answered"
-      "question-type":
-        | "color-pick"
-        | "name-pick"
-        | "text"
-        | "match"
-        | "player-pick"
+      "question-type": "text" | "player-pick" | "voting" | "match"
     }
     CompositeTypes: {
       [_ in never]: never
