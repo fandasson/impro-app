@@ -9,12 +9,9 @@ import { fetchMatchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
 import { MatchAnswerCreate, Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
-import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
-import { Character } from "@/components/users/questions/MatchQuestion/Character";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
 import { markQuestionAsAnswered, setLoading, useStore } from "@/store";
-import { sluggifyString } from "@/utils/string.utils";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
@@ -46,7 +43,8 @@ export const MatchQuestion = ({ question }: Props) => {
     }, [question.id]);
 
     const findName = (id: UniqueIdentifier) => {
-        return question.names?.find((name) => sluggifyString(`character-${name}`) === id);
+        // FIXME use players instead of names
+        // return question.names?.find((name) => sluggifyString(`character-${name}`) === id);
     };
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -67,16 +65,17 @@ export const MatchQuestion = ({ question }: Props) => {
                 };
 
                 // Check if the player was already matched with a different character
-                const occupied = Object.entries(prevMatches).find(([key, value]) => value === name);
-                if (occupied) {
-                    const id = parseInt(occupied[0]);
-
-                    // If the player was already matched, remove the old match
-                    // This prevents removing the newly added match
-                    if (id !== over.id) {
-                        delete matches[id];
-                    }
-                }
+                // FIXME use players instead of names
+                // const occupied = Object.entries(prevMatches).find(([key, value]) => value === name);
+                // if (occupied) {
+                //     const id = parseInt(occupied[0]);
+                //
+                //     // If the player was already matched, remove the old match
+                //     // This prevents removing the newly added match
+                //     if (id !== over.id) {
+                //         delete matches[id];
+                //     }
+                // }
                 return matches;
             });
         }
@@ -100,26 +99,28 @@ export const MatchQuestion = ({ question }: Props) => {
         });
     };
 
+    // FIXME use players instead of names
     const renderDraggingCharacter = (id: UniqueIdentifier) => {
-        const name = findName(id);
-        if (name) {
-            return <Character name={name} />;
-        }
+        // const name = findName(id);
+        // if (name) {
+        //     return <Character name={name} />;
+        // }
     };
+    // FIXME use players instead of names
     const canBeSubmitted = players?.every((player) => matches[player.id] !== undefined) ?? false;
     return (
         <>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"flex gap-4"}>
-                    {question.names &&
-                        question.names.map((name) => {
-                            const id = sluggifyString(`character-${name}`);
-                            return (
-                                <Draggable id={id} key={id}>
-                                    <Character name={name} />
-                                </Draggable>
-                            );
-                        })}
+                    {/*{question.names &&*/}
+                    {/*    question.names.map((name) => {*/}
+                    {/*        const id = sluggifyString(`character-${name}`);*/}
+                    {/*        return (*/}
+                    {/*            <Draggable id={id} key={id}>*/}
+                    {/*                <Character name={name} />*/}
+                    {/*            </Draggable>*/}
+                    {/*        );*/}
+                    {/*    })}*/}
                 </div>
                 <div className={"grid gap-4"}>
                     {players &&
@@ -130,7 +131,8 @@ export const MatchQuestion = ({ question }: Props) => {
                         ))}
                 </div>
                 <DragOverlay dropAnimation={null}>
-                    {draggingCharacter ? renderDraggingCharacter(draggingCharacter) : null}
+                    {/*// FIXME use players instead of names*/}
+                    {/*{draggingCharacter ? renderDraggingCharacter(draggingCharacter) : null}*/}
                 </DragOverlay>
             </DndContext>
             <Button type={"submit"} disabled={!canBeSubmitted || isPending || isLoading} onClick={handleSubmit}>

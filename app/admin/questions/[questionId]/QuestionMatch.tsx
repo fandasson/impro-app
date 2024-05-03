@@ -11,7 +11,7 @@ export const QuestionMatch = ({ question }: Props) => {
         <>
             <div>
                 <h3 className={"text-lg font-medium"}>Postavy</h3>
-                {question.names?.join(", ")}
+                {/* FIXME use players instead of names */}
             </div>
             <div>
                 <h3 className={"text-lg font-medium"}>Improvizátoři</h3>
