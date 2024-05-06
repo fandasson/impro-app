@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";
 import { Intro } from "@/components/audience/Intro";
-import { CHANNEL_DATABASE } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -19,7 +18,7 @@ export const AudienceIndex = ({ defaultPerformance }: Props) => {
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel(CHANNEL_DATABASE)
+            .channel("improAppRealtime")
             .on<Tables<"performances">>(
                 "postgres_changes",
                 {

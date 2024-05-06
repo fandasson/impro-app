@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { Intro } from "@/components/users/Intro";
 import { UserQuestionDetail } from "@/components/users/questions/UserQuestionDetail";
-import { CHANNEL_DATABASE } from "@/utils/constants.utils";
-import { createClient } from "@/utils/supabase/client";
+import { useActiveOrLockedQuestion, usePerformance } from "@/hooks/users.hooks";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
@@ -13,29 +10,8 @@ type Props = {
 };
 
 export const UserIndex = ({ defaultPerformance }: Props) => {
-    const [performance, setPerformance] = useState(defaultPerformance);
-
-    // @ts-ignore
-    useEffect(() => {
-        const supabase = createClient();
-        const channel = supabase
-            .channel(CHANNEL_DATABASE)
-            .on<Tables<"performances">>(
-                "postgres_changes",
-                {
-                    event: "UPDATE",
-                    schema: "public",
-                    table: "performances",
-                    filter: "id=eq." + defaultPerformance.id,
-                },
-                (payload) => {
-                    setPerformance(payload.new);
-                },
-            )
-            .subscribe();
-
-        return () => supabase.removeChannel(channel);
-    }, [defaultPerformance.id]);
+    const question = useActiveOrLockedQuestion(defaultPerformance.id);
+    const performance = usePerformance(defaultPerformance);
 
     if (performance.state === "intro") {
         return <Intro performance={performance} />;
@@ -46,6 +22,6 @@ export const UserIndex = ({ defaultPerformance }: Props) => {
         //     return <NoQuestion />;
         // }
 
-        return <UserQuestionDetail performanceId={defaultPerformance.id} />;
+        return <UserQuestionDetail />;
     }
 };

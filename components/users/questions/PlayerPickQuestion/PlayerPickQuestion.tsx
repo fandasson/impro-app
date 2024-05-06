@@ -29,7 +29,6 @@ export const PlayerPickQuestion = ({ question }: Props) => {
         setSelectedPlayer(`${playerId}`);
     };
 
-    console.log(selectedPlayer);
     return (
         <>
             <ToggleGroup

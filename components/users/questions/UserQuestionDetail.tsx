@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { NoQuestion } from "@/components/users/NoQuestion";
@@ -10,33 +9,13 @@ import { PlayerPickAnswers } from "@/components/users/answers/PlayerPickAnswers"
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { PlayerPickQuestion } from "@/components/users/questions/PlayerPickQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
-import { setLoading, useUsersStore } from "@/store/users.store";
-import { createClient } from "@/utils/supabase/client";
-import { Tables } from "@/utils/supabase/entity.types";
+import { useUsersStore } from "@/store/users.store";
 
-type Props = {
-    performanceId: number;
-};
-
-export const UserQuestionDetail = ({ performanceId }: Props) => {
+export const UserQuestionDetail = () => {
     let component: React.JSX.Element | null = null;
     const loading = useUsersStore((state) => state.loading);
-    const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
+    const question = useUsersStore((state) => state.question);
     const alreadyAnswered = useUsersStore((state) => (question ? state.answeredQuestions[question.id] : false));
-
-    useEffect(() => {
-        // only setting the loading state to true; fetchUserAnswer will set it to false
-        setLoading(true);
-        fetchActiveOrLockedQuestion(performanceId)
-            .then((response) => {
-                if (!response.data) {
-                    setLoading(false);
-                    return;
-                }
-                setQuestion(response.data);
-            })
-            .finally(() => setLoading(false));
-    }, [performanceId]);
 
     // FIXME: was causing issues with infinite loop
     // useEffect(() => {
@@ -50,36 +29,6 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
     //             .finally(() => setLoading(false));
     //     }
     // }, [question]);
-
-    console.log(question);
-    // @ts-ignore
-    useEffect(() => {
-        const supabase = createClient();
-        const channel = supabase
-            .channel("anotherTest")
-            .on<Tables<"questions">>(
-                "postgres_changes",
-                {
-                    event: "UPDATE",
-                    schema: "public",
-                    table: "questions",
-                    // todo use question.id instead
-                    filter: "performance_id=eq." + performanceId,
-                },
-                (payload) => {
-                    const newQuestion = payload.new;
-                    if (["active", "locked"].includes(newQuestion?.state)) {
-                        setQuestion(newQuestion);
-                    } else {
-                        setQuestion(null);
-                    }
-                },
-            )
-            .subscribe();
-
-        return () => supabase.removeChannel(channel);
-        // todo use question.id instead
-    }, [performanceId]);
 
     // if (loading) {
     //     return <Loading />;
@@ -100,8 +49,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
         case "player-pick":
             if (question.state === "active") {
                 component = <PlayerPickQuestion question={question} />;
-            }
-            if (question.state === "locked") {
+            } else if (question.state === "locked") {
                 component = <PlayerPickAnswers questionId={question.id} />;
             }
             break;
