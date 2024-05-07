@@ -21,12 +21,14 @@ export const PlayerPickQuestion = ({ question }: Props) => {
     }, [question.id]);
 
     const handleSubmit = async (value: string) => {
-        const playerId = parseInt(value);
-        await resubmitAnswer({
-            question_id: question.id,
-            value,
-        });
-        setSelectedPlayer(`${playerId}`);
+        if (value) {
+            const playerId = parseInt(value);
+            await resubmitAnswer({
+                question_id: question.id,
+                value,
+            });
+            setSelectedPlayer(`${playerId}`);
+        }
     };
 
     return (
