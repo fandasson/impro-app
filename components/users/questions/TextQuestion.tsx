@@ -6,6 +6,7 @@ import { submitAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Textarea";
+import { setLoading, useUsersStore } from "@/store/users.store";
 
 type Props = {
     questionId: number;
@@ -15,6 +16,7 @@ type Inputs = {
     answer: string;
 };
 export const TextQuestion = (props: Props) => {
+    const loading = useUsersStore((state) => state.loading);
     const {
         register,
         handleSubmit,
@@ -22,10 +24,11 @@ export const TextQuestion = (props: Props) => {
         reset,
     } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        setLoading(true);
         await submitAnswer({
             question_id: props.questionId,
             value: data.answer,
-        });
+        }).finally(() => setLoading(false));
         reset();
     };
 
@@ -40,7 +43,9 @@ export const TextQuestion = (props: Props) => {
                 id={"answer"}
                 {...register("answer", { required: true })}
             />
-            <Button type={"submit"}>Odeslat</Button>
+            <Button type={"submit"} disabled={loading}>
+                Odeslat
+            </Button>
         </form>
     );
 };
