@@ -11,7 +11,7 @@ type AnswersResponse = PostgrestSingleResponse<Tables<"answers">[]>;
 export const fetchAnswers = async (questionId: number): Promise<AnswersResponse> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    return supabase.from("answers").select("*").eq("question_id", questionId);
+    return supabase.from("answers").select("*").eq("question_id", questionId).neq("value", "");
 };
 
 export const fetchMatchingQuestionResults = async (questionId: number): Promise<MatchAnswerResults[] | null> => {
