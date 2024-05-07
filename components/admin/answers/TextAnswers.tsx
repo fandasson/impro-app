@@ -1,22 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
+import { Answer } from "@/api/types.api";
 import { RemoveAnswersButton } from "@/components/admin/answers/RemoveAnswersButton";
 import { Badge } from "@/components/ui/Badge";
-import { createClient } from "@/utils/supabase/client";
-import { Tables } from "@/utils/supabase/entity.types";
+import { removeAnswers } from "@/store/admin.store";
 
 type Props = {
-    questionId: number;
-    answers: Tables<"answers">[];
+    answers: Answer[];
 };
-export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
-    const [answers, setAnswers] = useState(initialAnswers);
+export const TextAnswers = ({ answers }: Props) => {
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-
-    useEffect(() => {
-        setAnswers(initialAnswers);
-    }, [initialAnswers]);
 
     const toggleSelect = (id: number) => {
         if (selectedAnswers.includes(id)) {
@@ -27,46 +21,30 @@ export const TextAnswers = ({ questionId, answers: initialAnswers }: Props) => {
     };
 
     const handleRemove = () => {
-        setAnswers((prevState) => prevState.filter((a) => !selectedAnswers.includes(a.id)));
+        removeAnswers(selectedAnswers);
         setSelectedAnswers([]);
     };
 
-    // @ts-ignore
-    useEffect(() => {
-        const supabase = createClient();
-        const channel = supabase
-            .channel("text-answers")
-            .on<Tables<"answers">>(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "answers",
-                    filter: "question_id=eq." + questionId,
-                },
-                (payload) => setAnswers([...answers, payload.new]),
-            )
-            .subscribe();
-
-        return () => supabase.removeChannel(channel);
-    }, [setAnswers, answers, questionId]);
-
     return (
         <div className={"flex flex-col"}>
-            <div className={"mb-8 grid grid-cols-1 gap-4"}>
-                {answers.map((answer) => {
-                    const selected = selectedAnswers.includes(answer.id);
-                    return (
-                        <Badge
-                            className={"text-md cursor-pointer px-3.5 py-2"}
-                            key={answer.id}
-                            variant={`${selected ? "default" : "outline"}`}
-                            onClick={() => toggleSelect(answer.id)}
-                        >
-                            {answer.value}
-                        </Badge>
-                    );
-                })}
+            <RemoveAnswersButton answersIds={selectedAnswers} callback={handleRemove} />
+            <div className={"my-8 grid grid-cols-1 gap-4"}>
+                {answers
+                    // sort by id DESC
+                    .sort((a, b) => b.id - a.id)
+                    .map((answer) => {
+                        const selected = selectedAnswers.includes(answer.id);
+                        return (
+                            <Badge
+                                className={"text-md cursor-pointer px-3.5 py-2"}
+                                key={answer.id}
+                                variant={`${selected ? "default" : "outline"}`}
+                                onClick={() => toggleSelect(answer.id)}
+                            >
+                                {answer.value}
+                            </Badge>
+                        );
+                    })}
             </div>
             <RemoveAnswersButton answersIds={selectedAnswers} callback={handleRemove} />
         </div>

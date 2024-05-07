@@ -1,43 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
-
-import { Answer, QuestionWithPlayers } from "@/api/types.api";
+import { Answer, Player } from "@/api/types.api";
 import { cn } from "@/utils/styling.utils";
-import { createClient } from "@/utils/supabase/client";
-import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    question: QuestionWithPlayers;
+    players: Player[];
     answers: Answer[];
 };
-export const PlayerPickAnswers = ({ question, answers: initialAnswers }: Props) => {
-    const [answers, setAnswers] = useState(initialAnswers);
-
-    useEffect(() => {
-        setAnswers(initialAnswers);
-    }, [initialAnswers]);
-
-    // @ts-ignore
-    useEffect(() => {
-        const supabase = createClient();
-        const channel = supabase
-            .channel("player-pick-answers")
-            .on<Tables<"answers">>(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "answers",
-                    filter: "question_id=eq." + question.id,
-                },
-                (payload) => setAnswers([...answers, payload.new]),
-            )
-            .subscribe();
-
-        return () => supabase.removeChannel(channel);
-    }, [setAnswers, answers, question]);
-
-    const sortedPlayers = question.players
+export const PlayerPickAnswers = ({ players, answers }: Props) => {
+    const sortedPlayers = players
         .map((player) => {
             return {
                 ...player,

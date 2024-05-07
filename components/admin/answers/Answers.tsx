@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 
-import { fetchAnswers } from "@/api/answers.api";
 import { setQuestionVisibility } from "@/api/questions.api";
 import { QuestionWithPlayers } from "@/api/types.api";
+import { Loading } from "@/components/admin/Loading";
 import { PlayerPickAnswers } from "@/components/admin/answers/PlayerPickAnswers";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 import { Switch } from "@/components/ui/Switch";
-import { Tables } from "@/utils/supabase/entity.types";
+import { useAnswers } from "@/hooks/admin.hooks";
+import { useAdminStore } from "@/store/admin.store";
 
 type Props = {
     question: QuestionWithPlayers;
@@ -16,12 +17,12 @@ type Props = {
 
 export const Answers = ({ question }: Props) => {
     const [displayAnswers, setDisplayAnswers] = useState(false);
-    const [answers, setAnswers] = useState<Tables<"answers">[] | null>(null);
+    const loading = useAdminStore((state) => state.loading);
+    const answers = useAnswers(question.id);
     let component: React.JSX.Element | null = null;
 
     useEffect(() => {
         setDisplayAnswers(question.present_answers || false);
-        fetchAnswers(question.id).then((response) => setAnswers(response.data));
     }, [question]);
 
     const handleVisibilityChange = async (visibility: boolean) => {
@@ -31,14 +32,19 @@ export const Answers = ({ question }: Props) => {
 
     switch (question.type) {
         case "text":
-            component = <TextAnswers questionId={question.id} answers={answers ?? []} />;
+            component = <TextAnswers answers={answers} />;
             break;
         case "player-pick":
-            component = <PlayerPickAnswers question={question} answers={answers ?? []} />;
+            component = <PlayerPickAnswers players={question.players} answers={answers} />;
             break;
     }
 
     const length = answers?.length ?? 0;
+
+    if (loading && length === 0) {
+        return <Loading />;
+    }
+
     return (
         <>
             <div className={"flex items-center justify-between"}>
