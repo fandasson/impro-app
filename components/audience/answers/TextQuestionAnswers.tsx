@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { fetchAnswers } from "@/api/answers.api";
+import { fetchTextAnswers } from "@/api/answers.api";
+import { TextAnswer } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
-import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
     questionId: number;
 };
-export const QuestionAnswers = ({ questionId }: Props) => {
-    const [answers, setAnswers] = useState<Tables<"answers">[] | null>(null);
+export const TextQuestionAnswers = ({ questionId }: Props) => {
+    const [answers, setAnswers] = useState<TextAnswer[] | null>(null);
 
     useEffect(() => {
-        fetchAnswers(questionId).then((response) => setAnswers(response.data));
+        fetchTextAnswers(questionId).then((response) => setAnswers(response.data));
     }, [questionId]);
 
     if (!answers) {

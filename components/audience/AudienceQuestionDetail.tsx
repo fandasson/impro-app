@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
+import { Question } from "@/api/types.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
 import { PlayerPickAnswers } from "@/components/audience/answers/PlayerPickAnswers";
-import { QuestionAnswers } from "@/components/audience/answers/QuestionAnswers";
+import { TextQuestionAnswers } from "@/components/audience/answers/TextQuestionAnswers";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
 
@@ -12,24 +13,28 @@ type Props = {
     performanceId: number;
 };
 export const AudienceQuestionDetail = ({ performanceId }: Props) => {
-    const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
+    const [question, setQuestion] = useState<Question | null>(null);
+    const [questionId, setQuestionId] = useState<number | undefined>();
 
     useEffect(() => {
-        fetchActiveOrLockedQuestion(performanceId).then((response) => setQuestion(response.data));
+        fetchActiveOrLockedQuestion(performanceId).then((response) => {
+            setQuestion(response.data);
+            setQuestionId(response.data?.id);
+        });
     }, [performanceId]);
 
     // @ts-ignore
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel("question-channel")
+            .channel("audience-questions")
             .on<Tables<"questions">>(
                 "postgres_changes",
                 {
                     event: "UPDATE",
                     schema: "public",
                     table: "questions",
-                    filter: `id=eq.${question?.id || -1}`,
+                    filter: `id=eq.${questionId || -1}`,
                 },
                 (payload) => {
                     if (["active", "locked"].includes(payload.new?.state)) {
@@ -42,7 +47,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
             .subscribe();
 
         return () => supabase.removeChannel(channel);
-    }, [question]);
+    }, [questionId]);
 
     if (!question) {
         return <></>;
@@ -51,7 +56,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
     let component = null;
     switch (question.type) {
         case "text":
-            component = <QuestionAnswers questionId={question.id} />;
+            component = <TextQuestionAnswers questionId={question.id} />;
             break;
         case "player-pick":
             component = <PlayerPickAnswers questionId={question.id} />;

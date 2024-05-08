@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { fetchAnswers } from "@/api/answers.api";
+import { fetchVoteAnswers } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
-import { Player, TextAnswer } from "@/api/types.api";
+import { Player, VoteAnswer } from "@/api/types.api";
+import { countVotesForPlayers } from "@/utils/answers.utils";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
@@ -10,11 +11,11 @@ type Props = {
 };
 
 export const PlayerPickAnswers = ({ questionId }: Props) => {
-    const [answers, setAnswers] = useState<TextAnswer[] | null>(null);
+    const [answers, setAnswers] = useState<VoteAnswer[] | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
 
     useEffect(() => {
-        const _fetchResults = fetchAnswers(questionId).then((response) => setAnswers(response.data));
+        const _fetchResults = fetchVoteAnswers(questionId).then((response) => setAnswers(response.data));
         const _fetchQuestion = fetchQuestion(questionId).then((response) => {
             setPlayers(response.data?.players || []);
         });
@@ -25,14 +26,7 @@ export const PlayerPickAnswers = ({ questionId }: Props) => {
         return null;
     }
 
-    const sortedPlayers = players
-        .map((players) => {
-            return {
-                ...players,
-                count: answers.filter((answer) => parseInt(answer.value) === players.id).length,
-            };
-        })
-        .sort((a, b) => b.count - a.count);
+    const sortedPlayers = countVotesForPlayers(players, answers);
 
     return (
         <div className={"flex flex-col gap-8 text-2xl"}>
