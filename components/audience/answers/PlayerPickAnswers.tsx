@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetchAnswers } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
-import { Answer, Player } from "@/api/types.api";
+import { Player, TextAnswer } from "@/api/types.api";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const PlayerPickAnswers = ({ questionId }: Props) => {
-    const [answers, setAnswers] = useState<Answer[] | null>(null);
+    const [answers, setAnswers] = useState<TextAnswer[] | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
 
     useEffect(() => {

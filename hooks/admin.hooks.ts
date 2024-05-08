@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 
-import { fetchTextAnswers } from "@/api/answers.api";
-import { Answer, AnswersResponse, TableNames, TextAnswer } from "@/api/types.api";
+import { fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
+import { Answer, AnswersResponse, TableNames, TextAnswer, VoteAnswer } from "@/api/types.api";
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 
 export const useTextAnswers = (questionId: number) =>
     useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers);
+
+export const useVoteAnswers = (questionId: number) =>
+    useAnswers<VoteAnswer>("answers_vote", questionId, fetchVoteAnswers);
 
 const useAnswers = <T extends Answer>(
     table: TableNames,

@@ -1,20 +1,17 @@
 "use client";
-import { Answer, Player } from "@/api/types.api";
+import { Player } from "@/api/types.api";
+import { useVoteAnswers } from "@/hooks/admin.hooks";
+import { countVotesForPlayers } from "@/utils/answers.utils";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
     players: Player[];
-    answers: Answer[];
+    questionId: number;
 };
-export const PlayerPickAnswers = ({ players, answers }: Props) => {
-    const sortedPlayers = players
-        .map((player) => {
-            return {
-                ...player,
-                count: answers.filter((answer) => parseInt(answer.value) === player.id).length,
-            };
-        })
-        .sort((a, b) => b.count - a.count);
+
+export const PlayerPickAnswers = ({ players, questionId }: Props) => {
+    const answers = useVoteAnswers(questionId);
+    const sortedPlayers = countVotesForPlayers(players, answers);
 
     return (
         <div className={"flex flex-col gap-8 text-2xl"}>

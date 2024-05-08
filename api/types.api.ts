@@ -11,7 +11,7 @@ export type Answer = {
     user_id: string;
 };
 
-export type AnswersResponse = PostgrestSingleResponse<Answer[]>;
+export type AnswersResponse<T extends Answer = Answer> = PostgrestSingleResponse<T[]>;
 export type MatchAnswerResults = {
     player_id: number;
     value: string;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { fetchMatchQuestionPlayers } from "@/api/questions.api";
-import { resubmitAnswer } from "@/api/submit-answer";
+import { submitVoteAnswer } from "@/api/submit-answer";
 import { Player } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -24,9 +24,9 @@ export const PlayerPickQuestion = ({ question }: Props) => {
         if (value) {
             const playerId = parseInt(value);
             setSelectedPlayer(`${playerId}`);
-            await resubmitAnswer({
+            await submitVoteAnswer({
                 question_id: question.id,
-                value,
+                player_id: playerId,
             });
         }
     };

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { setQuestionVisibility } from "@/api/questions.api";
 import { QuestionWithPlayers } from "@/api/types.api";
 import { AnswersHeadline } from "@/components/admin/answers/AnswersHeadline";
+import { PlayerPickAnswers } from "@/components/admin/answers/PlayerPickAnswers";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 import { Switch } from "@/components/ui/Switch";
 
@@ -30,7 +31,7 @@ export const Answers = ({ question }: Props) => {
             case "text":
                 return <TextAnswers questionId={question.id} />;
             case "player-pick":
-            // return <PlayerPickAnswers players={question.players} answers={answers} />;
+                return <PlayerPickAnswers questionId={question.id} players={question.players} />;
         }
     };
     return (
