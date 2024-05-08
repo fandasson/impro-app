@@ -24,7 +24,7 @@ export const QuestionItem = (props: Props) => {
     return (
         <Link href={`/admin/questions/${id}`} className={"flex justify-between rounded border px-3.5 py-3"}>
             <strong>{name}</strong>
-            <span>{pool.name}</span>
+            <span>{pool?.name}</span>
             {stateIcon}
         </Link>
     );

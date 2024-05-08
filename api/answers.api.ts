@@ -16,6 +16,12 @@ export const fetchVoteAnswers = async (questionId: number): Promise<AnswersRespo
     return supabase.from("answers_vote").select("*").eq("question_id", questionId);
 };
 
+export const fetchPoolVoteAnswers = async (poolId: number): Promise<AnswersResponse<VoteAnswer>> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    return supabase.from("answers_vote").select("*, questions!inner(pool_id)").eq("questions.pool_id", poolId);
+};
+
 export const fetchMatchingQuestionResults = async (questionId: number): Promise<MatchAnswerResults[] | null> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);

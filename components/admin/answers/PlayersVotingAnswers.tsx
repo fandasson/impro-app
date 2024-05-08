@@ -6,11 +6,13 @@ import { cn } from "@/utils/styling.utils";
 
 type Props = {
     players: Player[];
+    summary: boolean;
+    poolId: number | null;
     questionId: number;
 };
 
-export const PlayersVotingAnswers = ({ players, questionId }: Props) => {
-    const answers = useVoteAnswers(questionId);
+export const PlayersVotingAnswers = ({ players, questionId, poolId, summary = false }: Props) => {
+    const answers = useVoteAnswers(questionId, summary, poolId);
     const sortedPlayers = countVotesForPlayers(players, answers);
 
     return (

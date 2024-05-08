@@ -4,7 +4,7 @@ import { Database, Tables, TablesInsert } from "@/utils/supabase/entity.types";
 
 export type Question = Tables<"questions">;
 export type QuestionWithPlayers = Question & { players: Tables<"players">[] };
-export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> };
+export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
 export type QuestionDetail = QuestionWithPlayers & QuestionWithPool;
 
 export type Answer = {
@@ -19,6 +19,7 @@ export type MatchAnswerResults = {
     value: string;
     count: number;
 };
+
 export type MatchAnswerCreate = Omit<TablesInsert<"answers_match">, "user_id">;
 
 export type TextAnswerInsert = Omit<TablesInsert<"answers_text">, "user_id">;

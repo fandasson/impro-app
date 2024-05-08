@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
-import { fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
+import { fetchPoolVoteAnswers, fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
 import { Answer, AnswersResponse, TableNames, TextAnswer, VoteAnswer } from "@/api/types.api";
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
@@ -8,8 +8,12 @@ import { createClient } from "@/utils/supabase/client";
 export const useTextAnswers = (questionId: number) =>
     useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers);
 
-export const useVoteAnswers = (questionId: number) =>
-    useAnswers<VoteAnswer>("answers_vote", questionId, fetchVoteAnswers);
+export const useVoteAnswers = (questionId: number, summary: boolean, poolId: number | null) => {
+    const fetcher = useMemo(() => {
+        return !summary && poolId !== null ? fetchVoteAnswers : (_: number) => fetchPoolVoteAnswers(poolId!);
+    }, [poolId, summary]);
+    return useAnswers<VoteAnswer>("answers_vote", questionId, fetcher);
+};
 
 const useAnswers = <T extends Answer>(
     table: TableNames,
