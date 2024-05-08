@@ -4,12 +4,9 @@ import React, { useEffect, useState } from "react";
 
 import { setQuestionVisibility } from "@/api/questions.api";
 import { QuestionWithPlayers } from "@/api/types.api";
-import { Loading } from "@/components/admin/Loading";
-import { PlayerPickAnswers } from "@/components/admin/answers/PlayerPickAnswers";
+import { AnswersHeadline } from "@/components/admin/answers/AnswersHeadline";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 import { Switch } from "@/components/ui/Switch";
-import { useAnswers } from "@/hooks/admin.hooks";
-import { useAdminStore } from "@/store/admin.store";
 
 type Props = {
     question: QuestionWithPlayers;
@@ -56,7 +53,6 @@ export const Answers = ({ question }: Props) => {
                     <strong>Zobrazit</strong>
                 </div>
             </div>
-            <h3 className={"mb-4 font-medium not-italic text-gray-400"}>
                 {length} {length === 1 ? "Odpověď" : length < 5 ? "Odpovědi" : "Odpovědí"}
             </h3>
             {component}
