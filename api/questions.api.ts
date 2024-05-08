@@ -3,13 +3,13 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-import { Player, QuestionWithPlayers } from "@/api/types.api";
+import { Player, QuestionDetail } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { Enums, Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
 type QuestionResponse = PostgrestSingleResponse<Tables<"questions">>;
-type QuestionDetailResponse = PostgrestSingleResponse<QuestionWithPlayers>;
+type QuestionDetailResponse = PostgrestSingleResponse<QuestionDetail>;
 
 export const fetchActiveQuestion = async (performanceId: number): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
@@ -63,7 +63,7 @@ export const checkUserAlreadyAnswered = async (questionId: number): Promise<bool
 
 export const fetchQuestion = async (questionId: number): Promise<QuestionDetailResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("questions").select("*, players (*)").eq("id", questionId).single();
+    return supabase.from("questions").select("*, players (*), questions_pool(id, name)").eq("id", questionId).single();
 };
 
 export const fetchMatchQuestionPlayers = async (questionId: number): Promise<Player[]> => {

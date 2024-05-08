@@ -21,7 +21,7 @@ export default async function PerformanceDetail({ params }: { params: { performa
 
     const { data: questions, error } = await supabase
         .from("questions")
-        .select("*")
+        .select("*, questions_pool(id, name)")
         .eq("performance_id", params.performanceId)
         .order("index_order", { ascending: true });
 

@@ -177,14 +177,17 @@ export type Database = {
         Row: {
           id: number
           name: string
+          quest: boolean | null
         }
         Insert: {
           id?: number
           name: string
+          quest?: boolean | null
         }
         Update: {
           id?: number
           name?: string
+          quest?: boolean | null
         }
         Relationships: []
       }
@@ -195,6 +198,7 @@ export type Database = {
           multiple: boolean
           name: string
           performance_id: number
+          pool_id: number | null
           present_answers: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
@@ -206,6 +210,7 @@ export type Database = {
           multiple?: boolean
           name: string
           performance_id: number
+          pool_id?: number | null
           present_answers?: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
@@ -217,6 +222,7 @@ export type Database = {
           multiple?: boolean
           name?: string
           performance_id?: number
+          pool_id?: number | null
           present_answers?: boolean | null
           question?: string
           state?: Database["public"]["Enums"]["question-state"]
@@ -228,6 +234,13 @@ export type Database = {
             columns: ["performance_id"]
             isOneToOne: false
             referencedRelation: "performances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "questions_pool"
             referencedColumns: ["id"]
           },
         ]
@@ -258,6 +271,32 @@ export type Database = {
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions_pool: {
+        Row: {
+          id: number
+          name: string | null
+          performance_id: number | null
+        }
+        Insert: {
+          id?: number
+          name?: string | null
+          performance_id?: number | null
+        }
+        Update: {
+          id?: number
+          name?: string | null
+          performance_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_pool_performance_id_fkey"
+            columns: ["performance_id"]
+            isOneToOne: false
+            referencedRelation: "performances"
             referencedColumns: ["id"]
           },
         ]

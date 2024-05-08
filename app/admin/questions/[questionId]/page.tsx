@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Component } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -29,7 +29,14 @@ export default async function QuestionDetail({ params }: { params: { questionId:
             <article className={"mb-4 grid grid-cols-2 gap-3"}>
                 <div className={"border-r-1"}>
                     <div className={"flex flex-col gap-1"}>
-                        <em className={"font-medium not-italic text-gray-400"}>Otázka</em>
+                        <em className={"font-medium not-italic text-gray-400"}>
+                            Otázka{" "}
+                            {question.questions_pool?.name && (
+                                <span className={"inline-flex"}>
+                                    | {question.questions_pool?.name} <Component />
+                                </span>
+                            )}
+                        </em>
                         <h2 className={"text-lg font-medium"}>{question.question}</h2>
                     </div>
                 </div>
