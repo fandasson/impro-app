@@ -9,7 +9,10 @@ import { createClient } from "@/utils/supabase/server";
 export default async function Performances() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { data: performances, error } = await supabase.from("performances").select("*");
+    const { data: performances, error } = await supabase
+        .from("performances")
+        .select("*")
+        .order("date", { ascending: false });
 
     if (performances === null) {
         throw new Error(`Error when fetching performances: ${error.message}`);
