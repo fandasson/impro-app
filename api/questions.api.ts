@@ -43,7 +43,7 @@ export const checkUserAlreadyAnswered = async (questionId: number): Promise<bool
     }
 
     const responseAnswers = await supabase
-        .from("answers")
+        .from("answers_text")
         .select("*", { count: "exact", head: true })
         .eq("question_id", questionId)
         .eq("user_id", userId);

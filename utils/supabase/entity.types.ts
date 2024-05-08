@@ -9,35 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      answers: {
-        Row: {
-          id: number
-          question_id: number
-          user_id: string
-          value: string
-        }
-        Insert: {
-          id?: number
-          question_id: number
-          user_id: string
-          value: string
-        }
-        Update: {
-          id?: number
-          question_id?: number
-          user_id?: string
-          value?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       answers_match: {
         Row: {
           id: number
@@ -70,6 +41,71 @@ export type Database = {
           },
           {
             foreignKeyName: "answers_match_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      answers_text: {
+        Row: {
+          id: number
+          question_id: number
+          user_id: string
+          value: string
+        }
+        Insert: {
+          id?: number
+          question_id: number
+          user_id: string
+          value: string
+        }
+        Update: {
+          id?: number
+          question_id?: number
+          user_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      answers_vote: {
+        Row: {
+          id: number
+          player_id: number
+          question_id: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          player_id: number
+          question_id: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          player_id?: number
+          question_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answer_votes_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answer_votes_question_id_fkey"
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"

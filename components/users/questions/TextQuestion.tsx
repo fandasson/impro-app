@@ -2,7 +2,7 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { submitAnswer } from "@/api/submit-answer";
+import { submitTextAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Textarea";
@@ -25,7 +25,7 @@ export const TextQuestion = (props: Props) => {
     } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         setLoading(true);
-        await submitAnswer({
+        await submitTextAnswer({
             question_id: props.questionId,
             value: data.answer,
         }).finally(() => setLoading(false));

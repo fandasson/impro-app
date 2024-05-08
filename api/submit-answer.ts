@@ -4,13 +4,11 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { MatchAnswerCreate } from "@/api/types.api";
+import { MatchAnswerCreate, TextAnswerInsert, VoteAnswerInsert } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
-import { TablesInsert } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
-type Answer = Omit<TablesInsert<"answers">, "user_id">;
-export const submitAnswer = async (answer: Answer) => {
+export const submitTextAnswer = async (answer: TextAnswerInsert) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
@@ -19,22 +17,23 @@ export const submitAnswer = async (answer: Answer) => {
         throw new Error("User not found");
     }
 
-    const response = await supabase.from("answers").insert({ ...answer, user_id: user_id! });
+    const response = await supabase.from("answers_text").insert({ ...answer, user_id: user_id! });
     // FIXME handle response
-    console.log("submit-answer", response);
+    console.log("submit-answer", response.status);
 };
 
-export const resubmitAnswer = async (answer: Answer) => {
+export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!user_id) {
         throw new Error("User not found");
     }
 
+    const supabase = createClient(cookieStore);
+
     const existingAnswerResponse = await supabase
-        .from("answers")
+        .from("answers_vote")
         .select("*")
         .eq("question_id", answer.question_id)
         .eq("user_id", user_id!)
@@ -43,9 +42,9 @@ export const resubmitAnswer = async (answer: Answer) => {
     let response: PostgrestSingleResponse<any>;
     if (existingAnswerResponse.data) {
         const answerId = existingAnswerResponse.data.id;
-        response = await supabase.from("answers").update({ value: answer.value }).eq("id", answerId);
+        response = await supabase.from("answers_vote").update({ player_id: answer.player_id }).eq("id", answerId);
     } else {
-        response = await supabase.from("answers").insert({ ...answer, user_id: user_id! });
+        response = await supabase.from("answers_vote").insert({ ...answer, user_id: user_id! });
     }
     // FIXME handle response
     console.log("submit-answer", response);

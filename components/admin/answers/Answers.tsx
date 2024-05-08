@@ -14,8 +14,6 @@ type Props = {
 
 export const Answers = ({ question }: Props) => {
     const [displayAnswers, setDisplayAnswers] = useState(false);
-    const loading = useAdminStore((state) => state.loading);
-    const answers = useAnswers(question.id);
     let component: React.JSX.Element | null = null;
 
     useEffect(() => {
@@ -27,21 +25,14 @@ export const Answers = ({ question }: Props) => {
         setDisplayAnswers(visibility);
     };
 
-    switch (question.type) {
-        case "text":
-            component = <TextAnswers answers={answers} />;
-            break;
-        case "player-pick":
-            component = <PlayerPickAnswers players={question.players} answers={answers} />;
-            break;
-    }
-
-    const length = answers?.length ?? 0;
-
-    if (loading && length === 0) {
-        return <Loading />;
-    }
-
+    const renderComponent = () => {
+        switch (question.type) {
+            case "text":
+                return <TextAnswers questionId={question.id} />;
+            case "player-pick":
+            // return <PlayerPickAnswers players={question.players} answers={answers} />;
+        }
+    };
     return (
         <>
             <div className={"flex items-center justify-between"}>
@@ -53,9 +44,8 @@ export const Answers = ({ question }: Props) => {
                     <strong>Zobrazit</strong>
                 </div>
             </div>
-                {length} {length === 1 ? "Odpověď" : length < 5 ? "Odpovědi" : "Odpovědí"}
-            </h3>
-            {component}
+            <AnswersHeadline />
+            {renderComponent()}
         </>
     );
 };

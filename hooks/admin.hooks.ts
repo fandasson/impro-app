@@ -1,39 +1,49 @@
 import { useEffect } from "react";
 
-import { fetchAnswers } from "@/api/answers.api";
-import { Answer } from "@/api/types.api";
+import { fetchTextAnswers } from "@/api/answers.api";
+import { Answer, AnswersResponse, TableNames, TextAnswer } from "@/api/types.api";
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 
-export const useAnswers = (questionId: number) => {
+export const useTextAnswers = (questionId: number) =>
+    useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers);
+
+const useAnswers = <T extends Answer>(
+    table: TableNames,
+    questionId: number,
+    fetcher: (questionId: number) => Promise<AnswersResponse>,
+) => {
     const answers = useAdminStore((state) => state.answers);
+
     useEffect(() => {
         setLoading(true);
-        fetchAnswers(questionId)
-            .then((response) => setAnswers(response.data ?? []))
+        fetcher(questionId)
+            .then((response) => {
+                setAnswers(response.data ?? []);
+            })
             .finally(() => setLoading(false));
-    }, [questionId]);
+    }, [fetcher, questionId]);
 
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel("admin-answers")
-            .on<Answer>(
+            .channel(`admin-${table}-answers`)
+            .on<T>(
                 "postgres_changes",
                 {
                     event: "INSERT",
                     schema: "public",
-                    table: "answers",
+                    table,
                     filter: `question_id=eq.${questionId}`,
                 },
                 (payload) => addAnswer(payload.new),
             )
-            .on<Answer>(
+            .on<T>(
                 "postgres_changes",
                 {
                     event: "UPDATE",
                     schema: "public",
-                    table: "answers",
+                    table,
                     filter: `question_id=eq.${questionId}`,
                 },
                 (payload) => modifyAnswer(payload.new.id, payload.new),
@@ -43,7 +53,7 @@ export const useAnswers = (questionId: number) => {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [questionId]);
+    }, [table, questionId]);
 
-    return answers;
+    return answers as T[];
 };

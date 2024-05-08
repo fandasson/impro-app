@@ -1,15 +1,18 @@
 "use client";
-import { useState } from "react";
+import React, { memo, useState } from "react";
 
-import { Answer } from "@/api/types.api";
+import { Loading } from "@/components/admin/Loading";
 import { RemoveAnswersButton } from "@/components/admin/answers/RemoveAnswersButton";
 import { Badge } from "@/components/ui/Badge";
-import { removeAnswers } from "@/store/admin.store";
+import { useTextAnswers } from "@/hooks/admin.hooks";
+import { useAdminStore } from "@/store/admin.store";
 
 type Props = {
-    answers: Answer[];
+    questionId: number;
 };
-export const TextAnswers = ({ answers }: Props) => {
+export const TextAnswers = memo(({ questionId }: Props) => {
+    const answers = useTextAnswers(questionId);
+    const loading = useAdminStore((state) => state.loading);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
 
     const toggleSelect = (id: number) => {
@@ -21,9 +24,12 @@ export const TextAnswers = ({ answers }: Props) => {
     };
 
     const handleRemove = () => {
-        removeAnswers(selectedAnswers);
         setSelectedAnswers([]);
     };
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <div className={"flex flex-col"}>
@@ -49,4 +55,4 @@ export const TextAnswers = ({ answers }: Props) => {
             <RemoveAnswersButton answersIds={selectedAnswers} callback={handleRemove} />
         </div>
     );
-};
+});

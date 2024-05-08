@@ -1,17 +1,13 @@
 "use server";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-import { MatchAnswerResults } from "@/api/types.api";
-import { Tables } from "@/utils/supabase/entity.types";
+import { AnswersResponse, MatchAnswerResults, TableNames } from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
 
-type AnswersResponse = PostgrestSingleResponse<Tables<"answers">[]>;
-
-export const fetchAnswers = async (questionId: number): Promise<AnswersResponse> => {
+export const fetchTextAnswers = async (questionId: number): Promise<AnswersResponse> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    return supabase.from("answers").select("*").eq("question_id", questionId).neq("value", "");
+    return supabase.from("answers_text").select("*").eq("question_id", questionId).neq("value", "");
 };
 
 export const fetchMatchingQuestionResults = async (questionId: number): Promise<MatchAnswerResults[] | null> => {
@@ -21,8 +17,12 @@ export const fetchMatchingQuestionResults = async (questionId: number): Promise<
     return response.data;
 };
 
-export const removeAnswers = async (answersIds: number[]): Promise<void> => {
+export const removeTextAnswers = async (answersIds: number[]): Promise<void> => {
+    return removeAnswers("answers_text", answersIds);
+};
+
+const removeAnswers = async (table: TableNames, answersIds: number[]): Promise<void> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    await supabase.from("answers").delete().in("id", answersIds).throwOnError();
+    await supabase.from(table).delete().in("id", answersIds).throwOnError();
 };

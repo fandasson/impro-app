@@ -1,4 +1,4 @@
-import { removeAnswers as removeAnswersRemote } from "@/api/answers.api";
+import { removeTextAnswers as removeAnswersRemote } from "@/api/answers.api";
 import { Button } from "@/components/ui/Button";
 import { removeAnswers as removeAnswersLocal, setLoading, useAdminStore } from "@/store/admin.store";
 
