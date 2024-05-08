@@ -5,9 +5,9 @@ import React from "react";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { NoQuestion } from "@/components/users/NoQuestion";
-import { PlayerPickAnswers } from "@/components/users/answers/PlayerPickAnswers";
+import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAnswers";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
-import { PlayerPickQuestion } from "@/components/users/questions/PlayerPickQuestion";
+import { PlayersVotingQuestion } from "@/components/users/questions/PlayersVotingQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
 import { useUsersStore } from "@/store/users.store";
 
@@ -46,11 +46,12 @@ export const UserQuestionDetail = () => {
         case "text":
             component = <TextQuestion questionId={question.id} />;
             break;
+        case "voting":
         case "player-pick":
             if (question.state === "active") {
-                component = <PlayerPickQuestion question={question} />;
+                component = <PlayersVotingQuestion question={question} />;
             } else if (question.state === "locked") {
-                component = <PlayerPickAnswers questionId={question.id} />;
+                component = <PlayersVotingAnswers questionId={question.id} />;
             }
             break;
         case "match":

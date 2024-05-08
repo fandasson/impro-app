@@ -9,7 +9,7 @@ type Props = {
     questionId: number;
 };
 
-export const PlayerPickAnswers = ({ players, questionId }: Props) => {
+export const PlayersVotingAnswers = ({ players, questionId }: Props) => {
     const answers = useVoteAnswers(questionId);
     const sortedPlayers = countVotesForPlayers(players, answers);
 

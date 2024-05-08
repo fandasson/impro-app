@@ -10,7 +10,7 @@ type Props = {
     questionId: number;
 };
 
-export const PlayerPickAnswers = ({ questionId }: Props) => {
+export const PlayersVotingAnswers = ({ questionId }: Props) => {
     const [answers, setAnswers] = useState<VoteAnswer[] | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
 

@@ -4,15 +4,14 @@ import { useEffect, useState } from "react";
 
 import { fetchMatchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
-import { Player } from "@/api/types.api";
+import { Player, Question } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
-import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    question: Tables<"questions">;
+    question: Question;
 };
 
-export const PlayerPickQuestion = ({ question }: Props) => {
+export const PlayersVotingQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<Player[] | null>(null);
     const [selectedPlayer, setSelectedPlayer] = useState<string>();
 

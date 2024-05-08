@@ -4,7 +4,7 @@ import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { Question } from "@/api/types.api";
 import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
-import { PlayerPickAnswers } from "@/components/audience/answers/PlayerPickAnswers";
+import { PlayersVotingAnswers } from "@/components/audience/answers/PlayersVotingAnswers";
 import { TextQuestionAnswers } from "@/components/audience/answers/TextQuestionAnswers";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/entity.types";
@@ -58,8 +58,9 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
         case "text":
             component = <TextQuestionAnswers questionId={question.id} />;
             break;
+        case "voting":
         case "player-pick":
-            component = <PlayerPickAnswers questionId={question.id} />;
+            component = <PlayersVotingAnswers questionId={question.id} />;
             break;
         case "match":
             component = <MatchQuestionAnswers questionId={question.id} />;
