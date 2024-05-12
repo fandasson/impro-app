@@ -1,6 +1,7 @@
 "use server";
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { Player, QuestionDetail, QuestionRequestCreate } from "@/api/types.api";
@@ -77,7 +78,10 @@ export const setQuestionState = async (
     state: Enums<"question-state">,
 ): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("questions").update({ state }).eq("id", questionId).select().single();
+    const response = await supabase.from("questions").update({ state }).eq("id", questionId).select().single();
+    const performanceId = response.data?.performance_id;
+    revalidatePath(`/admin/performances/${performanceId}`);
+    return response;
 };
 
 export const setQuestionVisibility = async (questionId: number, visibility: boolean): Promise<QuestionResponse> => {
@@ -124,5 +128,6 @@ export const createQuestion = async (performanceId: number, question: QuestionRe
         await supabase.from("questions_players").insert(playersToInsert);
     }
 
+    revalidatePath(`/admin/performances/${performanceId}`);
     return newQuestionId;
 };
