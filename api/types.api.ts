@@ -31,3 +31,6 @@ export type Player = Tables<"players">;
 export type TextAnswer = Tables<"answers_text">;
 export type VoteAnswer = Tables<"answers_vote">;
 export type Performance = Tables<"performances">;
+
+export type QuestionState = Enums<"question-state">;
+export type QuestionType = Enums<"question-type">;

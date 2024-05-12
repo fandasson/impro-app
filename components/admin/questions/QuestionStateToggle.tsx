@@ -4,23 +4,22 @@ import { Eye, EyeOff, Pencil, UserCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { fetchQuestion, setQuestionState } from "@/api/questions.api";
+import { Question, QuestionState } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
-import { Enums, Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    defaultState?: Enums<"question-state">;
+    defaultState?: QuestionState;
     questionId: number;
 };
 
-type State = Enums<"question-state">;
 export const QuestionStateToggle = ({ questionId, defaultState }: Props) => {
-    const [question, setQuestion] = useState<Tables<"questions"> | null>(null);
+    const [question, setQuestion] = useState<Question | null>(null);
 
     useEffect(() => {
         fetchQuestion(questionId).then((response) => setQuestion(response.data));
     }, [questionId]);
 
-    const toggleState = (newState: State) => {
+    const toggleState = (newState: QuestionState) => {
         if (newState === question?.state) {
             return;
         }
@@ -33,7 +32,7 @@ export const QuestionStateToggle = ({ questionId, defaultState }: Props) => {
             size={"lg"}
             defaultValue={defaultState}
             value={question?.state}
-            onValueChange={(newValue) => toggleState(newValue as State)}
+            onValueChange={(newValue) => toggleState(newValue as QuestionState)}
         >
             <ToggleGroupItem value="draft" title={"Skrytá otázka"}>
                 <EyeOff />
