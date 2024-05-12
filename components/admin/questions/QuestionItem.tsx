@@ -1,4 +1,4 @@
-import { Eye, EyeOff, UserCheck } from "lucide-react";
+import { Eye, EyeOff, Pencil, UserCheck } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -14,6 +14,9 @@ export const QuestionItem = (props: Props) => {
             stateIcon = <EyeOff />;
             break;
         case "active":
+            stateIcon = <Pencil className={"stroke-destructive"} />;
+            break;
+        case "locked":
             stateIcon = <Eye className={"stroke-destructive"} />;
             break;
         case "answered":
