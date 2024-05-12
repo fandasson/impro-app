@@ -1,11 +1,14 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
-import { Database, Tables, TablesInsert } from "@/utils/supabase/entity.types";
+import { Database, Enums, Tables, TablesInsert } from "@/utils/supabase/entity.types";
 
 export type Question = Tables<"questions">;
-export type QuestionWithPlayers = Question & { players: Tables<"players">[] };
+export type QuestionWithPlayers = Question & { players: Player[] };
 export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
 export type QuestionDetail = QuestionWithPlayers & QuestionWithPool;
+export type QuestionRequestCreate = Pick<Question, "name" | "question" | "type" | "index_order" | "multiple"> & {
+    players?: Player[];
+};
 
 export type Answer = {
     id: number;

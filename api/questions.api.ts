@@ -3,7 +3,7 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-import { Player, QuestionDetail } from "@/api/types.api";
+import { Player, QuestionDetail, QuestionRequestCreate } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { Enums, Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
@@ -83,4 +83,46 @@ export const setQuestionState = async (
 export const setQuestionVisibility = async (questionId: number, visibility: boolean): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
     return supabase.from("questions").update({ present_answers: visibility }).eq("id", questionId).select().single();
+};
+
+export const getNewIndexOrder = async (performanceId: number): Promise<number> => {
+    const supabase = createClient(cookies());
+    const response = await supabase
+        .from("questions")
+        .select("index_order")
+        .eq("performance_id", performanceId)
+        .order("index_order", { ascending: false })
+        .limit(1)
+        .single();
+
+    return response.data?.index_order ? response.data?.index_order + 1 : 1;
+};
+
+export const createQuestion = async (performanceId: number, question: QuestionRequestCreate) => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { players, ...questionData } = question;
+    const response = await supabase
+        .from("questions")
+        .insert({
+            ...questionData,
+            state: "draft",
+            performance_id: performanceId,
+        })
+        .select();
+
+    const newQuestionId = response.data?.[0].id;
+    if (!newQuestionId) {
+        throw new Error("Question not created, can assign players");
+    }
+
+    const playersToInsert = players?.map(({ id }) => ({
+        question_id: newQuestionId,
+        player_id: id,
+    }));
+    if (playersToInsert) {
+        await supabase.from("questions_players").insert(playersToInsert);
+    }
+
+    return newQuestionId;
 };

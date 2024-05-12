@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
 import { QuestionItem, QuestionsList } from "@/components/admin/questions";
+import { Button } from "@/components/ui/Button";
 import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
 
@@ -34,6 +36,9 @@ export default async function PerformanceDetail({ params }: { params: { performa
                 </h1>
                 <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
             </div>
+            <Link href={`/admin/performances/${performanceId}/add-question`}>
+                <Button variant={"default"}>Přidat otázku</Button>
+            </Link>
             <QuestionsList>
                 {questions.map((question) => (
                     <QuestionItem key={question.id} {...question} />
