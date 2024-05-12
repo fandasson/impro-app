@@ -131,3 +131,34 @@ export const createQuestion = async (performanceId: number, question: QuestionRe
     revalidatePath(`/admin/performances/${performanceId}`);
     return newQuestionId;
 };
+
+export const updateQuestion = async (questionId: number, question: QuestionRequestCreate) => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { players, ...questionData } = question;
+
+    const response = await supabase
+        .from("questions")
+        .update({
+            ...questionData,
+        })
+        .eq("id", questionId)
+        .select();
+
+    // assuming question is not updated after there is any voting submission
+    // remove all assigned players
+    await supabase.from("questions_players").delete().eq("question_id", questionId);
+
+    // add new players
+    const playersToInsert = players?.map(({ id }) => ({
+        question_id: questionId,
+        player_id: id,
+    }));
+
+    if (playersToInsert) {
+        await supabase.from("questions_players").insert(playersToInsert);
+    }
+
+    revalidatePath(`/admin/questions/${questionId}/view`);
+    return response.data?.[0];
+};

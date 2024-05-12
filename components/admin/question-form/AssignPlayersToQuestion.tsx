@@ -6,10 +6,11 @@ import { Badge } from "@/components/ui/Badge";
 type Props = {
     players: Player[];
     handlePlayersChange: (players: Player[]) => void;
+    initialSelectedPlayers?: Player[];
 };
 export const AssignPlayersToQuestion = (props: Props) => {
-    const { players, handlePlayersChange } = props;
-    const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
+    const { players, handlePlayersChange, initialSelectedPlayers = [] } = props;
+    const [selectedPlayers, setSelectedPlayers] = useState<Player[]>(initialSelectedPlayers);
 
     const handlePlayerClick = (player: Player) => {
         const index = selectedPlayers.indexOf(player);
@@ -23,13 +24,14 @@ export const AssignPlayersToQuestion = (props: Props) => {
         handlePlayersChange(newList);
     };
 
+    const selectedPlayersIds = selectedPlayers.map(({ id }) => id);
     return (
         <div className={"grid grid-cols-2 gap-4"}>
             {players.map((player) => {
                 return (
                     <Badge
                         key={player.id}
-                        variant={`${selectedPlayers.includes(player) ? "default" : "outline"}`}
+                        variant={`${selectedPlayersIds.includes(player.id) ? "default" : "outline"}`}
                         className={"justify-center p-5 text-lg uppercase"}
                         onClick={() => handlePlayerClick(player)}
                     >

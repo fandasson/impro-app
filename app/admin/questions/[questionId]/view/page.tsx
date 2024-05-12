@@ -28,7 +28,9 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                         </Button>
                         <h1 className="text-2xl font-bold">{question.name}</h1>
                     </div>
-                    <Button variant={"outline"}>Edit</Button>
+                    <Link href={`/admin/questions/${question.id}/edit`}>
+                        <Button variant={"outline"}>Edit</Button>
+                    </Link>
                 </div>
             </header>
             <article className={"mb-4 grid grid-cols-2 gap-3"}>

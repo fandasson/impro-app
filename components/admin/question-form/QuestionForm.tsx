@@ -1,11 +1,11 @@
 "use client";
 import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { getNewIndexOrder } from "@/api/questions.api";
-import { Player, QuestionDetail, QuestionType } from "@/api/types.api";
+import { Player, QuestionDetail, QuestionRequestUpdate, QuestionType } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -17,7 +17,7 @@ import { setLoading, useAdminStore } from "@/store/admin.store";
 type Props = {
     performanceId: number;
     question?: QuestionDetail;
-    handleSubmit: (data: QuestionRequestCreate) => Promise<void>;
+    handleSubmit: (data: QuestionRequestCreate | QuestionRequestUpdate) => Promise<void>;
 };
 
 type QuestionRequestCreate = {
@@ -40,10 +40,19 @@ export const QuestionForm = (props: Props) => {
         watch,
         getValues,
         setValue,
-    } = useForm<QuestionRequestCreate>();
+    } = useForm<QuestionRequestCreate | QuestionRequestUpdate>({
+        defaultValues: {
+            name: question?.name || "",
+            question: question?.question || "",
+            type: question?.type || "text",
+            index_order: question?.index_order || 1,
+            multiple: question?.multiple || false,
+            players: question?.players || [],
+        },
+    });
 
     useEffect(() => {
-        if (getFieldState("index_order").isDirty) {
+        if (getFieldState("index_order").isDirty || getValues("index_order") > 1) {
             return;
         }
         getNewIndexOrder(performanceId).then((index) => setValue("index_order", index));
@@ -52,14 +61,17 @@ export const QuestionForm = (props: Props) => {
     const type = watch("type");
     useEffect(() => {
         if (type === "voting") {
-            fetchAvailablePlayers(performanceId).then(setPlayers);
+            setLoading(true);
+            fetchAvailablePlayers(performanceId)
+                .then(setPlayers)
+                .finally(() => setLoading(false));
         }
     }, [type, performanceId]);
 
     const handlePlayersChange = (_players: Player[]) => {
         if (type === "voting") {
             setValue("players", _players);
-            if (!getFieldState("name").isDirty) {
+            if (!getFieldState("name").isDirty && getValues("name") === "") {
                 setValue("name", _players.map(({ name }) => name).join(", "));
             }
         }
@@ -80,6 +92,7 @@ export const QuestionForm = (props: Props) => {
                 <ToggleGroup
                     type="single"
                     size={"lg"}
+                    disabled={!!question}
                     defaultValue={getValues("type")}
                     onValueChange={(newValue: QuestionType) => {
                         if (!getFieldState("question").isDirty) {
@@ -127,10 +140,15 @@ export const QuestionForm = (props: Props) => {
                 </Label>
                 <Input id={"index_order"} type={"number"} {...register("index_order", { required: true })} />
             </div>
-            <AssignPlayersToQuestion players={players} handlePlayersChange={handlePlayersChange} />
-
+            {type === "voting" && (
+                <AssignPlayersToQuestion
+                    players={players}
+                    handlePlayersChange={handlePlayersChange}
+                    initialSelectedPlayers={question?.players}
+                />
+            )}
             <Button variant={"default"} type={"submit"} disabled={loading}>
-                Přidat
+                {question ? "Uložit" : "Přidat"}
             </Button>
         </form>
     );

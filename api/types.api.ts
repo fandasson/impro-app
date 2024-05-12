@@ -10,6 +10,10 @@ export type QuestionRequestCreate = Pick<Question, "name" | "question" | "type" 
     players?: Player[];
 };
 
+export type QuestionRequestUpdate = Pick<Question, "name" | "question" | "type" | "index_order" | "multiple"> & {
+    players?: Player[];
+};
+
 export type Answer = {
     id: number;
     question_id: number;
