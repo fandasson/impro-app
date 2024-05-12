@@ -73,7 +73,7 @@ export const QuestionForm = (props: Props) => {
             players: data.players ?? [],
         });
         setLoading(false);
-        router.push(`/admin/questions/${newQuestionId}`);
+        router.push(`/admin/questions/${newQuestionId}/view`);
     };
 
     return (
