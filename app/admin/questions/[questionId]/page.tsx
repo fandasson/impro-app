@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchQuestion } from "@/api/questions.api";
-import { QuestionMatch } from "@/app/admin/questions/[questionId]/QuestionMatch";
 import { Answers } from "@/components/admin/answers/Answers";
+import { QuestionMatch } from "@/components/admin/questions";
 import { QuestionStateToggle } from "@/components/admin/questions/QuestionStateToggle";
 import { Button } from "@/components/ui/Button";
 
@@ -18,13 +18,18 @@ export default async function QuestionDetail({ params }: { params: { questionId:
 
     return (
         <>
-            <header className={"mb-4 flex items-center gap-2"}>
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href={`/admin/performances/${question.performance_id}`}>
-                        <ChevronLeft className="h-4 w-4" />
-                    </Link>
-                </Button>
-                <h1 className="text-2xl font-bold">{question.name}</h1>
+            <header className={"mb-4"}>
+                <div className={"flex justify-between"}>
+                    <div className={"flex items-center gap-2"}>
+                        <Button variant="ghost" size="icon" asChild>
+                            <Link href={`/admin/performances/${question.performance_id}`}>
+                                <ChevronLeft className="h-4 w-4" />
+                            </Link>
+                        </Button>
+                        <h1 className="text-2xl font-bold">{question.name}</h1>
+                    </div>
+                    <Button variant={"outline"}>Edit</Button>
+                </div>
             </header>
             <article className={"mb-4 grid grid-cols-2 gap-3"}>
                 <div className={"border-r-1"}>
