@@ -30,6 +30,7 @@ export const QuestionStateToggle = ({ questionId, defaultState }: Props) => {
         <ToggleGroup
             type="single"
             size={"lg"}
+            className={"justify-end"}
             defaultValue={defaultState}
             value={question?.state}
             onValueChange={(newValue) => toggleState(newValue as QuestionState)}
