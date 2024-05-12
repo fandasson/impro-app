@@ -1,11 +1,10 @@
 "use client";
 import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { fetchAvailablePlayers } from "@/api/performances.api";
-import { createQuestion, getNewIndexOrder } from "@/api/questions.api";
+import { getNewIndexOrder } from "@/api/questions.api";
 import { Player, QuestionDetail, QuestionType } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +17,7 @@ import { setLoading, useAdminStore } from "@/store/admin.store";
 type Props = {
     performanceId: number;
     question?: QuestionDetail;
+    handleSubmit: (data: QuestionRequestCreate) => Promise<void>;
 };
 
 type QuestionRequestCreate = {
@@ -29,13 +29,12 @@ type QuestionRequestCreate = {
     players?: Player[];
 };
 export const QuestionForm = (props: Props) => {
-    const { performanceId } = props;
-    const router = useRouter();
+    const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
     const loading = useAdminStore((state) => state.loading);
     const {
         register,
-        handleSubmit,
+        handleSubmit: handleFormSubmit,
         formState: { errors },
         getFieldState,
         watch,
@@ -68,16 +67,12 @@ export const QuestionForm = (props: Props) => {
 
     const onSubmit: SubmitHandler<QuestionRequestCreate> = async (data) => {
         setLoading(true);
-        const newQuestionId = await createQuestion(performanceId, {
-            ...data,
-            players: data.players ?? [],
-        });
+        await handleSubmit(data);
         setLoading(false);
-        router.push(`/admin/questions/${newQuestionId}/view`);
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={"flex flex-col gap-4"}>
+        <form onSubmit={handleFormSubmit(onSubmit)} className={"flex flex-col gap-4"}>
             <div className={"flex flex-col gap-4"}>
                 <Label htmlFor={"type"} className={"font-medium"}>
                     Typ otázky
