@@ -10,7 +10,7 @@ export const useTextAnswers = (questionId: number) =>
 
 export const useVoteAnswers = (questionId: number, summary: boolean, poolId: number | null) => {
     const fetcher = useMemo(() => {
-        return !summary && poolId !== null ? fetchVoteAnswers : (_: number) => fetchPoolVoteAnswers(poolId!);
+        return summary && poolId !== null ? (_: number) => fetchPoolVoteAnswers(poolId!) : fetchVoteAnswers;
     }, [poolId, summary]);
     return useAnswers<VoteAnswer>("answers_vote", questionId, fetcher);
 };
