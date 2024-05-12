@@ -38,3 +38,15 @@ const removeAnswers = async (table: TableNames, answersIds: number[]): Promise<v
     const supabase = createClient(cookieStore);
     await supabase.from(table).delete().in("id", answersIds).throwOnError();
 };
+
+export const areThereVotesForQuestion = async (questionId: number): Promise<boolean> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const response = await supabase
+        .from("answers_vote")
+        .select("id", { head: true, count: "exact" })
+        .eq("question_id", questionId)
+        .single();
+
+    return !!response.count;
+};
