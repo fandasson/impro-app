@@ -8,12 +8,9 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function PerformanceDetail({ params }: { params: { performanceId: string } }) {
     const cookieStore = cookies();
+    const performanceId = parseInt(params.performanceId);
     const supabase = createClient(cookieStore);
-    const { data: performance } = await supabase
-        .from("performances")
-        .select("*")
-        .eq("id", params.performanceId)
-        .single();
+    const { data: performance } = await supabase.from("performances").select("*").eq("id", performanceId).single();
 
     if (!performance) {
         notFound();
@@ -22,8 +19,8 @@ export default async function PerformanceDetail({ params }: { params: { performa
     const { data: questions, error } = await supabase
         .from("questions")
         .select("*, questions_pool(id, name)")
-        .eq("performance_id", params.performanceId)
-        .order("index_order", { ascending: true });
+        .eq("performance_id", performanceId)
+        .order("index_order", { ascending: false });
 
     if (questions === null) {
         throw new Error(`Error when fetching questions: ${error.message}`);
