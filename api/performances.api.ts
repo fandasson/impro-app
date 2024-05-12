@@ -19,3 +19,16 @@ export const setPerformanceState = async (
     const supabase = createClient(cookies());
     return supabase.from("performances").update({ state }).eq("id", performanceId).select().single();
 };
+
+export const fetchAvailablePlayers = async (performanceId: number) => {
+    const supabase = createClient(cookies());
+    const response = await supabase
+        .from("performances")
+        .select("players(*)")
+        .eq("id", performanceId)
+        .order("name", { ascending: true })
+        .single();
+    const players = response.data?.players ?? [];
+    const sortedPlayers = players.sort((a, b) => a.name.localeCompare(b.name));
+    return sortedPlayers;
+};
