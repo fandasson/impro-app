@@ -3,6 +3,7 @@ import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { areThereVotesForQuestion } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { getNewIndexOrder } from "@/api/questions.api";
 import { Player, QuestionDetail, QuestionRequestUpdate, QuestionType } from "@/api/types.api";
@@ -31,7 +32,9 @@ type QuestionRequestCreate = {
 export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
+    const [canEdit, setCanEdit] = useState(false);
     const loading = useAdminStore((state) => state.loading);
+
     const {
         register,
         handleSubmit: handleFormSubmit,
@@ -52,11 +55,16 @@ export const QuestionForm = (props: Props) => {
     });
 
     useEffect(() => {
+        if (!question) return;
+        areThereVotesForQuestion(question.id).then((votesExists) => setCanEdit(!votesExists));
+    }, [question]);
+
+    useEffect(() => {
         if (getFieldState("index_order").isDirty || getValues("index_order") > 1) {
             return;
         }
         getNewIndexOrder(performanceId).then((index) => setValue("index_order", index));
-    }, [getFieldState, performanceId, setValue]);
+    }, [getFieldState, getValues, performanceId, setValue]);
 
     const type = watch("type");
     useEffect(() => {
@@ -85,6 +93,7 @@ export const QuestionForm = (props: Props) => {
 
     return (
         <form onSubmit={handleFormSubmit(onSubmit)} className={"flex flex-col gap-4"}>
+            {!canEdit && !loading && <div className={"text-center"}>Na otázku se už hlasovalo a nelze editovat</div>}
             <div className={"flex flex-col gap-4"}>
                 <Label htmlFor={"type"} className={"font-medium"}>
                     Typ otázky
@@ -147,9 +156,11 @@ export const QuestionForm = (props: Props) => {
                     initialSelectedPlayers={question?.players}
                 />
             )}
-            <Button variant={"default"} type={"submit"} disabled={loading}>
-                {question ? "Uložit" : "Přidat"}
-            </Button>
+            {canEdit && (
+                <Button variant={"default"} type={"submit"} disabled={loading}>
+                    {question ? "Uložit" : "Přidat"}
+                </Button>
+            )}
         </form>
     );
 };
