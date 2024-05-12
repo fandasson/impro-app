@@ -17,11 +17,11 @@ export const PlayersVotingAnswers = ({ questionId }: Props) => {
 
     useEffect(() => {
         setLoading(true);
-        const _fetchResults = fetchVoteAnswers(questionId).then((response) => setAnswers(response.data ?? []));
+        const _fetchAnswers = fetchVoteAnswers(questionId).then((response) => setAnswers(response.data ?? []));
         const _fetchQuestion = fetchQuestion(questionId).then((response) => {
             setPlayers(response.data?.players || []);
         });
-        Promise.all([_fetchResults, _fetchQuestion]).finally(() => setLoading(false));
+        Promise.all([_fetchAnswers, _fetchQuestion]).finally(() => setLoading(false));
     }, [questionId]);
 
     const sortedPlayers = countVotesForPlayers(players, answers);
