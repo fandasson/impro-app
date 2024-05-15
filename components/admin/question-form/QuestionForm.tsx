@@ -32,7 +32,7 @@ type QuestionRequestCreate = {
 export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
-    const [canEdit, setCanEdit] = useState(false);
+    const [canEdit, setCanEdit] = useState(true);
     const loading = useAdminStore((state) => state.loading);
 
     const {
@@ -79,7 +79,7 @@ export const QuestionForm = (props: Props) => {
     const handlePlayersChange = (_players: Player[]) => {
         if (type === "voting") {
             setValue("players", _players);
-            if (!getFieldState("name").isDirty && getValues("name") === "") {
+            if (!getFieldState("name").isDirty) {
                 setValue("name", _players.map(({ name }) => name).join(", "));
             }
         }
