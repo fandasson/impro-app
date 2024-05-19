@@ -30,7 +30,7 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                 <div className={"flex items-center gap-2"}>
                     <Button variant="ghost" size="icon" asChild>
                         <Link href={`/admin/questions/${questionId}/view`}>
-                            <ChevronLeft className="h-4 w-4" />
+                            <ChevronLeft size={28} />
                         </Link>
                     </Button>
                     <h1 className="text-2xl font-bold">Editace otázky</h1>

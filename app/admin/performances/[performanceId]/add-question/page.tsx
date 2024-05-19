@@ -24,7 +24,7 @@ export default async function AddQuestion({ params }: { params: { performanceId:
             <header className={"mb-4 flex items-center gap-2"}>
                 <Button variant="ghost" size="icon" asChild>
                     <Link href={`/admin/performances/${performanceId}`}>
-                        <ChevronLeft className="h-4 w-4" />
+                        <ChevronLeft size={28} />
                     </Link>
                 </Button>
                 <h1 className="text-2xl font-bold">Nová otázka</h1>
