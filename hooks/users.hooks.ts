@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
-import { Performance } from "@/api/types.api";
+import { Performance, Question } from "@/api/types.api";
 import { setLoading, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
-import { Tables } from "@/utils/supabase/entity.types";
 
 export const useActiveOrLockedQuestion = (performanceId: number) => {
     const question = useUsersStore((state) => state.question);
@@ -28,7 +27,7 @@ export const useActiveOrLockedQuestion = (performanceId: number) => {
             const supabase = createClient();
             const channel = supabase
                 .channel("activeOrLockedQuestionChannel")
-                .on<Tables<"questions">>(
+                .on<Question>(
                     "postgres_changes",
                     {
                         event: "UPDATE",
@@ -62,7 +61,7 @@ export const usePerformance = (defaultPerformance: Performance): Performance => 
         const supabase = createClient();
         const channel = supabase
             .channel("activePerformance")
-            .on<Tables<"performances">>(
+            .on<Performance>(
                 "postgres_changes",
                 {
                     event: "UPDATE",
