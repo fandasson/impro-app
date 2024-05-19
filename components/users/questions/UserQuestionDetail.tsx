@@ -9,26 +9,17 @@ import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAn
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { PlayersVotingQuestion } from "@/components/users/questions/PlayersVotingQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
+import { useActiveOrLockedQuestion } from "@/hooks/users.hooks";
 import { useUsersStore } from "@/store/users.store";
 
-export const UserQuestionDetail = () => {
+type Props = {
+    performanceId: number;
+};
+export const UserQuestionDetail = ({ performanceId }: Props) => {
     let component: React.JSX.Element | null = null;
     const loading = useUsersStore((state) => state.loading);
-    const question = useUsersStore((state) => state.question);
+    const question = useActiveOrLockedQuestion(performanceId);
     const alreadyAnswered = useUsersStore((state) => (question ? state.answeredQuestions[question.id] : false));
-
-    // FIXME: was causing issues with infinite loop
-    // useEffect(() => {
-    //     if (question) {
-    //         checkUserAlreadyAnswered(question.id)
-    //             .then((response) => {
-    //                 if (response) {
-    //                     markQuestionAsAnswered(question.id);
-    //                 }
-    //             })
-    //             .finally(() => setLoading(false));
-    //     }
-    // }, [question]);
 
     // if (loading) {
     //     return <Loading />;

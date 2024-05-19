@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";
 import { Intro } from "@/components/audience/Intro";
-import { createClient } from "@/utils/supabase/client";
+import { usePerformance } from "@/hooks/users.hooks";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
@@ -12,29 +10,7 @@ type Props = {
 };
 
 export const AudienceIndex = ({ defaultPerformance }: Props) => {
-    const [performance, setPerformance] = useState(defaultPerformance);
-
-    // @ts-ignore
-    useEffect(() => {
-        const supabase = createClient();
-        const channel = supabase
-            .channel("improAppRealtime")
-            .on<Tables<"performances">>(
-                "postgres_changes",
-                {
-                    event: "UPDATE",
-                    schema: "public",
-                    table: "performances",
-                    filter: "id=eq." + defaultPerformance.id,
-                },
-                (payload) => {
-                    setPerformance(payload.new);
-                },
-            )
-            .subscribe();
-
-        return () => supabase.removeChannel(channel);
-    }, [defaultPerformance.id]);
+    const performance = usePerformance(defaultPerformance);
 
     if (performance.state === "intro") {
         return <Intro performance={performance} />;

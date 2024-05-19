@@ -12,17 +12,6 @@ import { createClient } from "@/utils/supabase/server";
 type QuestionResponse = PostgrestSingleResponse<Tables<"questions">>;
 type QuestionDetailResponse = PostgrestSingleResponse<QuestionDetail>;
 
-export const fetchActiveQuestion = async (performanceId: number): Promise<QuestionResponse> => {
-    const supabase = createClient(cookies());
-    return supabase
-        .from("questions")
-        .select("*")
-        .eq("performance_id", performanceId)
-        .eq("state", "active")
-        .limit(1)
-        .single();
-};
-
 export const fetchActiveOrLockedQuestion = async (performanceId: number): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
     return supabase
@@ -32,6 +21,11 @@ export const fetchActiveOrLockedQuestion = async (performanceId: number): Promis
         .or("state.eq.active,state.eq.locked")
         .limit(1)
         .single();
+};
+
+export const findQuestion = async (performanceId: number, filter: string): Promise<QuestionResponse> => {
+    const supabase = createClient(cookies());
+    return supabase.from("questions").select("*").eq("performance_id", performanceId).or(filter).limit(1).single();
 };
 
 export const checkUserAlreadyAnswered = async (questionId: number): Promise<boolean> => {

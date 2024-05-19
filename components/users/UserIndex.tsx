@@ -2,7 +2,7 @@
 
 import { Intro } from "@/components/users/Intro";
 import { UserQuestionDetail } from "@/components/users/questions/UserQuestionDetail";
-import { useActiveOrLockedQuestion, usePerformance } from "@/hooks/users.hooks";
+import { usePerformance } from "@/hooks/users.hooks";
 import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
@@ -10,7 +10,6 @@ type Props = {
 };
 
 export const UserIndex = ({ defaultPerformance }: Props) => {
-    const question = useActiveOrLockedQuestion(defaultPerformance.id);
     const performance = usePerformance(defaultPerformance);
 
     if (performance.state === "intro") {
@@ -18,10 +17,6 @@ export const UserIndex = ({ defaultPerformance }: Props) => {
     }
 
     if (performance.state === "life") {
-        // if (!question) {
-        //     return <NoQuestion />;
-        // }
-
-        return <UserQuestionDetail />;
+        return <UserQuestionDetail performanceId={performance.id} />;
     }
 };
