@@ -1,11 +1,12 @@
-import { ChevronLeft, Component } from "lucide-react";
+import { ChevronLeft, ProjectorIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchQuestion } from "@/api/questions.api";
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionMatch } from "@/components/admin/questions";
-import { QuestionStateToggle } from "@/components/admin/questions/QuestionStateToggle";
+import { QuestionAdminStateToggle } from "@/components/admin/questions/QuestionAdminStateToggle";
+import { QuestionUserStateToggle } from "@/components/admin/questions/QuestionUserStateToggle";
 import { Button } from "@/components/ui/Button";
 
 export default async function QuestionDetail({ params }: { params: { questionId: string } }) {
@@ -20,36 +21,33 @@ export default async function QuestionDetail({ params }: { params: { questionId:
         <>
             <header className={"mb-4"}>
                 <div className={"flex justify-between"}>
-                    <div className={"flex items-center gap-2"}>
-                        <Button variant="ghost" size="icon" asChild>
+                    <div className={"flex items-stretch"}>
+                        <Button variant="ghost" size="icon" asChild className={"h-auto"}>
                             <Link href={`/admin/performances/${question.performance_id}`}>
                                 <ChevronLeft size={28} />
                             </Link>
                         </Button>
-                        <h1 className="text-2xl font-bold">{question.name}</h1>
+                        <div className={"flex flex-col gap-2"}>
+                            <h1 className="text-2xl font-bold">{question.name}</h1>
+                            <em className={"relative -left-0.5"}>{question.question}</em>
+                        </div>
                     </div>
                     <Link href={`/admin/questions/${question.id}/edit`}>
-                        <Button variant={"outline"}>Edit</Button>
+                        <Button variant={"outline"}>Upravit otázku</Button>
                     </Link>
                 </div>
             </header>
+            <div className={"flex flex-col justify-between gap-8 lg:flex-row"}>
+                <div className={"flex items-center"}>
+                    <SmartphoneIcon size={28} className={"mr-4"} />
+                    <QuestionUserStateToggle defaultState={question.state} question={question} />
+                </div>
+                <div className={"flex items-center"}>
+                    <ProjectorIcon size={28} className={"mr-4"} />
+                    <QuestionAdminStateToggle question={question} />
+                </div>
+            </div>
             <article className={"mb-4 grid grid-cols-2 gap-3"}>
-                <div className={"border-r-1"}>
-                    <div className={"flex flex-col gap-1"}>
-                        <em className={"font-medium not-italic text-gray-400"}>
-                            Otázka{" "}
-                            {question.questions_pool?.name && (
-                                <span className={"inline-flex"}>
-                                    | {question.questions_pool?.name} <Component />
-                                </span>
-                            )}
-                        </em>
-                        <h2 className={"text-lg font-medium"}>{question.question}</h2>
-                    </div>
-                </div>
-                <div className={"pl-4"}>
-                    <QuestionStateToggle defaultState={question.state} questionId={question.id} />
-                </div>
                 <QuestionMatch question={question} />
             </article>
             <aside className={"mt-4"}>

@@ -4,7 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { Player, QuestionDetail, QuestionRequestCreate } from "@/api/types.api";
+import { AudienceVisibility, Player, QuestionDetail, QuestionRequestCreate } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { Enums, Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
@@ -85,9 +85,19 @@ export const setQuestionState = async (
     return response;
 };
 
-export const setQuestionVisibility = async (questionId: number, visibility: boolean): Promise<QuestionResponse> => {
+export const setAudienceVisibility = async (
+    questionId: number,
+    visibility: AudienceVisibility,
+): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("questions").update({ present_answers: visibility }).eq("id", questionId).select().single();
+    const response = supabase
+        .from("questions")
+        .update({ audience_visibility: visibility })
+        .eq("id", questionId)
+        .select()
+        .single();
+    revalidatePath(`/admin/question/${questionId}/view`);
+    return response;
 };
 
 export const getNewIndexOrder = async (performanceId: number): Promise<number> => {

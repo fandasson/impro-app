@@ -67,10 +67,11 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
             break;
     }
 
+    // fixme
     return (
         <div className={"flex flex-col items-center gap-8"}>
             <QuestionHeadline question={question} />
-            {question.present_answers && component}
+            {/*{question.present_answers && component}*/}
         </div>
     );
 };

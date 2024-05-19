@@ -193,37 +193,37 @@ export type Database = {
       }
       questions: {
         Row: {
+          audience_visibility: Database["public"]["Enums"]["audience_visibility"]
           id: number
           index_order: number
           multiple: boolean
           name: string
           performance_id: number
           pool_id: number | null
-          present_answers: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
           type: Database["public"]["Enums"]["question-type"]
         }
         Insert: {
+          audience_visibility?: Database["public"]["Enums"]["audience_visibility"]
           id?: number
           index_order: number
           multiple?: boolean
           name: string
           performance_id: number
           pool_id?: number | null
-          present_answers?: boolean | null
           question: string
           state: Database["public"]["Enums"]["question-state"]
           type?: Database["public"]["Enums"]["question-type"]
         }
         Update: {
+          audience_visibility?: Database["public"]["Enums"]["audience_visibility"]
           id?: number
           index_order?: number
           multiple?: boolean
           name?: string
           performance_id?: number
           pool_id?: number | null
-          present_answers?: boolean | null
           question?: string
           state?: Database["public"]["Enums"]["question-state"]
           type?: Database["public"]["Enums"]["question-type"]
@@ -328,6 +328,7 @@ export type Database = {
       }
     }
     Enums: {
+      audience_visibility: "hidden" | "question" | "results"
       "performance-state": "draft" | "intro" | "life" | "finished"
       "question-state": "draft" | "active" | "locked" | "answered"
       "question-type": "text" | "player-pick" | "voting" | "match"

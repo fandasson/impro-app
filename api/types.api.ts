@@ -41,3 +41,4 @@ export type Performance = Tables<"performances">;
 
 export type QuestionState = Enums<"question-state">;
 export type QuestionType = Enums<"question-type">;
+export type AudienceVisibility = Enums<"audience_visibility">;
