@@ -81,6 +81,7 @@ export const setQuestionState = async (
     const response = await supabase.from("questions").update({ state }).eq("id", questionId).select().single();
     const performanceId = response.data?.performance_id;
     revalidatePath(`/admin/performances/${performanceId}`);
+    revalidatePath(`/admin/question/${questionId}/view`);
     return response;
 };
 
