@@ -21,14 +21,7 @@ export const Answers = ({ question }: Props) => {
                 return <TextAnswers questionId={question.id} />;
             case "voting":
             case "player-pick":
-                return (
-                    <PlayersVotingAnswers
-                        questionId={question.id}
-                        players={question.players}
-                        poolId={question.pool_id}
-                        summary={!!question.pool_id && showResultsForGroup}
-                    />
-                );
+                return <PlayersVotingAnswers questionId={question.id} players={question.players} />;
         }
     };
     return (
