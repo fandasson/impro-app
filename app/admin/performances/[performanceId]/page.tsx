@@ -29,9 +29,12 @@ export default async function PerformanceDetail({ params }: { params: { performa
                 </h1>
                 <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
             </div>
-            <div>
-                <Link href={`/admin/performances/${performanceId}/add-question`} className={""}>
+            <div className={"flex justify-between"}>
+                <Link href={`/admin/performances/${performanceId}/add-question`}>
                     <Button variant={"default"}>Přidat otázku</Button>
+                </Link>
+                <Link href={`/admin/performances/${performanceId}/question-pools`}>
+                    <Button variant={"outline"}>Skupiny</Button>
                 </Link>
             </div>
             <List>

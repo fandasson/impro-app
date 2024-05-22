@@ -19,11 +19,11 @@ export default async function QuestionPoolDetail({ params }: { params: { poolId:
             <header className={"mb-4"}>
                 <div className={"flex justify-between"}>
                     <div className={"flex items-stretch"}>
-                        <Link href={`/admin/performances/${pool.performance_id}`}>
-                            <Button variant="ghost" size="icon" className={"h-auto"} asChild>
+                        <Button variant="ghost" size="icon" className={"h-auto"} asChild>
+                            <Link href={`/admin/performances/${pool.performance_id}`}>
                                 <ChevronLeft size={28} />
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                         <div className={"flex flex-col gap-2"}>
                             <h1 className="text-2xl font-bold">
                                 Skupina otázek <em>{pool.name}</em>

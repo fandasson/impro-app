@@ -1,9 +1,11 @@
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchPerformance } from "@/api/performances.api";
 import { fetchAvailablePools } from "@/api/questions.api";
 import { List } from "@/components/admin/questions";
+import { Button } from "@/components/ui/Button";
 
 export default async function QuestionPools({ params }: { params: { performanceId: string } }) {
     const performanceId = parseInt(params.performanceId);
@@ -17,9 +19,18 @@ export default async function QuestionPools({ params }: { params: { performanceI
     return (
         <>
             <div className={"flex justify-between"}>
-                <h1 className="mb-4 text-2xl font-bold">
-                    Skupiny otázek pro <em>{performance.name}</em>
-                </h1>
+                <div className={"flex items-stretch"}>
+                    <Button variant="ghost" size="icon" className={"h-auto"} asChild>
+                        <Link href={`/admin/performances/${performanceId}`}>
+                            <ChevronLeft size={28} />
+                        </Link>
+                    </Button>
+                    <div className={"flex flex-col gap-2"}>
+                        <h1 className="mb-4 text-2xl font-bold">
+                            Skupiny otázek pro <em>{performance.name}</em>
+                        </h1>
+                    </div>
+                </div>
             </div>
             <List>
                 {pools.map((pool) => (
