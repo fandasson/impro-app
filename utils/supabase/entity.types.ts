@@ -279,17 +279,17 @@ export type Database = {
         Row: {
           id: number
           name: string | null
-          performance_id: number | null
+          performance_id: number
         }
         Insert: {
           id?: number
           name?: string | null
-          performance_id?: number | null
+          performance_id: number
         }
         Update: {
           id?: number
           name?: string | null
-          performance_id?: number | null
+          performance_id?: number
         }
         Relationships: [
           {
