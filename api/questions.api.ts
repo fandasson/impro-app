@@ -4,7 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { AudienceVisibility, Player, QuestionDetail, QuestionRequestCreate } from "@/api/types.api";
+import { AudienceVisibility, Player, QuestionDetail, QuestionUpsertRequest } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { Enums, Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
@@ -107,7 +107,7 @@ export const getNewIndexOrder = async (performanceId: number): Promise<number> =
     return response.data?.index_order ? response.data?.index_order + 1 : 1;
 };
 
-export const createQuestion = async (performanceId: number, question: QuestionRequestCreate) => {
+export const createQuestion = async (performanceId: number, question: QuestionUpsertRequest) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { players, ...questionData } = question;
@@ -137,7 +137,7 @@ export const createQuestion = async (performanceId: number, question: QuestionRe
     return newQuestionId;
 };
 
-export const updateQuestion = async (questionId: number, question: QuestionRequestCreate) => {
+export const updateQuestion = async (questionId: number, question: QuestionUpsertRequest) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { players, ...questionData } = question;
@@ -166,4 +166,10 @@ export const updateQuestion = async (questionId: number, question: QuestionReque
 
     revalidatePath(`/admin/questions/${questionId}/view`);
     return response.data?.[0];
+};
+
+export const fetchAvailablePools = async (performanceId: number) => {
+    const supabase = createClient(cookies());
+    const response = await supabase.from("questions_pool").select("*").eq("performance_id", performanceId);
+    return response.data ?? [];
 };

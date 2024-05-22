@@ -5,12 +5,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import { areThereVotesForQuestion } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
-import { getNewIndexOrder } from "@/api/questions.api";
-import { Player, QuestionDetail, QuestionRequestUpdate, QuestionType } from "@/api/types.api";
+import { fetchAvailablePools, getNewIndexOrder } from "@/api/questions.api";
+import { Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 import { setLoading, useAdminStore } from "@/store/admin.store";
@@ -18,7 +19,7 @@ import { setLoading, useAdminStore } from "@/store/admin.store";
 type Props = {
     performanceId: number;
     question?: QuestionDetail;
-    handleSubmit: (data: QuestionRequestCreate | QuestionRequestUpdate) => Promise<void>;
+    handleSubmit: (data: QuestionUpsertRequest) => Promise<void>;
 };
 
 type QuestionRequestCreate = {
@@ -27,11 +28,13 @@ type QuestionRequestCreate = {
     type: QuestionType;
     index_order: number;
     multiple: boolean;
+    pool_id?: number;
     players?: Player[];
 };
 export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
+    const [pools, setPools] = useState<QuestionPool[]>([]);
     const [canEdit, setCanEdit] = useState(true);
     const loading = useAdminStore((state) => state.loading);
 
@@ -43,7 +46,7 @@ export const QuestionForm = (props: Props) => {
         watch,
         getValues,
         setValue,
-    } = useForm<QuestionRequestCreate | QuestionRequestUpdate>({
+    } = useForm<QuestionUpsertRequest>({
         defaultValues: {
             name: question?.name || "",
             question: question?.question || "",
@@ -70,9 +73,10 @@ export const QuestionForm = (props: Props) => {
     useEffect(() => {
         if (type === "voting") {
             setLoading(true);
-            fetchAvailablePlayers(performanceId)
-                .then(setPlayers)
-                .finally(() => setLoading(false));
+
+            const _fetchPlayers = fetchAvailablePlayers(performanceId).then(setPlayers);
+            const _fetchPools = fetchAvailablePools(performanceId).then(setPools);
+            Promise.all([_fetchPlayers, _fetchPools]).then(() => setLoading(false));
         }
     }, [type, performanceId]);
 
@@ -85,7 +89,7 @@ export const QuestionForm = (props: Props) => {
         }
     };
 
-    const onSubmit: SubmitHandler<QuestionRequestCreate> = async (data) => {
+    const onSubmit: SubmitHandler<QuestionUpsertRequest> = async (data) => {
         setLoading(true);
         await handleSubmit(data);
         setLoading(false);
@@ -143,11 +147,38 @@ export const QuestionForm = (props: Props) => {
                 </Label>
                 <Textarea id={"question"} {...register("question", { required: true })} />
             </div>
-            <div className={"flex flex-col gap-4"}>
-                <Label htmlFor={"index_order"} className={"font-medium"}>
-                    Pořadí
-                </Label>
-                <Input id={"index_order"} type={"number"} {...register("index_order", { required: true })} />
+            <div className={"grid grid-cols-2 gap-4"}>
+                <div className={"flex flex-col gap-4"}>
+                    <Label htmlFor={"index_order"} className={"font-medium"}>
+                        Pořadí
+                    </Label>
+                    <Input id={"index_order"} type={"number"} {...register("index_order", { required: true })} />
+                </div>
+                <div className={"flex flex-col gap-4"}>
+                    {type === "voting" && (
+                        <>
+                            <Label htmlFor={"pool"} className={"font-medium"}>
+                                Skupina otázek (pro sčítání hlasů)
+                            </Label>
+                            <Select
+                                onValueChange={(value) => setValue("pool_id", parseInt(value))}
+                                disabled={!canEdit}
+                                defaultValue={String(question?.pool_id) ?? undefined}
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Vyberte skupinu" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {pools.map((pool) => (
+                                        <SelectItem key={pool.id} value={String(pool.id)}>
+                                            {pool.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </>
+                    )}
+                </div>
             </div>
             {type === "voting" && (
                 <AssignPlayersToQuestion

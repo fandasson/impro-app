@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { fetchQuestion, updateQuestion } from "@/api/questions.api";
-import { QuestionRequestUpdate } from "@/api/types.api";
+import { QuestionUpsertRequest } from "@/api/types.api";
 import { QuestionForm } from "@/components/admin/question-form";
 import { Button } from "@/components/ui/Button";
 
@@ -15,7 +15,7 @@ export default async function QuestionDetail({ params }: { params: { questionId:
         notFound();
     }
 
-    const handleSubmit = async (data: QuestionRequestUpdate) => {
+    const handleSubmit = async (data: QuestionUpsertRequest) => {
         "use server";
         await updateQuestion(questionId, {
             ...data,

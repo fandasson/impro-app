@@ -3,14 +3,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createQuestion } from "@/api/questions.api";
-import { QuestionRequestCreate } from "@/api/types.api";
+import { QuestionUpsertRequest } from "@/api/types.api";
 import { QuestionForm } from "@/components/admin/question-form";
 import { Button } from "@/components/ui/Button";
 
 export default async function AddQuestion({ params }: { params: { performanceId: string } }) {
     const performanceId = parseInt(params.performanceId);
 
-    const handleSubmit = async (data: QuestionRequestCreate) => {
+    const handleSubmit = async (data: QuestionUpsertRequest) => {
         "use server";
         const newQuestionId = await createQuestion(performanceId, {
             ...data,
