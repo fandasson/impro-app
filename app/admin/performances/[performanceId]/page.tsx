@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
-import { QuestionItem, QuestionsList } from "@/components/admin/questions";
+import { List, QuestionItem } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
 import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
@@ -39,11 +39,11 @@ export default async function PerformanceDetail({ params }: { params: { performa
             <Link href={`/admin/performances/${performanceId}/add-question`}>
                 <Button variant={"default"}>Přidat otázku</Button>
             </Link>
-            <QuestionsList>
+            <List>
                 {questions.map((question) => (
                     <QuestionItem key={question.id} {...question} />
                 ))}
-            </QuestionsList>
+            </List>
         </>
     );
 }
