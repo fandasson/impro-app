@@ -196,3 +196,9 @@ export const fetchQuestionPool = async (poolId: number) => {
     const response = await supabase.from("questions_pool").select("*").eq("id", poolId).single();
     return response.data;
 };
+
+export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
+    const supabase = createClient(cookies());
+    await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);
+    revalidatePath(`/admin/performances/${performanceId}`);
+};
