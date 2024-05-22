@@ -4,12 +4,20 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { AudienceVisibility, Player, QuestionDetail, QuestionUpsertRequest } from "@/api/types.api";
+import {
+    AudienceVisibility,
+    Player,
+    Question,
+    QuestionDetail,
+    QuestionUpsertRequest,
+    QuestionWithPool,
+} from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
-import { Enums, Tables } from "@/utils/supabase/entity.types";
+import { Enums } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
-type QuestionResponse = PostgrestSingleResponse<Tables<"questions">>;
+type QuestionResponse = PostgrestSingleResponse<Question>;
+type QuestionsResponse = PostgrestSingleResponse<QuestionWithPool[]>;
 type QuestionDetailResponse = PostgrestSingleResponse<QuestionDetail>;
 
 export const fetchActiveOrLockedQuestion = async (performanceId: number): Promise<QuestionResponse> => {
@@ -59,6 +67,15 @@ export const checkUserAlreadyAnswered = async (questionId: number): Promise<bool
 export const fetchQuestion = async (questionId: number): Promise<QuestionDetailResponse> => {
     const supabase = createClient(cookies());
     return supabase.from("questions").select("*, players (*), questions_pool(id, name)").eq("id", questionId).single();
+};
+
+export const fetchQuestions = async (performanceId: number): Promise<QuestionsResponse> => {
+    const supabase = createClient(cookies());
+    return supabase
+        .from("questions")
+        .select("*, questions_pool(id, name)")
+        .eq("performance_id", performanceId)
+        .order("index_order", { ascending: false });
 };
 
 export const fetchMatchQuestionPlayers = async (questionId: number): Promise<Player[]> => {

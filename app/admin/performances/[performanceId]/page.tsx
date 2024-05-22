@@ -1,29 +1,22 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { fetchPerformance } from "@/api/performances.api";
+import { fetchQuestions } from "@/api/questions.api";
 import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
 import { List, QuestionItem } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
 import { formatDate } from "@/utils/date.utils";
-import { createClient } from "@/utils/supabase/server";
 
 export default async function PerformanceDetail({ params }: { params: { performanceId: string } }) {
-    const cookieStore = cookies();
     const performanceId = parseInt(params.performanceId);
-    const supabase = createClient(cookieStore);
-    const { data: performance } = await supabase.from("performances").select("*").eq("id", performanceId).single();
+    const { data: performance } = await fetchPerformance(performanceId);
 
     if (!performance) {
         notFound();
     }
 
-    const { data: questions, error } = await supabase
-        .from("questions")
-        .select("*, questions_pool(id, name)")
-        .eq("performance_id", performanceId)
-        .order("index_order", { ascending: false });
-
+    const { data: questions, error } = await fetchQuestions(performanceId);
     if (questions === null) {
         throw new Error(`Error when fetching questions: ${error.message}`);
     }
