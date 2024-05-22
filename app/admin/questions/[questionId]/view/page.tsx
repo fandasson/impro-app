@@ -31,6 +31,15 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                             <h1 className="text-2xl font-bold">{question.name}</h1>
                             <em className={"relative -left-0.5"}>{question.question}</em>
                         </div>
+                        {question.questions_pool && (
+                            <Link
+                                href={`/admin/performances/${question.performance_id}/question-pools/${question.pool_id}`}
+                            >
+                                <Button variant="ghost" size="sm" className={"ml-4 gap-2"}>
+                                    Skupina otázek <strong>{question.questions_pool.name}</strong>
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                     <Link href={`/admin/questions/${question.id}/edit`}>
                         <Button variant={"outline"}>Upravit otázku</Button>

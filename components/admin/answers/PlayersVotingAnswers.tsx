@@ -6,7 +6,7 @@ import { cn } from "@/utils/styling.utils";
 
 type Props = {
     players: Player[];
-    summary: boolean;
+    summary?: boolean;
     poolId: number | null;
     questionId: number;
 };
