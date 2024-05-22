@@ -29,9 +29,11 @@ export default async function PerformanceDetail({ params }: { params: { performa
                 </h1>
                 <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
             </div>
-            <Link href={`/admin/performances/${performanceId}/add-question`}>
-                <Button variant={"default"}>Přidat otázku</Button>
-            </Link>
+            <div>
+                <Link href={`/admin/performances/${performanceId}/add-question`} className={""}>
+                    <Button variant={"default"}>Přidat otázku</Button>
+                </Link>
+            </div>
             <List>
                 {questions.map((question) => (
                     <QuestionItem key={question.id} {...question} />
