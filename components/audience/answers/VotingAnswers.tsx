@@ -4,9 +4,10 @@ import { cn } from "@/utils/styling.utils";
 type VotedPlayer = Player & {
     count: number;
 };
+import { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
 
 type Props = {
-    players: VotedPlayer[];
+    players: VotedPlayer<PlayerWithPhotos>[];
 };
 export const VotingAnswers = ({ players }: Props) => {
     return (

@@ -1,9 +1,5 @@
-import { Player } from "@/api/types.api";
+import { VotedPlayer } from "@/api/types.api";
 import { cn } from "@/utils/styling.utils";
-
-type VotedPlayer = Player & {
-    count: number;
-};
 
 type Props = {
     players: VotedPlayer[];

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchPoolVoteAnswers } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { Player, VoteAnswer } from "@/api/types.api";
+import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
 import { VotingAnswers } from "@/components/audience/answers/VotingAnswers";
 import { countVotesForPlayers } from "@/utils/answers.utils";
 
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export const PoolVotingAnswers = ({ poolId, performanceId }: Props) => {
-    const [players, setPlayers] = useState<Player[]>([]);
+    const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
     const [answers, setAnswers] = useState<VoteAnswer[]>([]);
 
     useEffect(() => {
@@ -37,7 +38,7 @@ export const PoolVotingAnswers = ({ poolId, performanceId }: Props) => {
         }
     }, [poolId, performanceId]);
 
-    const sortedPlayers = countVotesForPlayers(players, answers ?? []);
+    const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers ?? []);
 
     return <VotingAnswers players={sortedPlayers} />;
 };

@@ -1,6 +1,6 @@
-import { Player, VoteAnswer } from "@/api/types.api";
+import { Player, VoteAnswer, VotedPlayer } from "@/api/types.api";
 
-export const countVotesForPlayers = (players: Player[], answers: VoteAnswer[]) => {
+export const countVotesForPlayers = <T extends Player>(players: T[], answers: VoteAnswer[]) => {
     const sortedPlayers = players
         .map((player) => {
             return {
@@ -9,5 +9,5 @@ export const countVotesForPlayers = (players: Player[], answers: VoteAnswer[]) =
             };
         })
         .sort((a, b) => b.count - a.count);
-    return sortedPlayers;
+    return sortedPlayers as VotedPlayer<T>[];
 };

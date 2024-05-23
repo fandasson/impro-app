@@ -25,6 +25,17 @@ export type MatchAnswerResults = {
     count: number;
 };
 
+export type VotedPlayer<T extends Player = Player> = T & {
+    count: number;
+};
+
+export type PlayerWithPhotos = Player & {
+    photos: {
+        body: string;
+        profile: string;
+    };
+};
+
 export type MatchAnswerCreate = Omit<TablesInsert<"answers_match">, "user_id">;
 
 export type TextAnswerInsert = Omit<TablesInsert<"answers_text">, "user_id">;
