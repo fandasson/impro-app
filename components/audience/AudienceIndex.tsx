@@ -1,5 +1,6 @@
 "use client";
 
+import { AudiencePoolResults } from "@/components/audience/AudiencePoolResults";
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";
 import { Intro } from "@/components/audience/Intro";
 import { usePool } from "@/hooks/audience.hooks";
@@ -20,9 +21,9 @@ export const AudienceIndex = ({ defaultPerformance }: Props) => {
 
     if (performance.state === "life") {
         if (pool) {
-            return <>Pool here</>;
+            return <AudiencePoolResults pool={pool} />;
         } else {
+            return <AudienceQuestionDetail performanceId={defaultPerformance.id} />;
         }
-        return <AudienceQuestionDetail performanceId={defaultPerformance.id} />;
     }
 };
