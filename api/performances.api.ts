@@ -2,19 +2,24 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-import { Enums, Tables } from "@/utils/supabase/entity.types";
+import { Performance, PerformanceState } from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
 
-type PerformanceResponse = PostgrestSingleResponse<Tables<"performances">>;
+type PerformanceResponse = PostgrestSingleResponse<Performance>;
 
 export const fetchPerformance = async (performanceId: number): Promise<PerformanceResponse> => {
     const supabase = createClient(cookies());
     return supabase.from("performances").select("*").eq("id", performanceId).single();
 };
 
+export const fetchVisiblePerformance = async (): Promise<PerformanceResponse> => {
+    const supabase = createClient(cookies());
+    return supabase.from("performances").select("*").in("state", ["intro", "life"]).limit(1).single();
+};
+
 export const setPerformanceState = async (
     performanceId: number,
-    state: Enums<"performance-state">,
+    state: PerformanceState,
 ): Promise<PerformanceResponse> => {
     const supabase = createClient(cookies());
     return supabase.from("performances").update({ state }).eq("id", performanceId).select().single();

@@ -4,11 +4,12 @@ import { Archive, Eye, EyeOff, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { fetchPerformance, setPerformanceState } from "@/api/performances.api";
+import { PerformanceState } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
-import { Enums, Tables } from "@/utils/supabase/entity.types";
+import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    defaultState?: Enums<"performance-state">;
+    defaultState?: PerformanceState;
     performanceId: number;
 };
 export const PerformanceStateToggle = ({ performanceId, defaultState }: Props) => {
@@ -18,7 +19,7 @@ export const PerformanceStateToggle = ({ performanceId, defaultState }: Props) =
         fetchPerformance(performanceId).then((response) => setPerformance(response.data));
     }, [performanceId]);
 
-    const toggleState = (newState: Enums<"performance-state">) => {
+    const toggleState = (newState: PerformanceState) => {
         if (newState === performance?.state) {
             return;
         }
@@ -31,7 +32,7 @@ export const PerformanceStateToggle = ({ performanceId, defaultState }: Props) =
             size={"lg"}
             defaultValue={defaultState}
             value={performance?.state}
-            onValueChange={(newValue) => toggleState(newValue as Enums<"performance-state">)}
+            onValueChange={(newValue) => toggleState(newValue as PerformanceState)}
         >
             <ToggleGroupItem value="draft">
                 <EyeOff />
