@@ -22,8 +22,6 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
         );
     }
 
-    // else question.audience_visibility === "results"
-
     switch (question.type) {
         case "text":
             return <TextQuestionAnswers questionId={question.id} />;

@@ -1,16 +1,17 @@
 import { create } from "zustand";
 
-import { Answer, Question } from "@/api/types.api";
+import { Question, QuestionPool } from "@/api/types.api";
 
 type AudienceStore = {
-    answers: Answer[];
     question: Question | null;
+    pool: QuestionPool | null;
 };
 
 export const useAudienceStore = create<AudienceStore>()((set) => ({
     answers: [],
     question: null,
+    pool: null,
 }));
 
-export const setAnswers = (answers: Answer[]) => useAudienceStore.setState({ answers });
 export const setQuestion = (question: Question | null) => useAudienceStore.setState({ question });
+export const setPool = (pool: QuestionPool | null) => useAudienceStore.setState({ pool });

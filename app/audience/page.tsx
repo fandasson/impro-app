@@ -1,17 +1,8 @@
-import { cookies } from "next/headers";
-
+import { fetchVisiblePerformance } from "@/api/performances.api";
 import { AudienceIndex } from "@/components/audience/AudienceIndex";
-import { createClient } from "@/utils/supabase/server";
 
 export default async function AudienceView() {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { data: performance } = await supabase
-        .from("performances")
-        .select("*")
-        .in("state", ["intro", "life"])
-        .limit(1)
-        .single();
+    const { data: performance } = await fetchVisiblePerformance();
 
     if (!performance) {
         return null;

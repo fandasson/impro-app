@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 
+import { fetchVisiblePool } from "@/api/question-pools.api";
 import { findQuestion } from "@/api/questions.api";
-import { setQuestion, useAudienceStore } from "@/store/audience.store";
+import { Question, QuestionPool } from "@/api/types.api";
+import { setPool, setQuestion, useAudienceStore } from "@/store/audience.store";
 import { createClient } from "@/utils/supabase/client";
-import { Tables } from "@/utils/supabase/entity.types";
 
 export const useQuestion = (performanceId: number) => {
     const question = useAudienceStore((state) => state.question);
@@ -24,7 +25,7 @@ export const useQuestion = (performanceId: number) => {
             const supabase = createClient();
             const channel = supabase
                 .channel("activeOrLockedQuestionChannel")
-                .on<Tables<"questions">>(
+                .on<Question>(
                     "postgres_changes",
                     {
                         event: "UPDATE",
@@ -49,4 +50,48 @@ export const useQuestion = (performanceId: number) => {
     }, [performanceId]);
 
     return question;
+};
+
+export const usePool = (performanceId: number) => {
+    const pool = useAudienceStore((state) => state.pool);
+
+    useEffect(() => {
+        fetchVisiblePool(performanceId).then((response) => {
+            if (!response) {
+                return;
+            }
+            setPool(response);
+        });
+    }, [performanceId]);
+
+    useEffect(() => {
+        if (performanceId) {
+            const supabase = createClient();
+            const channel = supabase
+                .channel("visibleQuestionPoolChannel")
+                .on<QuestionPool>(
+                    "postgres_changes",
+                    {
+                        event: "UPDATE",
+                        schema: "public",
+                        table: "questions_pool",
+                        filter: `performance_id=eq.${performanceId}`,
+                    },
+                    (payload) => {
+                        const newPool = payload.new;
+                        if (newPool.audience_visibility) {
+                            setPool(newPool);
+                        } else {
+                            setPool(null);
+                        }
+                    },
+                )
+                .subscribe();
+            return () => {
+                supabase.removeChannel(channel);
+            };
+        }
+    }, [performanceId]);
+
+    return pool;
 };

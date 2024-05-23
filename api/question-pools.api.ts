@@ -16,6 +16,17 @@ export const fetchQuestionPool = async (poolId: number) => {
     return response.data;
 };
 
+export const fetchVisiblePool = async (performanceId: number) => {
+    const supabase = createClient(cookies());
+    const response = await supabase
+        .from("questions_pool")
+        .select("*")
+        .eq("performance_id", performanceId)
+        .eq("audience_visibility", true)
+        .single();
+    return response.data;
+};
+
 export const setPoolAudienceVisibility = async (
     poolId: number,
     visibility: boolean,
