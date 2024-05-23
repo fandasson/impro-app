@@ -277,16 +277,19 @@ export type Database = {
       }
       questions_pool: {
         Row: {
+          audience_visibility: boolean
           id: number
           name: string | null
           performance_id: number
         }
         Insert: {
+          audience_visibility?: boolean
           id?: number
           name?: string | null
           performance_id: number
         }
         Update: {
+          audience_visibility?: boolean
           id?: number
           name?: string | null
           performance_id?: number

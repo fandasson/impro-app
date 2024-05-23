@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -40,6 +40,7 @@ export default async function QuestionPools({ params }: { params: { performanceI
                         className={"flex justify-between rounded border px-3.5 py-3"}
                     >
                         <strong>{pool.name}</strong>
+                        <div>{pool.audience_visibility ? <Eye /> : <EyeOff />}</div>
                     </Link>
                 ))}
             </List>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { fetchQuestionPool } from "@/api/question-pools.api";
 import { PoolVotingAnswers } from "@/components/admin/answers/PoolVotingAnswers";
+import { PoolAudienceStateToggle } from "@/components/admin/question-pools/PoolAudienceStateToggle";
 import { Button } from "@/components/ui/Button";
 
 export default async function QuestionPoolDetail({ params }: { params: { poolId: string } }) {
@@ -29,6 +30,9 @@ export default async function QuestionPoolDetail({ params }: { params: { poolId:
                                 Skupina otázek <em>{pool.name}</em>
                             </h1>
                         </div>
+                    </div>
+                    <div>
+                        <PoolAudienceStateToggle pool={pool} />
                     </div>
                 </div>
             </header>
