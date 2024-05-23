@@ -2,7 +2,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { fetchQuestionPool } from "@/api/questions.api";
+import { fetchQuestionPool } from "@/api/question-pools.api";
 import { PoolVotingAnswers } from "@/components/admin/answers/PoolVotingAnswers";
 import { Button } from "@/components/ui/Button";
 

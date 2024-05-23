@@ -189,18 +189,6 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
     return response.data?.[0];
 };
 
-export const fetchAvailablePools = async (performanceId: number) => {
-    const supabase = createClient(cookies());
-    const response = await supabase.from("questions_pool").select("*").eq("performance_id", performanceId);
-    return response.data ?? [];
-};
-
-export const fetchQuestionPool = async (poolId: number) => {
-    const supabase = createClient(cookies());
-    const response = await supabase.from("questions_pool").select("*").eq("id", poolId).single();
-    return response.data;
-};
-
 export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
     const supabase = createClient(cookies());
     await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);

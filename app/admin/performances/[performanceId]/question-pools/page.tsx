@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchPerformance } from "@/api/performances.api";
-import { fetchAvailablePools } from "@/api/questions.api";
+import { fetchAvailablePools } from "@/api/question-pools.api";
 import { List } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
 

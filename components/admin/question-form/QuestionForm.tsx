@@ -5,7 +5,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import { areThereVotesForQuestion } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
-import { fetchAvailablePools, getNewIndexOrder } from "@/api/questions.api";
+import { fetchAvailablePools } from "@/api/question-pools.api";
+import { getNewIndexOrder } from "@/api/questions.api";
 import { Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { Button } from "@/components/ui/Button";
