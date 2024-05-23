@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { fetchPoolVoteAnswers } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
-import { Player, VoteAnswer } from "@/api/types.api";
+import { getPlayerPhotos } from "@/api/photos.api";
 import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
 import { VotingAnswers } from "@/components/audience/answers/VotingAnswers";
 import { countVotesForPlayers } from "@/utils/answers.utils";
@@ -24,7 +24,15 @@ export const PoolVotingAnswers = ({ poolId, performanceId }: Props) => {
                 if (!response) {
                     return;
                 }
-                setPlayers(response);
+
+                const newPlayers = response.map((player) => {
+                    const photo = getPlayerPhotos(player.id);
+                    return {
+                        ...player,
+                        photos: photo,
+                    } as PlayerWithPhotos;
+                });
+                setPlayers(newPlayers);
             });
         }
 

@@ -1,32 +1,18 @@
-import { Player } from "@/api/types.api";
-import { cn } from "@/utils/styling.utils";
-
-type VotedPlayer = Player & {
-    count: number;
-};
 import { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
+import { VoteCard } from "@/components/audience/answers/VoteCard";
 
 type Props = {
     players: VotedPlayer<PlayerWithPhotos>[];
 };
 export const VotingAnswers = ({ players }: Props) => {
     return (
-        <div className={"grid grid-cols-1 gap-4 text-2xl"}>
-            {players &&
-                players.map((player, index) => {
-                    return (
-                        <div
-                            key={player.id}
-                            className={cn(
-                                "flex justify-between gap-16 rounded-md p-4",
-                                index === 0 ? "border" : undefined,
-                            )}
-                        >
-                            <h2 className={"font-medium"}>{player.name}</h2>
-                            {player.count}
-                        </div>
-                    );
-                })}
+        <div className="flex h-screen items-center justify-center bg-gray-950">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+                {players &&
+                    players.map((player, index) => {
+                        return <VoteCard key={player.id} player={player} />;
+                    })}
+            </div>
         </div>
     );
 };
