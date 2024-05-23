@@ -9,11 +9,11 @@ import {
     Player,
     Question,
     QuestionDetail,
+    QuestionState,
     QuestionUpsertRequest,
     QuestionWithPool,
 } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
-import { Enums } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 
 type QuestionResponse = PostgrestSingleResponse<Question>;
@@ -84,11 +84,11 @@ export const fetchMatchQuestionPlayers = async (questionId: number): Promise<Pla
     return response.data?.players || [];
 };
 
-export const setQuestionState = async (
-    questionId: number,
-    state: Enums<"question-state">,
-): Promise<QuestionResponse> => {
+export const setQuestionState = async (questionId: number, state: QuestionState): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
+    // first, hide all visible
+    await supabase.from("questions").update({ state: "answered" }).in("state", ["active", "locked"]);
+
     const response = await supabase.from("questions").update({ state }).eq("id", questionId).select().single();
     const performanceId = response.data?.performance_id;
     revalidatePath(`/admin/performances/${performanceId}`);
@@ -101,6 +101,10 @@ export const setAudienceVisibility = async (
     visibility: AudienceVisibility,
 ): Promise<QuestionResponse> => {
     const supabase = createClient(cookies());
+    // first, hide visible
+    await supabase.from("questions").update({ audience_visibility: "hidden" }).neq("audience_visibility", "hidden");
+
+    // set required visibility
     const response = supabase
         .from("questions")
         .update({ audience_visibility: visibility })
