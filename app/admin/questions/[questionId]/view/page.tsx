@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { fetchQuestion } from "@/api/questions.api";
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionMatch } from "@/components/admin/questions";
-import { QuestionAdminStateToggle } from "@/components/admin/questions/QuestionAdminStateToggle";
+import { QuestionAudienceStateToggle } from "@/components/admin/questions/QuestionAudienceStateToggle";
 import { QuestionUserStateToggle } from "@/components/admin/questions/QuestionUserStateToggle";
 import { Button } from "@/components/ui/Button";
 
@@ -53,7 +53,7 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                 </div>
                 <div className={"flex items-center"}>
                     <ProjectorIcon size={28} className={"mr-4"} />
-                    <QuestionAdminStateToggle question={question} />
+                    <QuestionAudienceStateToggle question={question} />
                 </div>
             </div>
             <article className={"mb-4 grid grid-cols-2 gap-3"}>

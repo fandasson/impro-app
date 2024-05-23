@@ -9,7 +9,7 @@ type Props = {
     question: QuestionDetail;
 };
 
-export const QuestionAdminStateToggle = ({ question, defaultState }: Props) => {
+export const QuestionAudienceStateToggle = ({ question, defaultState }: Props) => {
     const handleVisibilityChange = async (visibility: AudienceVisibility) => {
         await setAudienceVisibility(question.id, visibility);
     };
