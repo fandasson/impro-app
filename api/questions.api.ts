@@ -96,23 +96,14 @@ export const setQuestionState = async (questionId: number, state: QuestionState)
     return response;
 };
 
-export const setAudienceVisibility = async (
-    questionId: number,
-    visibility: AudienceVisibility,
-): Promise<QuestionResponse> => {
+export const setAudienceVisibility = async (questionId: number, visibility: AudienceVisibility): Promise<void> => {
     const supabase = createClient(cookies());
     // first, hide visible
     await supabase.from("questions").update({ audience_visibility: "hidden" }).neq("audience_visibility", "hidden");
 
     // set required visibility
-    const response = supabase
-        .from("questions")
-        .update({ audience_visibility: visibility })
-        .eq("id", questionId)
-        .select()
-        .single();
+    await supabase.from("questions").update({ audience_visibility: visibility }).eq("id", questionId);
     revalidatePath(`/admin/question/${questionId}/view`);
-    return response;
 };
 
 export const getNewIndexOrder = async (performanceId: number): Promise<number> => {
