@@ -10,9 +10,10 @@ import { countVotesForPlayers } from "@/utils/answers.utils";
 
 type Props = {
     questionId: number;
+    hideResults?: boolean;
 };
 
-export const PlayersVotingAnswers = ({ questionId }: Props) => {
+export const PlayersVotingAnswers = ({ questionId, hideResults = true }: Props) => {
     const [answers, setAnswers] = useState<VoteAnswer[] | null>(null);
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
 
@@ -39,8 +40,8 @@ export const PlayersVotingAnswers = ({ questionId }: Props) => {
     const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers);
 
     if (sortedPlayers.length === 2) {
-        return <VotingAnswersFinal players={sortedPlayers} />;
+        return <VotingAnswersFinal players={sortedPlayers} hideResults={hideResults} />;
     }
 
-    return <VotingAnswers players={sortedPlayers} />;
+    return <VotingAnswers players={sortedPlayers} hideResults={hideResults} />;
 };

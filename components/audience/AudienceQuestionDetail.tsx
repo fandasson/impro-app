@@ -1,7 +1,7 @@
-import { QuestionHeadline } from "@/components/audience/QuestionHeadline";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
 import { PlayersVotingAnswers } from "@/components/audience/answers/PlayersVotingAnswers";
 import { TextQuestionAnswers } from "@/components/audience/answers/TextQuestionAnswers";
+import { Question } from "@/components/audience/questions/Question";
 import { useQuestion } from "@/hooks/audience.hooks";
 
 type Props = {
@@ -15,11 +15,13 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
     }
 
     if (question.audience_visibility === "question") {
-        return (
-            <div className={"flex flex-col items-center gap-8"}>
-                <QuestionHeadline question={question} />
-            </div>
-        );
+        switch (question.type) {
+            case "voting":
+            case "player-pick":
+                return <PlayersVotingAnswers questionId={question.id} />;
+            default:
+                return <Question question={question} />;
+        }
     }
 
     switch (question.type) {
@@ -27,7 +29,7 @@ export const AudienceQuestionDetail = ({ performanceId }: Props) => {
             return <TextQuestionAnswers questionId={question.id} />;
         case "voting":
         case "player-pick":
-            return <PlayersVotingAnswers questionId={question.id} />;
+            return <PlayersVotingAnswers questionId={question.id} hideResults={false} />;
         case "match":
             return <MatchQuestionAnswers questionId={question.id} />;
         default:

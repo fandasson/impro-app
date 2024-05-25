@@ -4,8 +4,9 @@ import { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
 
 type Props = {
     players: VotedPlayer<PlayerWithPhotos>[];
+    hideResults: boolean;
 };
-export const VotingAnswersFinal = ({ players }: Props) => {
+export const VotingAnswersFinal = ({ players, hideResults }: Props) => {
     if (players.length !== 2) {
         return null;
     }
@@ -15,7 +16,8 @@ export const VotingAnswersFinal = ({ players }: Props) => {
             <FinalVoteCard key={players[0].id} player={players[0]} />
             <div className="flex flex-grow flex-col items-center">
                 <div className=" text-7xl text-gray-900">
-                    132 <span className={"text-gray-500"}>:</span> 456
+                    {hideResults ? "???" : players[0].count} <span className={"text-gray-500"}>:</span>{" "}
+                    {hideResults ? "???" : players[1].count}
                 </div>
             </div>
             <FinalVoteCard key={players[1].id} player={players[1]} />
