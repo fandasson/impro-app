@@ -7,8 +7,8 @@ type Props = {
 };
 export const VotingAnswers = ({ players, hideResults }: Props) => {
     return (
-        <div className="flex h-screen items-center justify-center">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+        <div className="flex h-screen w-screen items-center justify-center bg-black">
+            <div className="flex w-full flex-wrap items-center justify-center gap-6 rounded-lg bg-white p-8 shadow-lg">
                 {players &&
                     players.map((player, index) => {
                         return <VoteCard key={player.id} player={player} hideResults={hideResults} />;

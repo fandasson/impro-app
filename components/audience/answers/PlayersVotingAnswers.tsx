@@ -37,9 +37,9 @@ export const PlayersVotingAnswers = ({ questionId, hideResults = true }: Props) 
         return null;
     }
 
-    const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers);
+    const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers, hideResults);
 
-    if (sortedPlayers.length === 2) {
+    if (players.length === 2) {
         return <VotingAnswersFinal players={sortedPlayers} hideResults={hideResults} />;
     }
 
