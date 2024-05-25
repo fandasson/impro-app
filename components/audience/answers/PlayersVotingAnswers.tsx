@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { fetchVoteAnswers } from "@/api/answers.api";
+import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestion } from "@/api/questions.api";
-import { Player, VoteAnswer } from "@/api/types.api";
+import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
+import { VotingAnswers } from "@/components/audience/answers/VotingAnswers";
+import { VotingAnswersFinal } from "@/components/audience/answers/VotingAnswersFinal";
 import { countVotesForPlayers } from "@/utils/answers.utils";
-import { cn } from "@/utils/styling.utils";
 
 type Props = {
     questionId: number;
@@ -12,12 +14,20 @@ type Props = {
 
 export const PlayersVotingAnswers = ({ questionId }: Props) => {
     const [answers, setAnswers] = useState<VoteAnswer[] | null>(null);
-    const [players, setPlayers] = useState<Player[]>([]);
+    const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
 
     useEffect(() => {
         const _fetchResults = fetchVoteAnswers(questionId).then((response) => setAnswers(response.data));
         const _fetchQuestion = fetchQuestion(questionId).then((response) => {
-            setPlayers(response.data?.players || []);
+            const players = response.data?.players ?? [];
+            const newPlayers = players.map((player) => {
+                const photo = getPlayerPhotos(player.id);
+                return {
+                    ...player,
+                    photos: photo,
+                } as PlayerWithPhotos;
+            });
+            setPlayers(newPlayers);
         });
         Promise.all([_fetchResults, _fetchQuestion]);
     }, [questionId]);
@@ -26,25 +36,11 @@ export const PlayersVotingAnswers = ({ questionId }: Props) => {
         return null;
     }
 
-    const sortedPlayers = countVotesForPlayers(players, answers);
+    const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers);
 
-    return (
-        <div className={"flex flex-col gap-8 text-2xl"}>
-            {sortedPlayers &&
-                sortedPlayers.map((player, index) => {
-                    return (
-                        <div
-                            key={player.id}
-                            className={cn(
-                                "flex justify-between gap-16 rounded-md p-4",
-                                index === 0 ? "border" : undefined,
-                            )}
-                        >
-                            <h2 className={"font-medium"}>{player.name}</h2>
-                            {player.count}
-                        </div>
-                    );
-                })}
-        </div>
-    );
+    if (sortedPlayers.length === 2) {
+        return <VotingAnswersFinal players={sortedPlayers} />;
+    }
+
+    return <VotingAnswers players={sortedPlayers} />;
 };

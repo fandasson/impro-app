@@ -6,7 +6,7 @@ type Props = {
 };
 export const VotingAnswers = ({ players }: Props) => {
     return (
-        <div className="flex h-screen items-center justify-center bg-gray-950">
+        <div className="flex h-screen items-center justify-center">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
                 {players &&
                     players.map((player, index) => {

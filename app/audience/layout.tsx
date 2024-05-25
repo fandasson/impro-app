@@ -7,5 +7,5 @@ export default function ScreenLayout({
 }: Readonly<{
     children: ReactNode;
 }>) {
-    return <CenteredContainer className={"bg-black"}>{children}</CenteredContainer>;
+    return <CenteredContainer className={"w-screen bg-black"}>{children}</CenteredContainer>;
 }
