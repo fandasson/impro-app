@@ -2,54 +2,57 @@
 
 import { useEffect, useState } from "react";
 
+import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchMatchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
-import { Player, Question } from "@/api/types.api";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
+import { PlayerWithPhotos, Question } from "@/api/types.api";
+import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
+import { cn } from "@/utils/styling.utils";
 
 type Props = {
     question: Question;
 };
 
 export const PlayersVotingQuestion = ({ question }: Props) => {
-    const [players, setPlayers] = useState<Player[] | null>(null);
-    const [selectedPlayer, setSelectedPlayer] = useState<string>();
+    const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
+    const [selectedPlayer, setSelectedPlayer] = useState<number>();
 
     useEffect(() => {
-        fetchMatchQuestionPlayers(question.id).then((response) => setPlayers(response));
+        fetchMatchQuestionPlayers(question.id).then((response) => {
+            const newPlayers = response.map((player) => {
+                const photo = getPlayerPhotos(player.id);
+                return {
+                    ...player,
+                    photos: photo,
+                } as PlayerWithPhotos;
+            });
+            setPlayers(newPlayers);
+        });
     }, [question.id]);
 
-    const handleSubmit = async (value: string) => {
-        if (value) {
-            const playerId = parseInt(value);
-            setSelectedPlayer(`${playerId}`);
-            await submitVoteAnswer({
-                question_id: question.id,
-                player_id: playerId,
-            });
-        }
+    const handleSubmit = async (playerId: number) => {
+        setSelectedPlayer(playerId);
+        await submitVoteAnswer({
+            question_id: question.id,
+            player_id: playerId,
+        });
     };
 
+    const rows = Math.ceil(players.length / 2);
+
     return (
-        <>
-            <ToggleGroup
-                type="single"
-                size={"lg"}
-                value={selectedPlayer}
-                onValueChange={handleSubmit}
-                className={"grid grid-cols-1 gap-4"}
-            >
-                {players &&
-                    players.map((player) => (
-                        <ToggleGroupItem
-                            key={player.id}
-                            value={`${player.id}`}
-                            className={"border p-8 text-xl font-medium"}
-                        >
-                            {player.name}
-                        </ToggleGroupItem>
-                    ))}
-            </ToggleGroup>
-        </>
+        <div className={cn("grid grid-cols-2 items-center justify-center gap-x-2 gap-y-4", `grid-rows-${rows}`)}>
+            {players &&
+                players.map((player) => (
+                    <PlayerCard
+                        player={{ ...player, count: 0 }}
+                        key={player.id}
+                        hideResults={true}
+                        selected={selectedPlayer === player.id}
+                        onClick={() => handleSubmit(player.id)}
+                        heightFraction={rows}
+                    />
+                ))}
+        </div>
     );
 };

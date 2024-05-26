@@ -42,7 +42,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
             if (question.state === "active") {
                 component = <PlayersVotingQuestion question={question} />;
             } else if (question.state === "locked") {
-                component = <PlayersVotingAnswers questionId={question.id} />;
+                component = <PlayersVotingAnswers questionId={question.id} hideResults={false} />;
             }
             break;
         case "match":
@@ -52,9 +52,9 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
 
     return (
         <MobileContainer className={""}>
-            <div className={"grid grid-flow-col gap-4"}>
-                <h2 className={"text-lg font-medium"}>{question.question}</h2>
-            </div>
+            {/*<div className={"grid grid-flow-col gap-4"}>*/}
+            {/*    <h2 className={"text-lg font-medium"}>{question.question}</h2>*/}
+            {/*</div>*/}
             {component}
         </MobileContainer>
     );
