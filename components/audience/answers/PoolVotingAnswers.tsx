@@ -48,5 +48,5 @@ export const PoolVotingAnswers = ({ poolId, performanceId }: Props) => {
 
     const sortedPlayers = countVotesForPlayers<PlayerWithPhotos>(players, answers ?? []);
 
-    return <VotingAnswers players={sortedPlayers} />;
+    return <VotingAnswers players={sortedPlayers} hideResults={false} />;
 };
