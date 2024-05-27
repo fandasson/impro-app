@@ -69,6 +69,12 @@ export const fetchQuestion = async (questionId: number): Promise<QuestionDetailR
     return supabase.from("questions").select("*, players (*), questions_pool(id, name)").eq("id", questionId).single();
 };
 
+export const fetchQuestionState = async (questionId: number): Promise<QuestionState> => {
+    const supabase = createClient(cookies());
+    const response = await supabase.from("questions").select("state").eq("id", questionId).single();
+    return response.data?.state ?? "draft";
+};
+
 export const fetchQuestions = async (performanceId: number): Promise<QuestionsResponse> => {
     const supabase = createClient(cookies());
     return supabase

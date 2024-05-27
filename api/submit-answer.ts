@@ -4,6 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+import { fetchQuestionState } from "@/api/questions.api";
 import { MatchAnswerCreate, TextAnswerInsert, VoteAnswerInsert } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
@@ -31,6 +32,11 @@ export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
     }
 
     const supabase = createClient(cookieStore);
+
+    const state = await fetchQuestionState(answer.question_id);
+    if (state !== "active") {
+        return false;
+    }
 
     const existingAnswerResponse = await supabase
         .from("answers_vote")
