@@ -7,6 +7,7 @@ import { fetchMatchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
+import { storeAnswer, useUsersStore } from "@/store/users.store";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 export const PlayersVotingQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
     const [selectedPlayer, setSelectedPlayer] = useState<number>();
+    const answered = useUsersStore((state) => state.answers[question.id] as number | undefined);
 
     useEffect(() => {
         fetchMatchQuestionPlayers(question.id).then((response) => {
@@ -30,11 +32,19 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
         });
     }, [question.id]);
 
+    useEffect(() => {
+        if (answered && !selectedPlayer) {
+            setSelectedPlayer(answered);
+        }
+    }, [answered, selectedPlayer]);
+
     const handleSubmit = async (playerId: number) => {
         setSelectedPlayer(playerId);
         await submitVoteAnswer({
             question_id: question.id,
             player_id: playerId,
+        }).then(() => {
+            storeAnswer(question.id, playerId);
         });
     };
 
