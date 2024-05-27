@@ -32,7 +32,7 @@ export const PlayerCard = ({ player, onClick, selected, hideResults, heightFract
             </div>
             <div className="text-center font-bold">
                 <h3 className="text-xl">{player.name}</h3>
-                {!hideResults && <span className="text-md text-gray-200">{player.count}</span>}
+                {!hideResults && <span className="text-md font-mono text-gray-200">{player.count}</span>}
             </div>
         </div>
     );

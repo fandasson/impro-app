@@ -53,11 +53,11 @@ export const QuestionItem = (props: Props) => {
             >
                 <strong className={"col-span-4"}>{name}</strong>
                 <span>{pool?.name}</span>
-                <div className={"flex items-center justify-end"}>
+                <div className={"flex items-center justify-end pr-2"}>
                     <SmartphoneIcon size={28} className={"mr-4"} />
                     {stateIcon}
                 </div>
-                <div className={"flex items-center justify-end"}>
+                <div className={"flex items-center justify-end pl-2"}>
                     <ProjectorIcon size={28} className={"mr-4"} />
                     {audienceVisibilityIcon}
                 </div>
