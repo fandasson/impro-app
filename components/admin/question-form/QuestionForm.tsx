@@ -36,7 +36,7 @@ export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
     const [pools, setPools] = useState<QuestionPool[]>([]);
-    const [freezeVoting, setFreezeVoting] = useState(true);
+    const [freezeVoting, setFreezeVoting] = useState(false);
     const loading = useAdminStore((state) => state.loading);
 
     const {
