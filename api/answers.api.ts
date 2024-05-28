@@ -45,8 +45,6 @@ export const areThereVotesForQuestion = async (questionId: number): Promise<bool
     const response = await supabase
         .from("answers_vote")
         .select("id", { head: true, count: "exact" })
-        .eq("question_id", questionId)
-        .single();
-
+        .eq("question_id", questionId);
     return !!response.count;
 };

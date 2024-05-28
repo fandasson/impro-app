@@ -7,12 +7,16 @@ type Props = {
     players: Player[];
     handlePlayersChange: (players: Player[]) => void;
     initialSelectedPlayers?: Player[];
+    disabled: boolean;
 };
 export const AssignPlayersToQuestion = (props: Props) => {
-    const { players, handlePlayersChange, initialSelectedPlayers = [] } = props;
+    const { players, handlePlayersChange, initialSelectedPlayers = [], disabled } = props;
     const [selectedPlayers, setSelectedPlayers] = useState<Player[]>(initialSelectedPlayers);
 
     const handlePlayerClick = (player: Player) => {
+        if (disabled) {
+            return;
+        }
         const index = selectedPlayers.indexOf(player);
         let newList = [];
         if (index === -1) {

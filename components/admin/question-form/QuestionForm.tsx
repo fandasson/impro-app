@@ -36,7 +36,7 @@ export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
     const [pools, setPools] = useState<QuestionPool[]>([]);
-    const [canEdit, setCanEdit] = useState(true);
+    const [freezeVoting, setFreezeVoting] = useState(true);
     const loading = useAdminStore((state) => state.loading);
 
     const {
@@ -59,8 +59,10 @@ export const QuestionForm = (props: Props) => {
     });
 
     useEffect(() => {
-        if (!question) return;
-        areThereVotesForQuestion(question.id).then((votesExists) => setCanEdit(!votesExists));
+        if (!question) {
+            return;
+        }
+        areThereVotesForQuestion(question.id).then((votesExists) => setFreezeVoting(votesExists));
     }, [question]);
 
     useEffect(() => {
@@ -98,7 +100,11 @@ export const QuestionForm = (props: Props) => {
 
     return (
         <form onSubmit={handleFormSubmit(onSubmit)} className={"flex flex-col gap-4"}>
-            {!canEdit && !loading && <div className={"text-center"}>Na otázku se už hlasovalo a nelze editovat</div>}
+            {freezeVoting && !loading && (
+                <div className={"mb-2 rounded border p-4 text-center font-bold"}>
+                    Na otázku se už hlasovalo - některé údaje nelze změnit
+                </div>
+            )}
             <div className={"flex flex-col gap-4"}>
                 <Label htmlFor={"type"} className={"font-medium"}>
                     Typ otázky
@@ -163,7 +169,6 @@ export const QuestionForm = (props: Props) => {
                             </Label>
                             <Select
                                 onValueChange={(value) => setValue("pool_id", parseInt(value))}
-                                disabled={!canEdit}
                                 defaultValue={String(question?.pool_id) ?? undefined}
                             >
                                 <SelectTrigger className="w-[180px]">
@@ -186,13 +191,12 @@ export const QuestionForm = (props: Props) => {
                     players={players}
                     handlePlayersChange={handlePlayersChange}
                     initialSelectedPlayers={question?.players}
+                    disabled={freezeVoting}
                 />
             )}
-            {canEdit && (
-                <Button variant={"default"} type={"submit"} disabled={loading}>
-                    {question ? "Uložit" : "Přidat"}
-                </Button>
-            )}
+            <Button variant={"default"} type={"submit"} disabled={loading}>
+                {question ? "Uložit" : "Přidat"}
+            </Button>
         </form>
     );
 };
