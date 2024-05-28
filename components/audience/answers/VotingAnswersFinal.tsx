@@ -15,8 +15,9 @@ export const VotingAnswersFinal = ({ players, hideResults }: Props) => {
         <div className="flex w-full max-w-5xl items-center justify-between rounded-lg bg-white p-8">
             <FinalVoteCard key={players[0].id} player={players[0]} />
             <div className="flex flex-grow items-center justify-between gap-2 whitespace-nowrap px-4 font-mono text-7xl text-gray-900">
-                {hideResults ? "???" : players[0].count} <span className={"text-gray-500"}>:</span>
-                {hideResults ? "???" : players[1].count}
+                <span>{hideResults ? "??" : players[0].count}</span>
+                <span className={"text-gray-500"}>:</span>
+                <span>{hideResults ? "??" : players[1].count}</span>
             </div>
             <FinalVoteCard key={players[1].id} player={players[1]} />
         </div>

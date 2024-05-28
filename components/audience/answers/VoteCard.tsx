@@ -23,7 +23,7 @@ export const VoteCard = ({ player, hideResults }: Props) => {
             />
             <div className="text-center text-2xl">
                 <h3 className="font-bold text-gray-900">{player.name}</h3>
-                <span className="font-mono font-bold text-gray-600">{hideResults ? "???" : player.count}</span>
+                <span className="font-mono font-bold text-gray-600">{hideResults ? "" : player.count}</span>
             </div>
         </div>
     );
