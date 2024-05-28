@@ -14,6 +14,7 @@ export const VoteCard = ({ player, hideResults }: Props) => {
                 src={player.photos.profile}
                 width={150}
                 height={150}
+                priority={true}
                 alt={player.name}
                 className="w-15 mb-4 max-w-[300px] rounded-full"
                 style={{
