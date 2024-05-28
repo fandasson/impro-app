@@ -84,7 +84,7 @@ export const fetchQuestions = async (performanceId: number): Promise<QuestionsRe
         .order("index_order", { ascending: false });
 };
 
-export const fetchMatchQuestionPlayers = async (questionId: number): Promise<Player[]> => {
+export const fetchQuestionPlayers = async (questionId: number): Promise<Player[]> => {
     const supabase = createClient(cookies());
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
     return response.data?.players || [];

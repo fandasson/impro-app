@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { getPlayerPhotos } from "@/api/photos.api";
-import { fetchMatchQuestionPlayers } from "@/api/questions.api";
+import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
@@ -20,7 +20,7 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
     const answered = useUsersStore((state) => state.answers[question.id] as number | undefined);
 
     useEffect(() => {
-        fetchMatchQuestionPlayers(question.id).then((response) => {
+        fetchQuestionPlayers(question.id).then((response) => {
             const newPlayers = response.map((player) => {
                 const photo = getPlayerPhotos(player.id);
                 return {

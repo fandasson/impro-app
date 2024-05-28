@@ -5,7 +5,7 @@ import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types"
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-import { fetchMatchQuestionPlayers } from "@/api/questions.api";
+import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
 import { MatchAnswerCreate, Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
@@ -39,7 +39,7 @@ export const MatchQuestion = ({ question }: Props) => {
     const sensors = useSensors(mouseSensor, touchSensor);
 
     useEffect(() => {
-        fetchMatchQuestionPlayers(question.id).then((response) => setPlayers(response));
+        fetchQuestionPlayers(question.id).then((response) => setPlayers(response));
     }, [question.id]);
 
     const findName = (id: UniqueIdentifier) => {
