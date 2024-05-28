@@ -87,7 +87,8 @@ export const fetchQuestions = async (performanceId: number): Promise<QuestionsRe
 export const fetchQuestionPlayers = async (questionId: number): Promise<Player[]> => {
     const supabase = createClient(cookies());
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
-    return response.data?.players || [];
+    const players = response.data?.players ?? [];
+    return players.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 export const setQuestionState = async (questionId: number, state: QuestionState): Promise<QuestionResponse> => {
