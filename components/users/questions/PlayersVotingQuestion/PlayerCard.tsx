@@ -21,7 +21,7 @@ export const PlayerCard = ({ player, onClick, selected, hideResults, heightFract
                 maxHeight: `calc((100svh - 48px - (${heightFraction - 1} * 16px)) / ${heightFraction})`,
             }}
         >
-            <div className={"relative aspect-square max-h-[100px]"}>
+            <div className={"relative aspect-square h-[100px] w-[100px]"}>
                 <Image
                     src={player.photos.profile}
                     alt={player.name}
