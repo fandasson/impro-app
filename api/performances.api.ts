@@ -6,6 +6,12 @@ import { Performance, PerformanceState } from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
 
 type PerformanceResponse = PostgrestSingleResponse<Performance>;
+type PerformancesResponse = PostgrestSingleResponse<Performance[]>;
+
+export const fetchPerformances = async (): Promise<PerformancesResponse> => {
+    const supabase = createClient(cookies());
+    return supabase.from("performances").select("*").order("date", { ascending: false });
+};
 
 export const fetchPerformance = async (performanceId: number): Promise<PerformanceResponse> => {
     const supabase = createClient(cookies());

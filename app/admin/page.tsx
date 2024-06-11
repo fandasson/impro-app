@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 
+import { fetchPerformances } from "@/api/performances.api";
 import { Button } from "@/components/ui/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
 import { formatDate } from "@/utils/date.utils";
@@ -13,6 +14,7 @@ export default async function Performances() {
         .from("performances")
         .select("*")
         .order("date", { ascending: false });
+    const { data: performances, error } = await fetchPerformances();
 
     if (performances === null) {
         throw new Error(`Error when fetching performances: ${error.message}`);
