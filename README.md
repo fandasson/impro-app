@@ -46,3 +46,5 @@ The whole solution stands mainly on the following pillars:
 
 ## Local development
 This is a standard [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). If you want to run it locally, deploy it, or customize it, follow the appropriate documentation.
+
+Database schema (possibly not up-to-date) can be found in [schema.db.sql](./schema.db.sql) file 
