@@ -1,65 +1,65 @@
 {
-    "name": "impro-app",
-    "description": "Application for interaction with audience",
-    "version": "0.1.0",
-    "private": true,
-    "license": "MIT",
-    "author": "Frantisek Pac",
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "types:gen": "supabase gen types typescript --project-id meudxrcsglqhfsylqmhs --schema public > utils/supabase/entity.types.ts",
-        "types:check": "tsc --noEmit",
-        "format:check": "prettier --cache --check --log-level warn .",
-        "format:fix": "prettier --cache --write --log-level warn ."
-    },
-    "dependencies": {
-        "@dnd-kit/core": "^6.1.0",
-        "@radix-ui/react-label": "^2.0.2",
-        "@radix-ui/react-select": "^2.0.0",
-        "@radix-ui/react-slot": "^1.0.2",
-        "@radix-ui/react-switch": "^1.0.3",
-        "@radix-ui/react-toggle": "^1.0.3",
-        "@radix-ui/react-toggle-group": "^1.0.4",
-        "@supabase/ssr": "latest",
-        "@supabase/supabase-js": "latest",
-        "class-variance-authority": "^0.7.0",
-        "clsx": "^2.1.0",
-        "date-fns": "^3.3.1",
-        "lucide-react": "^0.323.0",
-        "next": "14.1.0",
-        "qrcode.react": "^3.1.0",
-        "react": "^18",
-        "react-dom": "^18",
-        "react-hook-form": "^7.50.1",
-        "tailwind-merge": "^2.2.1",
-        "tailwindcss": "^3.3.0",
-        "tailwindcss-animate": "^1.0.7",
-        "uuid": "^9.0.1",
-        "zustand": "^4.5.2"
-    },
-    "devDependencies": {
-        "@types/node": "^20",
-        "@types/react": "^18",
-        "@types/react-dom": "^18",
-        "@types/uuid": "^9.0.8",
-        "autoprefixer": "^10.0.1",
-        "cssnano": "^6.0.3",
-        "eslint": "^8",
-        "eslint-config-next": "14.1.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-import": "^2.29.1",
-        "postcss": "^8",
-        "prettier": "^3.2.5",
-        "prettier-plugin-tailwindcss": "^0.5.11",
-        "typescript": "^5"
-    },
-    "engines": {
-        "node": ">=20.0.0 < 21.0.0"
-    },
-    "volta": {
-        "node": "20.14.0"
-    }
+  "name": "impro-app",
+  "description": "Application for interaction with audience",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Frantisek Pac",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "types:gen": "supabase gen types typescript --project-id meudxrcsglqhfsylqmhs --schema public > utils/supabase/entity.types.ts",
+    "types:check": "tsc --noEmit",
+    "format:check": "prettier --cache --check --log-level warn .",
+    "format:fix": "prettier --cache --write --log-level warn ."
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@radix-ui/react-toggle-group": "^1.0.4",
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "lucide-react": "^0.323.0",
+    "next": "14.1.0",
+    "qrcode.react": "^3.1.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.8",
+    "autoprefixer": "^10.0.1",
+    "cssnano": "^6.0.3",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "postcss": "^8",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.0.0 < 21.0.0"
+  },
+  "volta": {
+    "node": "20.14.0"
+  }
 }

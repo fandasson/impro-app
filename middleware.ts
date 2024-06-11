@@ -1,17 +1,10 @@
 import { type NextRequest } from "next/server";
 
-import { createClient } from "@/utils/supabase/middleware";
+import { updateSession } from "@/utils/supabase/middleware";
 
+// follows https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs?queryGroups=language&language=ts#supabase-utilities
 export async function middleware(request: NextRequest) {
-    const { supabase, response } = createClient(request);
-
-    // TODO: https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs#nextjs-middleware
-
-    // Refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/server-side/nextjs
-    await supabase.auth.getUser();
-
-    return response;
+    return await updateSession(request);
 }
 
 export const config = {
@@ -22,6 +15,6 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          */
-        "/((?!_next/static|_next/image|favicon.ico).*)",
+        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
     ],
 };

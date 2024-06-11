@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { fetchPerformances } from "@/api/performances.api";
 import { Button } from "@/components/ui/Button";
@@ -10,10 +11,14 @@ import { createClient } from "@/utils/supabase/server";
 export default async function Performances() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { data: performances, error } = await supabase
-        .from("performances")
-        .select("*")
-        .order("date", { ascending: false });
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        redirect("/login");
+    }
+
     const { data: performances, error } = await fetchPerformances();
 
     if (performances === null) {
