@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ImproApp
+This app supports the impro performance of [IMPROvariace](https://www.improvariace.cz) impro group. It allows the audience to interact with the performance in real-time. All views run in the browser. No app installation or account creation is needed.
 
-## Getting Started
+## Main terminology
 
-First, run the development server:
+<dl>
+<dt>User</dt>
+    <dd>Show visitor interacting via the app through a smartphone.</dd>
+<dt>Admin</dt>
+    <dd>Show moderator or dedicated person responsible for interacting with the app during the show.</dd>
+<dt>Audience</dt>
+    <dd>Dedicated view used for displaying content to the whole audience via a screen projector.</dd>
+<dt>Question</dt>
+    <dd>Basic entity representing one interaction with the audience. Can be one of many types, like a text question (users input text), vote (users vote for the player they like most), or matching (users match players to characters).</dd>
+<dt>Question Pool</dt>
+    <dd>Group of Questions. Used when we want to count the sum of votes (answers) given to players over several Questions. A performance can have any number of Question Pools.</dd>
+</dl>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Currently supported use-cases
+### General
+- Vote Questions can be batched into a Question Pool.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### As admin:
+- I can add a _vote-type_ Question.
+- I can manage Performance visibility.
+- I can manage Question visibility towards Users and Audience.
+- I can see users' Answers in real-time.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### As user:
+- I only see a Question when the admin sets its visibility.
+- I can submit an Answer to a Question.
+- I can see the results of a Question (if set by Admin).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Current limitations
+- Missing CRUD operations over most of the entities (wasn't needed, Supabase's interface is used).
+- Only _vote-type_ Questions can be added via the Admin interface.
 
-## Learn More
+## Tech stack
+The whole solution stands mainly on the following pillars:
 
-To learn more about Next.js, take a look at the following resources:
+1. [Next.js](https://nextjs.org/) app using the app router and server actions (I just want to try it).
+2. [shadncn/ui](https://ui.shadcn.com)
+3. [Supabase](https://supabase.com/) for database, authentication, image storage, and real-time streaming.
+4. [Vercel](http://vercel.com/) for frontend cloud.
+5. [Zustand](https://supabase.com/) for local state management.
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Local development
+This is a standard [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). If you want to run it locally, deploy it, or customize it, follow the appropriate documentation.
