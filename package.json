@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "types:gen": "supabase gen types typescript --project-id meudxrcsglqhfsylqmhs --schema public > utils/supabase/entity.types.ts",
     "types:check": "tsc --noEmit",
     "format:check": "prettier --cache --check --log-level warn .",

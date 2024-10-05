@@ -1,1 +1,2 @@
-export default () => null;
+const loading = () => null;
+export default loading;
