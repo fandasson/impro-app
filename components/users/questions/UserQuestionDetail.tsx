@@ -35,7 +35,7 @@ export const UserQuestionDetail = ({ performanceId }: Props) => {
 
     switch (question.type) {
         case "text":
-            component = <TextQuestion questionId={question.id} />;
+            component = <TextQuestion questionId={question.id} questionText={question.question} />;
             break;
         case "voting":
         case "player-pick":

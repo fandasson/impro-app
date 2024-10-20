@@ -123,7 +123,7 @@ export const QuestionForm = (props: Props) => {
                         setValue("type", newValue as QuestionType);
                     }}
                 >
-                    <ToggleGroupItem value="text" disabled={true}>
+                    <ToggleGroupItem value="text">
                         <TextIcon className={"mr-2"} />
                         Textová&nbsp;otázka
                     </ToggleGroupItem>
