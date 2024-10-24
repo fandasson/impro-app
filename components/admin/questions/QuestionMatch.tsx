@@ -1,7 +1,7 @@
-import { QuestionWithPlayers } from "@/api/types.api";
+import { QuestionWithPlayersAndCharacters } from "@/api/types.api";
 
 type Props = {
-    question: QuestionWithPlayers;
+    question: QuestionWithPlayersAndCharacters;
 };
 export const QuestionMatch = ({ question }: Props) => {
     if (question.type !== "match") {
@@ -11,7 +11,7 @@ export const QuestionMatch = ({ question }: Props) => {
         <>
             <div>
                 <h3 className={"text-lg font-medium"}>Postavy</h3>
-                {/* FIXME use players instead of names */}
+                {question.characters?.map((character) => character.name).join(", ")}
             </div>
             <div>
                 <h3 className={"text-lg font-medium"}>Improvizátoři</h3>

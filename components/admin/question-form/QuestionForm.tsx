@@ -131,7 +131,7 @@ export const QuestionForm = (props: Props) => {
                         <HandIcon className={"mr-2"} />
                         Hlasování
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="match" disabled={true}>
+                    <ToggleGroupItem value="match">
                         <NotebookPenIcon className={"mr-2"} />
                         Přiřazování
                     </ToggleGroupItem>

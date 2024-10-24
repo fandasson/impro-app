@@ -2,9 +2,9 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 import { Database, Enums, Tables, TablesInsert } from "@/utils/supabase/entity.types";
 
-export type QuestionWithPlayers = Question & { players: Player[] };
+export type QuestionWithPlayersAndCharacters = Question & { players: Player[]; characters: Character[] };
 export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
-export type QuestionDetail = QuestionWithPlayers & QuestionWithPool;
+export type QuestionDetail = QuestionWithPlayersAndCharacters & QuestionWithPool;
 export type QuestionUpsertRequest = Pick<
     Question,
     "name" | "question" | "type" | "index_order" | "multiple" | "pool_id"
@@ -44,6 +44,7 @@ export type VoteAnswerInsert = Omit<TablesInsert<"answers_vote">, "user_id">;
 // ALIASES
 export type TableNames = keyof Database[Extract<keyof Database, "public">]["Tables"];
 export type Player = Tables<"players">;
+export type Character = Tables<"characters">;
 export type TextAnswer = Tables<"answers_text">;
 export type VoteAnswer = Tables<"answers_vote">;
 export type Performance = Tables<"performances">;

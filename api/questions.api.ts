@@ -66,7 +66,16 @@ export const checkUserAlreadyAnswered = async (questionId: number): Promise<bool
 
 export const fetchQuestion = async (questionId: number): Promise<QuestionDetailResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("questions").select("*, players (*), questions_pool(id, name)").eq("id", questionId).single();
+    const questionResponse = await supabase
+        .from("questions")
+        .select("*, players (*), questions_pool(id, name)")
+        .eq("id", questionId)
+        .single();
+    const characters = await supabase.from("characters").select().eq("question_id", questionId);
+    if (questionResponse.data === null) {
+        return questionResponse;
+    }
+    return { ...questionResponse, data: { ...questionResponse.data, characters: characters.data || [] } };
 };
 
 export const fetchQuestionState = async (questionId: number): Promise<QuestionState> => {
