@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 
 import {
     AudienceVisibility,
+    Character,
     Player,
     Question,
     QuestionDetail,
@@ -98,6 +99,12 @@ export const fetchQuestionPlayers = async (questionId: number): Promise<Player[]
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
     const players = response.data?.players ?? [];
     return players.sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export const fetchQuestionCharacters = async (questionId: number): Promise<Character[]> => {
+    const supabase = createClient(cookies());
+    const response = await supabase.from("characters").select().eq("question_id", questionId);
+    return response.data ?? [];
 };
 
 export const setQuestionState = async (questionId: number, state: QuestionState): Promise<QuestionResponse> => {
