@@ -116,9 +116,10 @@ export const MatchQuestion = ({ question }: Props) => {
                 <div className={"flex gap-4"}>
                     {characters &&
                         characters.map(({ id, name }) => {
+                            const isSelected = Object.values(matches).some((character) => character.id === id);
                             return (
                                 <Draggable id={id} key={id}>
-                                    <CharacterTile name={name} />
+                                    <CharacterTile name={name} selected={isSelected} />
                                 </Draggable>
                             );
                         })}
@@ -136,7 +137,7 @@ export const MatchQuestion = ({ question }: Props) => {
                 </DragOverlay>
             </DndContext>
             <Button type={"submit"} disabled={!canBeSubmitted || isPending || isLoading} onClick={handleSubmit}>
-                {isPending ? "Odesílám..." : "Odeslat"}
+                {isPending ? "Odesílám..." : `Odeslat ${!question.multiple ? "(není cesty zpět)" : ""}`}
             </Button>
         </>
     );
