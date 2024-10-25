@@ -94,8 +94,10 @@ export const useQuestion = (questionId: number | null) => {
     if (!questionId) {
         return null;
     }
-    fetchQuestion(questionId).then((response) => {
-        setQuestion(response.data);
-    });
+    if (!question || question.id !== questionId) {
+        fetchQuestion(questionId).then((response) => {
+            setQuestion(response.data);
+        });
+    }
     return question;
 };
