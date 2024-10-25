@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { fetchQuestionState } from "@/api/questions.api";
-import { MatchAnswerCreate, TextAnswerInsert, VoteAnswerInsert } from "@/api/types.api";
+import { MatchAnswerCreate, OptionsAnswerInsert, TextAnswerInsert, VoteAnswerInsert } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
 
@@ -19,6 +19,20 @@ export const submitTextAnswer = async (answer: TextAnswerInsert) => {
     }
 
     const response = await supabase.from("answers_text").insert({ ...answer, user_id: user_id! });
+    // FIXME handle response
+    console.log("submit-answer", response.status);
+};
+
+export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
+
+    if (!user_id) {
+        throw new Error("User not found");
+    }
+
+    const response = await supabase.from("answers_options").insert({ ...answer, user_id: user_id! });
     // FIXME handle response
     console.log("submit-answer", response.status);
 };

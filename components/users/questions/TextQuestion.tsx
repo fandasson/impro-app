@@ -32,6 +32,7 @@ export const TextQuestion = (props: Props) => {
             value: data.answer,
         })
             .then(() => {
+                // todo should markQuestionAsAnswered(question.id); be called
                 if (question?.following_question_id) {
                     router.push(`/question/${question.following_question_id}`);
                 } else {

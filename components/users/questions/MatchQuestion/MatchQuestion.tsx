@@ -9,16 +9,15 @@ import { Character as CharacterTile } from "./Character";
 
 import { fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
-import { Character, MatchAnswerCreate, Player } from "@/api/types.api";
+import { Character, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
-import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    question: Tables<"questions">;
+    question: Question;
 };
 
 export const MatchQuestion = ({ question }: Props) => {

@@ -6,6 +6,7 @@ import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAnswers";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
+import { OptionsQuestion } from "@/components/users/questions/OptionsQuestion";
 import { PlayersVotingQuestion } from "@/components/users/questions/PlayersVotingQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
 import { useUsersStore } from "@/store/users.store";
@@ -40,6 +41,8 @@ export const UserQuestionDetail = ({ question }: Props) => {
         case "match":
             component = <MatchQuestion question={question} />;
             break;
+        case "options":
+            component = <OptionsQuestion />;
     }
 
     return (
