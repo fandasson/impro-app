@@ -116,6 +116,7 @@ export const MatchQuestion = ({ question }: Props) => {
     const canBeSubmitted = players?.every((player) => matches[player.id] !== undefined) ?? false;
     return (
         <>
+            <p className={"text-lg font-medium"}>{question.question}</p>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"grid gap-4"}>
                     {players &&
