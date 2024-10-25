@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
+import { fetchActiveOrLockedQuestion, fetchQuestion } from "@/api/questions.api";
 import { Performance, Question } from "@/api/types.api";
-import { setLoading, setQuestion, useUsersStore } from "@/store/users.store";
+import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
 
 export const useActiveOrLockedQuestion = (performanceId: number) => {
@@ -54,8 +54,14 @@ export const useActiveOrLockedQuestion = (performanceId: number) => {
     return question;
 };
 
-export const usePerformance = (defaultPerformance: Performance): Performance => {
-    const [performance, setPerformance] = useState(defaultPerformance);
+export const usePerformance = (defaultPerformance: Performance): Performance | null => {
+    const performance = useUsersStore((state) => state.performance);
+
+    useEffect(() => {
+        if (!performance) {
+            setPerformance(defaultPerformance);
+        }
+    }, [defaultPerformance, performance]);
 
     useEffect(() => {
         const supabase = createClient();
@@ -81,4 +87,15 @@ export const usePerformance = (defaultPerformance: Performance): Performance => 
     }, [defaultPerformance.id]);
 
     return performance;
+};
+
+export const useQuestion = (questionId: number | null) => {
+    const question = useUsersStore((state) => state.question);
+    if (!questionId) {
+        return null;
+    }
+    fetchQuestion(questionId).then((response) => {
+        setQuestion(response.data);
+    });
+    return question;
 };

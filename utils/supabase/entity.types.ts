@@ -230,6 +230,7 @@ export type Database = {
       questions: {
         Row: {
           audience_visibility: Database["public"]["Enums"]["audience_visibility"]
+          following_question_id: number | null
           id: number
           index_order: number
           multiple: boolean
@@ -242,6 +243,7 @@ export type Database = {
         }
         Insert: {
           audience_visibility?: Database["public"]["Enums"]["audience_visibility"]
+          following_question_id?: number | null
           id?: number
           index_order: number
           multiple?: boolean
@@ -254,6 +256,7 @@ export type Database = {
         }
         Update: {
           audience_visibility?: Database["public"]["Enums"]["audience_visibility"]
+          following_question_id?: number | null
           id?: number
           index_order?: number
           multiple?: boolean
@@ -265,6 +268,13 @@ export type Database = {
           type?: Database["public"]["Enums"]["question-type"]
         }
         Relationships: [
+          {
+            foreignKeyName: "questions_following_question_id_fkey"
+            columns: ["following_question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "questions_performance_id_fkey"
             columns: ["performance_id"]

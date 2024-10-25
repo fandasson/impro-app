@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { submitTextAnswer } from "@/api/submit-answer";
@@ -19,13 +20,25 @@ type Inputs = {
 const MIN_LENGTH = 3;
 export const TextQuestion = (props: Props) => {
     const loading = useUsersStore((state) => state.loading);
+    const question = useUsersStore((state) => state.question);
+    const performance = useUsersStore((state) => state.performance);
     const { register, handleSubmit, reset, watch } = useForm<Inputs>();
+    const router = useRouter();
+
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         setLoading(true);
         await submitTextAnswer({
             question_id: props.questionId,
             value: data.answer,
-        }).finally(() => setLoading(false));
+        })
+            .then(() => {
+                if (question?.following_question_id) {
+                    router.push(`/question/${question.following_question_id}`);
+                } else {
+                    router.push(`/${performance?.url_slug}`);
+                }
+            })
+            .finally(() => setLoading(false));
         reset();
     };
 

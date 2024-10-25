@@ -29,6 +29,7 @@ export const MatchQuestion = ({ question }: Props) => {
     const [isPending, startTransition] = useTransition();
     const isLoading = useUsersStore((state) => state.loading);
     const router = useRouter();
+    const performance = useUsersStore((state) => state.performance);
 
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
@@ -95,10 +96,14 @@ export const MatchQuestion = ({ question }: Props) => {
             character_id: character.id,
         }));
         await submitMatchAnswer(data);
-        setLoading(false);
         markQuestionAsAnswered(question.id);
         startTransition(() => {
-            router.refresh();
+            if (question.following_question_id) {
+                router.push(`/question/${question.following_question_id}`);
+            } else {
+                router.push(`/${performance?.url_slug}`);
+            }
+            setLoading(false);
         });
     };
 

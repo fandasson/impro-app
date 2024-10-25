@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { Question } from "@/api/types.api";
+import { Performance, Question } from "@/api/types.api";
 
 type Store = {
     userId?: string;
@@ -9,6 +9,7 @@ type Store = {
     loading: boolean;
     question: Question | null;
     answers: Record<number, string | number>;
+    performance: Performance | null;
 };
 
 export const useUsersStore = create<Store>()(
@@ -17,6 +18,7 @@ export const useUsersStore = create<Store>()(
             answeredQuestions: {},
             loading: false,
             question: null,
+            performance: null,
             answers: {},
         }),
         {
@@ -34,5 +36,6 @@ export const markQuestionAsAnswered = (questionId: number) =>
 
 export const setLoading = (loading: boolean) => useUsersStore.setState({ loading });
 export const setQuestion = (question: Question | null) => useUsersStore.setState({ question });
+export const setPerformance = (performance: Performance | null) => useUsersStore.setState({ performance });
 export const storeAnswer = (questionId: number, answer: string | number) =>
     useUsersStore.setState((state) => ({ answers: { ...state.answers, [questionId]: answer } }));
