@@ -47,6 +47,7 @@ export type Player = Tables<"players">;
 export type Character = Tables<"characters">;
 export type TextAnswer = Tables<"answers_text">;
 export type VoteAnswer = Tables<"answers_vote">;
+export type MatchAnswer = Tables<"answers_match">;
 export type Performance = Tables<"performances">;
 export type Question = Tables<"questions">;
 export type QuestionPool = Tables<"questions_pool">;

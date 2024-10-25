@@ -2,8 +2,17 @@ import React from "react";
 
 import { useAdminStore } from "@/store/admin.store";
 
-export const AnswersHeadline = () => {
-    const answersCount = useAdminStore((state) => state.answers.length);
+type Props = {
+    uniqueUsers?: boolean;
+};
+export const AnswersHeadline = ({ uniqueUsers }: Props) => {
+    const answersCount = useAdminStore((state) => {
+        if (uniqueUsers) {
+            const uniqueUserIds = new Set(state.answers.map((answer) => answer.user_id));
+            return uniqueUserIds.size;
+        }
+        return state.answers.length;
+    });
 
     return (
         <h3 className={"mb-4 font-medium not-italic text-gray-400"}>
