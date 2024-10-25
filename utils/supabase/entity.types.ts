@@ -57,18 +57,24 @@ export type Database = {
       }
       answers_text: {
         Row: {
+          drawn: number | null
+          favorite: boolean
           id: number
           question_id: number
           user_id: string
           value: string
         }
         Insert: {
+          drawn?: number | null
+          favorite?: boolean
           id?: number
           question_id: number
           user_id: string
           value: string
         }
         Update: {
+          drawn?: number | null
+          favorite?: boolean
           id?: number
           question_id?: number
           user_id?: string

@@ -39,6 +39,12 @@ export const removeTextAnswers = async (answersIds: number[]): Promise<void> => 
     return removeAnswers("answers_text", answersIds);
 };
 
+export const favoriteTextAnswer = async (answersId: number, favorite: boolean): Promise<void> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    await supabase.from("answers_text").update({ favorite }).eq("id", answersId).throwOnError();
+};
+
 const removeAnswers = async (table: TableNames, answersIds: number[]): Promise<void> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
