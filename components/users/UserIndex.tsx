@@ -12,7 +12,6 @@ type Props = {
 export const UserIndex = ({ defaultPerformance }: Props) => {
     const performance = usePerformance(defaultPerformance);
 
-    console.log(defaultPerformance);
     if (!performance) {
         return null;
     }

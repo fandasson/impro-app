@@ -15,6 +15,10 @@ export const AudienceIndex = ({ defaultPerformance }: Props) => {
     const performance = usePerformance(defaultPerformance);
     const pool = usePool(defaultPerformance.id);
 
+    if (!performance) {
+        return null;
+    }
+
     if (performance.state === "intro") {
         return <Intro performance={performance} />;
     }
