@@ -12,6 +12,11 @@ import { Button } from "@/components/ui/Button";
 export default async function QuestionDetail({ params }: { params: { questionId: string } }) {
     const questionId = parseInt(params.questionId);
     const { data: question } = await fetchQuestion(questionId);
+    let followUpQuestionRequest = null;
+    if (question && question.following_question_id) {
+        followUpQuestionRequest = await fetchQuestion(question.following_question_id);
+    }
+    const followUpQuestion = followUpQuestionRequest?.data;
 
     if (!question) {
         notFound();
@@ -30,6 +35,17 @@ export default async function QuestionDetail({ params }: { params: { questionId:
                         <div className={"flex flex-col gap-2"}>
                             <h1 className="text-2xl font-bold">{question.name}</h1>
                             <em className={"relative -left-0.5"}>{question.question}</em>
+                            {followUpQuestion && (
+                                <span>
+                                    pokračuje otázkou{" "}
+                                    <Link
+                                        href={`/admin/questions/${followUpQuestion.id}/view`}
+                                        style={{ textDecoration: "underline" }}
+                                    >
+                                        {followUpQuestion.name}
+                                    </Link>
+                                </span>
+                            )}
                         </div>
                         {question.questions_pool && (
                             <Link
