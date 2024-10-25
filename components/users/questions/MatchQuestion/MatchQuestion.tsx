@@ -118,7 +118,15 @@ export const MatchQuestion = ({ question }: Props) => {
     return (
         <>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
-                <div className={"flex gap-4"}>
+                <div className={"grid gap-4"}>
+                    {players &&
+                        players.map((player) => (
+                            <Droppable key={player.id} id={player.id}>
+                                <PlayerMatch player={player} character={matches[player.id]} />
+                            </Droppable>
+                        ))}
+                </div>
+                <div className={"flex flex-wrap gap-4"}>
                     {characters &&
                         characters.map(({ id, name }) => {
                             const isSelected = Object.values(matches).some((character) => character.id === id);
@@ -128,14 +136,6 @@ export const MatchQuestion = ({ question }: Props) => {
                                 </Draggable>
                             );
                         })}
-                </div>
-                <div className={"grid gap-4"}>
-                    {players &&
-                        players.map((player) => (
-                            <Droppable key={player.id} id={player.id}>
-                                <PlayerMatch player={player} character={matches[player.id]} />
-                            </Droppable>
-                        ))}
                 </div>
                 <DragOverlay dropAnimation={null}>
                     {draggingCharacter ? renderDraggingCharacter(draggingCharacter) : null}
