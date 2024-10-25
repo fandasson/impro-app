@@ -45,6 +45,20 @@ export const favoriteTextAnswer = async (answersId: number, favorite: boolean): 
     await supabase.from("answers_text").update({ favorite }).eq("id", answersId).throwOnError();
 };
 
+export const randomDrawAnswer = async (answers: TextAnswer[]): Promise<void> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const notYetDrawn = answers.filter((a) => !a.drawn);
+    const randomDraw = Math.floor(Math.random() * notYetDrawn.length);
+    const drawIndex = Math.max(...answers.map((a) => a.drawn ?? 0));
+    await supabase
+        .from("answers_text")
+        .update({ drawn: drawIndex + 1 })
+        .eq("id", notYetDrawn[randomDraw].id)
+        .throwOnError();
+};
+
 const removeAnswers = async (table: TableNames, answersIds: number[]): Promise<void> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
