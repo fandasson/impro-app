@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 
-import { fetchMatchingAnswers, fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
-import { Answer, AnswersResponse, MatchAnswer, TableNames, TextAnswer, VoteAnswer } from "@/api/types.api";
+import { fetchMatchingAnswers, fetchOptionsAnswers, fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
+import {
+    Answer,
+    AnswersResponse,
+    MatchAnswer,
+    OptionsAnswer,
+    TableNames,
+    TextAnswer,
+    VoteAnswer,
+} from "@/api/types.api";
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 
@@ -14,6 +22,10 @@ export const useVoteAnswers = (questionId: number) => {
 
 export const useMatchingAnswers = (questionId: number) => {
     return useAnswers<MatchAnswer>("answers_match", questionId, fetchMatchingAnswers);
+};
+
+export const useOptionsAnswers = (questionId: number) => {
+    return useAnswers<OptionsAnswer>("answers_options", questionId, fetchOptionsAnswers);
 };
 
 const useAnswers = <T extends Answer>(

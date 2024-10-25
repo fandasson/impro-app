@@ -10,6 +10,7 @@ import {
     Player,
     Question,
     QuestionDetail,
+    QuestionOptions,
     QuestionState,
     QuestionUpsertRequest,
     QuestionWithPool,
@@ -104,6 +105,12 @@ export const fetchQuestionPlayers = async (questionId: number): Promise<Player[]
 export const fetchQuestionCharacters = async (questionId: number): Promise<Character[]> => {
     const supabase = createClient(cookies());
     const response = await supabase.from("characters").select().eq("question_id", questionId);
+    return response.data ?? [];
+};
+
+export const fetchQuestionOptions = async (questionId: number): Promise<QuestionOptions[]> => {
+    const supabase = createClient(cookies());
+    const response = await supabase.from("questions_options").select().eq("question_id", questionId);
     return response.data ?? [];
 };
 

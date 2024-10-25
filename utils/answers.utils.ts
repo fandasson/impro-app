@@ -1,4 +1,12 @@
-import { Character, MatchAnswer, Player, VoteAnswer, VotedPlayer } from "@/api/types.api";
+import {
+    Character,
+    MatchAnswer,
+    OptionsAnswer,
+    Player,
+    QuestionOptions,
+    VoteAnswer,
+    VotedPlayer,
+} from "@/api/types.api";
 
 export const countVotesForPlayers = <T extends Player>(
     players: T[],
@@ -47,5 +55,15 @@ export const countMatches = (
             return collector;
         },
         {} as Record<number, MatchesResult>,
+    );
+};
+
+export const countOptions = (options: QuestionOptions[], answers: OptionsAnswer[]): Record<number, number> => {
+    return options.reduce(
+        (collector, option) => {
+            collector[option.id] = answers.filter((answer) => answer.question_options_id === option.id).length;
+            return collector;
+        },
+        {} as Record<number, number>,
     );
 };

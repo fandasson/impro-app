@@ -55,6 +55,42 @@ export type Database = {
           },
         ]
       }
+      answers_options: {
+        Row: {
+          id: number
+          question_id: number
+          question_options_id: number
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          question_id: number
+          question_options_id: number
+          user_id: string
+        }
+        Update: {
+          id?: number
+          question_id?: number
+          question_options_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answers_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answers_options_question_options_id_fkey"
+            columns: ["question_options_id"]
+            isOneToOne: false
+            referencedRelation: "questions_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       answers_text: {
         Row: {
           drawn: number | null
@@ -297,6 +333,32 @@ export type Database = {
           },
         ]
       }
+      questions_options: {
+        Row: {
+          id: number
+          option: string | null
+          question_id: number
+        }
+        Insert: {
+          id?: number
+          option?: string | null
+          question_id: number
+        }
+        Update: {
+          id?: number
+          option?: string | null
+          question_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions_players: {
         Row: {
           player_id: number
@@ -386,7 +448,7 @@ export type Database = {
       audience_visibility: "hidden" | "question" | "results"
       "performance-state": "draft" | "intro" | "life" | "finished"
       "question-state": "draft" | "active" | "locked" | "answered"
-      "question-type": "text" | "player-pick" | "voting" | "match"
+      "question-type": "text" | "player-pick" | "voting" | "match" | "options"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -37,9 +37,9 @@ export type PlayerWithPhotos = Player & {
 };
 
 export type MatchAnswerCreate = Omit<TablesInsert<"answers_match">, "user_id">;
-
 export type TextAnswerInsert = Omit<TablesInsert<"answers_text">, "user_id">;
 export type VoteAnswerInsert = Omit<TablesInsert<"answers_vote">, "user_id">;
+export type OptionsAnswerInsert = Omit<TablesInsert<"answers_options">, "user_id">;
 
 // ALIASES
 export type TableNames = keyof Database[Extract<keyof Database, "public">]["Tables"];
@@ -47,9 +47,11 @@ export type Player = Tables<"players">;
 export type Character = Tables<"characters">;
 export type TextAnswer = Tables<"answers_text">;
 export type VoteAnswer = Tables<"answers_vote">;
+export type OptionsAnswer = Tables<"answers_options">;
 export type MatchAnswer = Tables<"answers_match">;
 export type Performance = Tables<"performances">;
 export type Question = Tables<"questions">;
+export type QuestionOptions = Tables<"questions_options">;
 export type QuestionPool = Tables<"questions_pool">;
 
 export type QuestionState = Enums<"question-state">;

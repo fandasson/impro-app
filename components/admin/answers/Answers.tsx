@@ -2,7 +2,9 @@
 
 import React from "react";
 
-import { QuestionDetail } from "@/api/types.api";
+import { OptionsAnswers } from "./OptionsAnswers";
+
+import { QuestionDetail, QuestionOptions } from "@/api/types.api";
 import { AnswersHeadline } from "@/components/admin/answers/AnswersHeadline";
 import { MatchingAnswers } from "@/components/admin/answers/MatchingAnswers";
 import { PlayersVotingAnswers } from "@/components/admin/answers/PlayersVotingAnswers";
@@ -10,9 +12,11 @@ import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 
 type Props = {
     question: QuestionDetail;
+    // this is hack to safe time;
+    questionOptions: QuestionOptions[];
 };
 
-export const Answers = ({ question }: Props) => {
+export const Answers = ({ question, questionOptions }: Props) => {
     const renderComponent = () => {
         switch (question.type) {
             case "text":
@@ -25,6 +29,8 @@ export const Answers = ({ question }: Props) => {
                         characters={question.characters}
                     />
                 );
+            case "options":
+                return <OptionsAnswers questionId={question.id} options={questionOptions} />;
             case "voting":
             case "player-pick":
                 return <PlayersVotingAnswers questionId={question.id} players={question.players} />;

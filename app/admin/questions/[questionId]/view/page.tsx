@@ -2,10 +2,12 @@ import { ChevronLeft, ProjectorIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { fetchQuestion } from "@/api/questions.api";
+import { fetchQuestion, fetchQuestionOptions } from "@/api/questions.api";
+import { QuestionOptions } from "@/api/types.api";
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionMatch } from "@/components/admin/questions";
 import { QuestionAudienceStateToggle } from "@/components/admin/questions/QuestionAudienceStateToggle";
+import { QuestionOptions as QuestionOptionsHeader } from "@/components/admin/questions/QuestionOptions";
 import { QuestionUserStateToggle } from "@/components/admin/questions/QuestionUserStateToggle";
 import { Button } from "@/components/ui/Button";
 
@@ -20,6 +22,12 @@ export default async function QuestionDetail({ params }: { params: { questionId:
 
     if (!question) {
         notFound();
+    }
+
+    const options: QuestionOptions[] = [];
+    if (question.type === "options") {
+        const results = await fetchQuestionOptions(question.id);
+        options.push(...results);
     }
 
     return (
@@ -74,9 +82,10 @@ export default async function QuestionDetail({ params }: { params: { questionId:
             </div>
             <article className={"mb-4 grid grid-cols-2 gap-3"}>
                 <QuestionMatch question={question} />
+                <QuestionOptionsHeader question={question} />
             </article>
             <aside className={"mt-4"}>
-                <Answers question={question} />
+                <Answers question={question} questionOptions={options} />
             </aside>
         </>
     );

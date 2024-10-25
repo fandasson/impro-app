@@ -1,7 +1,15 @@
 "use server";
 import { cookies } from "next/headers";
 
-import { AnswersResponse, MatchAnswer, MatchAnswerResults, TableNames, TextAnswer, VoteAnswer } from "@/api/types.api";
+import {
+    AnswersResponse,
+    MatchAnswer,
+    MatchAnswerResults,
+    OptionsAnswer,
+    TableNames,
+    TextAnswer,
+    VoteAnswer,
+} from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
 
 export const fetchTextAnswers = async (questionId: number): Promise<AnswersResponse<TextAnswer>> => {
@@ -20,6 +28,12 @@ export const fetchMatchingAnswers = async (questionId: number): Promise<AnswersR
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     return supabase.from("answers_match").select("*").eq("question_id", questionId);
+};
+
+export const fetchOptionsAnswers = async (questionId: number): Promise<AnswersResponse<OptionsAnswer>> => {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    return supabase.from("answers_options").select("*").eq("question_id", questionId);
 };
 
 export const fetchPoolVoteAnswers = async (poolId: number): Promise<AnswersResponse<VoteAnswer>> => {
