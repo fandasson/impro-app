@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import { submitTextAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
-import { Label } from "@/components/ui/Label";
+import { Paragraph } from "@/components/ui/Paragraph";
 import { Textarea } from "@/components/ui/Textarea";
 import { setLoading, useUsersStore } from "@/store/users.store";
 
@@ -46,14 +46,13 @@ export const TextQuestion = (props: Props) => {
     const inputLength = watch("answer")?.length || 0;
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={"flex flex-col gap-4"}>
-            <Label htmlFor={"answer"} className={"font-medium"}>
-                {props.questionText}
-            </Label>
+            <Paragraph>{props.questionText}</Paragraph>
             <Textarea
                 autoFocus={true}
                 placeholder={
                     "Nebojte se psát, co vás napadne... je to anonymní ;-)\nBudeme rádi za zprávy delší než pár písmen"
                 }
+                rows={5}
                 id={"answer"}
                 {...register("answer", { required: true, minLength: MIN_LENGTH })}
             />

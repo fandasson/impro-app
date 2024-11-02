@@ -8,6 +8,7 @@ import { submitOptionsAnswer } from "@/api/submit-answer";
 import { QuestionOptions } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Paragraph } from "@/components/ui/Paragraph";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
 export const OptionsQuestion = () => {
@@ -50,7 +51,7 @@ export const OptionsQuestion = () => {
 
     return (
         <>
-            <p className={"text-lg font-medium"}>{question.question}</p>
+            <Paragraph>{question.question}</Paragraph>
             <div className={"flex flex-col gap-4"}>
                 {options.map((option) => (
                     <Badge
