@@ -6,9 +6,12 @@ export interface ParagraphProps extends React.InputHTMLAttributes<HTMLParagraphE
 
 const Paragraph = React.forwardRef<HTMLParagraphElement, ParagraphProps>(({ className, children, ...props }, ref) => {
     return (
-        <p className={cn("text-lg", className)} ref={ref} {...props}>
-            {children}
-        </p>
+        <p
+            className={cn("text-lg", className)}
+            ref={ref}
+            {...props}
+            dangerouslySetInnerHTML={{ __html: children || "" }}
+        />
     );
 });
 
