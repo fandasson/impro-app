@@ -37,9 +37,11 @@ export const TextAnswers = memo(({ questionId }: Props) => {
     return (
         <div>
             <div className={"flex justify-end"}>
-                <Button onClick={drawAnswer} variant={"outline"}>
-                    Vylosovat odpověď
-                </Button>
+                {answers.length > 0 && (
+                    <Button onClick={drawAnswer} variant={"outline"}>
+                        Vylosovat odpověď
+                    </Button>
+                )}
             </div>
             <div className={"flex flex-col"}>
                 <div className={"my-8 grid grid-cols-1 gap-4"}>
