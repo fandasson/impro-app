@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { submitTextAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { Textarea } from "@/components/ui/Textarea";
-import { setLoading, useUsersStore } from "@/store/users.store";
+import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
 type Props = {
     questionId: number;
@@ -19,10 +20,11 @@ type Inputs = {
 };
 const MIN_LENGTH = 3;
 export const TextQuestion = (props: Props) => {
-    const loading = useUsersStore((state) => state.loading);
+    const isLoading = useUsersStore((state) => state.loading);
     const question = useUsersStore((state) => state.question);
     const performance = useUsersStore((state) => state.performance);
     const { register, handleSubmit, reset, watch } = useForm<Inputs>();
+    const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -30,17 +32,17 @@ export const TextQuestion = (props: Props) => {
         await submitTextAnswer({
             question_id: props.questionId,
             value: data.answer,
-        })
-            .then(() => {
-                // todo should markQuestionAsAnswered(question.id); be called
-                if (question?.following_question_id) {
-                    router.push(`/question/${question.following_question_id}`);
-                } else {
-                    router.push(`/${performance?.url_slug}`);
-                }
-            })
-            .finally(() => setLoading(false));
-        reset();
+        });
+        markQuestionAsAnswered(props.questionId);
+        startTransition(() => {
+            if (question?.following_question_id) {
+                router.push(`/question/${question.following_question_id}`);
+            } else {
+                router.push(`/${performance?.url_slug}`);
+            }
+            setLoading(false);
+            reset();
+        });
     };
 
     const inputLength = watch("answer")?.length || 0;
@@ -56,7 +58,7 @@ export const TextQuestion = (props: Props) => {
                 id={"answer"}
                 {...register("answer", { required: true, minLength: MIN_LENGTH })}
             />
-            <Button type={"submit"} disabled={loading || inputLength < MIN_LENGTH}>
+            <Button type={"submit"} disabled={isLoading || isPending || inputLength < MIN_LENGTH}>
                 Odeslat
             </Button>
         </form>
