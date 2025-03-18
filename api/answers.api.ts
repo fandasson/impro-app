@@ -15,7 +15,12 @@ import { createClient } from "@/utils/supabase/server";
 export const fetchTextAnswers = async (questionId: number): Promise<AnswersResponse<TextAnswer>> => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    return supabase.from("answers_text").select("*").eq("question_id", questionId).neq("value", "");
+    return supabase
+        .from("answers_text")
+        .select("*")
+        .eq("question_id", questionId)
+        .neq("value", "")
+        .order("id", { ascending: true });
 };
 
 export const fetchVoteAnswers = async (questionId: number): Promise<AnswersResponse<VoteAnswer>> => {
