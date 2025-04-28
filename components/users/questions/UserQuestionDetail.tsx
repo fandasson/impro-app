@@ -5,6 +5,7 @@ import { Question } from "@/api/types.api";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAnswers";
+import { InfoQuestion } from "@/components/users/questions/InfoQuestion";
 import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { OptionsQuestion } from "@/components/users/questions/OptionsQuestion";
 import { PlayersVotingQuestion } from "@/components/users/questions/PlayersVotingQuestion";
@@ -27,6 +28,9 @@ export const UserQuestionDetail = ({ question }: Props) => {
 
     let component: React.JSX.Element | null = null;
     switch (question.type) {
+        case "info":
+            component = <InfoQuestion questionId={question.id} questionText={question.question} />;
+            break;
         case "text":
             component = <TextQuestion questionId={question.id} questionText={question.question} />;
             break;
