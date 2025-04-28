@@ -6,6 +6,7 @@ import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
+import { Paragraph } from "@/components/ui/Paragraph";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
 import { storeAnswer, useUsersStore } from "@/store/users.store";
 import { cn } from "@/utils/styling.utils";
@@ -49,20 +50,27 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
     };
 
     const rows = Math.ceil(players.length / 2);
-
     return (
-        <div className={cn("grid grid-cols-2 items-center justify-center gap-x-2 gap-y-4", `grid-rows-${rows}`)}>
-            {players &&
-                players.map((player) => (
-                    <PlayerCard
-                        player={{ ...player, count: 0 }}
-                        key={player.id}
-                        hideResults={true}
-                        selected={selectedPlayer === player.id}
-                        onClick={() => handleSubmit(player.id)}
-                        heightFraction={rows}
-                    />
-                ))}
-        </div>
+        <>
+            {question.question && (
+                <>
+                    <h2 className={"text-2xl font-bold"}>{question.name}</h2>
+                    <Paragraph>{question.question}</Paragraph>
+                </>
+            )}
+            <div className={cn("grid grid-cols-2 items-center justify-center gap-x-2 gap-y-4", `grid-rows-${rows}`)}>
+                {players &&
+                    players.map((player) => (
+                        <PlayerCard
+                            player={{ ...player, count: 0 }}
+                            key={player.id}
+                            hideResults={true}
+                            selected={selectedPlayer === player.id}
+                            onClick={() => handleSubmit(player.id)}
+                            heightFraction={rows}
+                        />
+                    ))}
+            </div>
+        </>
     );
 };

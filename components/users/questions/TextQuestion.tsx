@@ -38,7 +38,7 @@ export const TextQuestion = (props: Props) => {
             if (question?.following_question_id) {
                 router.push(`/question/${question.following_question_id}`);
             } else {
-                router.push(`/${performance?.url_slug}`);
+                router.push(`/`);
             }
             setLoading(false);
             reset();
