@@ -17,14 +17,24 @@ export const OptionsAnswers = ({ options, questionId }: Props) => {
         return null;
     }
 
+    let maxValue = 0;
+    Object.values(countedOptions).forEach((value, index) => {
+        if (value > maxValue) {
+            maxValue = value;
+        }
+    });
+
+    console.log(maxValue);
     return (
         <Table>
             <TableBody>
                 {options.map((option) => {
+                    const isMaxValue = maxValue === countedOptions[option.id] && countedOptions[option.id] > 0;
+                    const bgClass = isMaxValue ? "bg-gray-600" : "";
                     return (
                         <TableRow key={option.id}>
-                            <TableCell>{option.option}</TableCell>
-                            <TableCell>{countedOptions[option.id] || 0}</TableCell>
+                            <TableCell className={bgClass}>{option.option}</TableCell>
+                            <TableCell className={bgClass}>{countedOptions[option.id] || 0}</TableCell>
                         </TableRow>
                     );
                 })}
