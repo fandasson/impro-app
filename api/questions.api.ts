@@ -110,7 +110,11 @@ export const fetchQuestionCharacters = async (questionId: number): Promise<Chara
 
 export const fetchQuestionOptions = async (questionId: number): Promise<QuestionOptions[]> => {
     const supabase = createClient(cookies());
-    const response = await supabase.from("questions_options").select().eq("question_id", questionId);
+    const response = await supabase
+        .from("questions_options")
+        .select()
+        .eq("question_id", questionId)
+        .order("id", { ascending: true });
     return response.data ?? [];
 };
 
