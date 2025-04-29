@@ -56,12 +56,11 @@ export const OptionsQuestion = () => {
                 {options.map((option) => (
                     <Badge
                         key={option.id}
-                        className={"text-md p-4"}
+                        className={"text-md flex-col items-start p-4"}
                         onClick={() => setSelectedOption(option.id)}
                         variant={selectedOption === option.id ? "default" : "outline"}
-                    >
-                        {option.option}
-                    </Badge>
+                        dangerouslySetInnerHTML={{ __html: option.option ?? "" }}
+                    />
                 ))}
             </div>
             <Button onClick={handleSubmit} disabled={loading || !selectedOption}>

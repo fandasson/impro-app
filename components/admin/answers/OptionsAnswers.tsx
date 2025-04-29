@@ -33,7 +33,7 @@ export const OptionsAnswers = ({ options, questionId }: Props) => {
                     const bgClass = isMaxValue ? "bg-gray-600" : "";
                     return (
                         <TableRow key={option.id}>
-                            <TableCell className={bgClass}>{option.option}</TableCell>
+                            <TableCell className={bgClass} dangerouslySetInnerHTML={{ __html: option.option ?? "" }} />
                             <TableCell className={bgClass}>{countedOptions[option.id] || 0}</TableCell>
                         </TableRow>
                     );
