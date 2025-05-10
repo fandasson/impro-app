@@ -7,6 +7,11 @@ const nextConfig = {
                 hostname: "meudxrcsglqhfsylqmhs.supabase.co",
                 port: "",
             },
+            {
+                protocol: "https",
+                hostname: "www.improvariace.cz",
+                port: "",
+            },
         ],
     },
 };
