@@ -5,14 +5,13 @@ import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types"
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-import { Character as CharacterTile } from "./Character";
-
 import { fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
 import { Character, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
+import { Character as CharacterTile } from "@/components/users/questions/MatchQuestion/Character";
 import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
