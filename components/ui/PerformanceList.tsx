@@ -18,7 +18,13 @@ export function PerformanceList({ performances }: PerformanceListProps) {
                     <h3 className="text-lg font-semibold">{performance.title}</h3>
                     <div className="mt-2 flex flex-col gap-2">
                         <Link href={performance.link}>
-                            <Image src={performance.coverImageUrl} width={600} height={188} alt={performance.title} />
+                            <Image
+                                src={performance.coverImageUrl}
+                                width={600}
+                                height={188}
+                                unoptimized={true}
+                                alt={performance.title}
+                            />
                         </Link>
                         <div className="mb-3 text-sm">
                             <div className="font-medium">
