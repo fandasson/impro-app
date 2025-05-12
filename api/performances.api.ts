@@ -20,7 +20,7 @@ export const fetchPerformance = async (performanceId: number): Promise<Performan
 
 export const fetchVisiblePerformance = async (): Promise<PerformanceResponse> => {
     const supabase = createClient(cookies());
-    return supabase.from("performances").select("*").in("state", ["intro", "life"]).limit(1).single();
+    return supabase.from("performances").select("*").in("state", ["intro", "life", "closing"]).limit(1).single();
 };
 
 export const setPerformanceState = async (

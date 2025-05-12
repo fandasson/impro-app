@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, Eye, EyeOff, QrCode } from "lucide-react";
+import { Archive, Calendar, Eye, EyeOff, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { fetchPerformance, setPerformanceState } from "@/api/performances.api";
@@ -42,6 +42,9 @@ export const PerformanceStateToggle = ({ performanceId, defaultState }: Props) =
             </ToggleGroupItem>
             <ToggleGroupItem value="life">
                 <Eye />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="closing">
+                <Calendar />
             </ToggleGroupItem>
             <ToggleGroupItem value="finished">
                 <Archive />

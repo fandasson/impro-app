@@ -445,7 +445,7 @@ export type Database = {
     }
     Enums: {
       audience_visibility: "hidden" | "question" | "results"
-      "performance-state": "draft" | "intro" | "life" | "finished"
+      "performance-state": "draft" | "intro" | "life" | "finished" | "closing"
       "question-state": "draft" | "active" | "locked" | "answered"
       "question-type":
         | "text"
@@ -571,7 +571,7 @@ export const Constants = {
   public: {
     Enums: {
       audience_visibility: ["hidden", "question", "results"],
-      "performance-state": ["draft", "intro", "life", "finished"],
+      "performance-state": ["draft", "intro", "life", "finished", "closing"],
       "question-state": ["draft", "active", "locked", "answered"],
       "question-type": [
         "text",
