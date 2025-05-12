@@ -10,7 +10,7 @@ const nextConfig = {
             {
                 protocol: "https",
                 hostname: "www.improvariace.cz",
-                port: "",
+                pathname: "/**",
             },
         ],
     },
