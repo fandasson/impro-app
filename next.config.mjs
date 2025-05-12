@@ -10,7 +10,8 @@ const nextConfig = {
             {
                 protocol: "https",
                 hostname: "www.improvariace.cz",
-                pathname: "/**",
+                pathname: "/media/**",
+                port: "",
             },
         ],
     },
