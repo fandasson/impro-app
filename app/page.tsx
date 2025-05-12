@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
 
 import { AuthUser } from "@/components/users/AuthUser";
+import { UpcomingPerformances } from "@/components/users/UpcomingPerformances";
 import { UserIndex } from "@/components/users/UserIndex";
 import { createClient } from "@/utils/supabase/server";
 
@@ -15,7 +15,7 @@ export default async function PerformanceView({ params }: { params: { slug: stri
         if (performances && performances.length > 1) {
             console.warn("More than one performance found", performances);
         }
-        notFound();
+        return <UpcomingPerformances />;
     }
 
     return (
