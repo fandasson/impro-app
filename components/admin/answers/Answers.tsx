@@ -2,11 +2,10 @@
 
 import React from "react";
 
-import { OptionsAnswers } from "./OptionsAnswers";
-
 import { QuestionDetail, QuestionOptions } from "@/api/types.api";
 import { AnswersHeadline } from "@/components/admin/answers/AnswersHeadline";
 import { MatchingAnswers } from "@/components/admin/answers/MatchingAnswers";
+import { OptionsAnswers } from "@/components/admin/answers/OptionsAnswers";
 import { PlayersVotingAnswers } from "@/components/admin/answers/PlayersVotingAnswers";
 import { TextAnswers } from "@/components/admin/answers/TextAnswers";
 
