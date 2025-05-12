@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
@@ -21,6 +22,7 @@ export default function RootLayout({
         <html lang="cs">
             <body className={cn("dark min-h-screen bg-background font-sans antialiased", inter.variable)}>
                 {children}
+                <SpeedInsights />
             </body>
         </html>
     );
