@@ -1,14 +1,15 @@
 "use client";
 
+import { Performance } from "@/api/types.api";
 import { AudiencePoolResults } from "@/components/audience/AudiencePoolResults";
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";
 import { Intro } from "@/components/audience/Intro";
+import { UpcomingPerformance } from "@/components/audience/UpcomingPerformance";
 import { usePool } from "@/hooks/audience.hooks";
 import { usePerformance } from "@/hooks/users.hooks";
-import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
-    defaultPerformance: Tables<"performances">;
+    defaultPerformance: Performance;
 };
 
 export const AudienceIndex = ({ defaultPerformance }: Props) => {
@@ -29,5 +30,9 @@ export const AudienceIndex = ({ defaultPerformance }: Props) => {
         } else {
             return <AudienceQuestionDetail performanceId={defaultPerformance.id} />;
         }
+    }
+
+    if (performance.state === "closing") {
+        return <UpcomingPerformance />;
     }
 };
