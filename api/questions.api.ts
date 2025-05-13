@@ -135,6 +135,8 @@ export const setAudienceVisibility = async (questionId: number, visibility: Audi
     const supabase = createClient(cookies());
     // first, hide visible
     await supabase.from("questions").update({ audience_visibility: "hidden" }).neq("audience_visibility", "hidden");
+    // hide pools
+    await supabase.from("questions_pool").update({ audience_visibility: false }).eq("audience_visibility", true);
 
     // set required visibility
     await supabase.from("questions").update({ audience_visibility: visibility }).eq("id", questionId);
