@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestionPlayers } from "@/api/questions.api";
@@ -15,6 +15,14 @@ type Props = {
     question: Question;
 };
 
+const shufflePlayers = (newPlayers: PlayerWithPhotos[]) => {
+    const shuffledPlayers = [...newPlayers];
+    for (let i = shuffledPlayers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPlayers[i], shuffledPlayers[j]] = [shuffledPlayers[j], shuffledPlayers[i]];
+    }
+    return shuffledPlayers;
+};
 export const PlayersVotingQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
     const [selectedPlayer, setSelectedPlayer] = useState<number>();
@@ -50,6 +58,7 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
     };
 
     const rows = Math.ceil(players.length / 2);
+    const shuffledPlayers = useMemo(() => shufflePlayers(players), [players]);
     return (
         <>
             {question.question && (
@@ -59,8 +68,8 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
                 </>
             )}
             <div className={cn("grid grid-cols-2 items-center justify-center gap-x-2 gap-y-4", `grid-rows-${rows}`)}>
-                {players &&
-                    players.map((player) => (
+                {shuffledPlayers &&
+                    shuffledPlayers.map((player) => (
                         <PlayerCard
                             player={{ ...player, count: 0 }}
                             key={player.id}
