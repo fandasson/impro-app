@@ -26,7 +26,9 @@ export const countVotesForPlayers = <T extends Player>(
     }
 
     const sortedPlayers =
-        extendedPlayers.length > 2 ? extendedPlayers.sort((a, b) => b.count - a.count) : extendedPlayers;
+        extendedPlayers.length > 2
+            ? extendedPlayers.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+            : extendedPlayers;
     return sortedPlayers as VotedPlayer<T>[];
 };
 
