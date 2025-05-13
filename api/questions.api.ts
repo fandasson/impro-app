@@ -3,6 +3,7 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 import {
     AudienceVisibility,
@@ -95,12 +96,12 @@ export const fetchQuestions = async (performanceId: number): Promise<QuestionsRe
         .order("index_order", { ascending: false });
 };
 
-export const fetchQuestionPlayers = async (questionId: number): Promise<Player[]> => {
+export const fetchQuestionPlayers = cache(async (questionId: number): Promise<Player[]> => {
     const supabase = createClient(cookies());
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
     const players = response.data?.players ?? [];
     return players.sort((a, b) => a.name.localeCompare(b.name));
-};
+});
 
 export const fetchQuestionCharacters = async (questionId: number): Promise<Character[]> => {
     const supabase = createClient(cookies());
