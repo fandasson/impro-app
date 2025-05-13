@@ -17,7 +17,7 @@ export const AssignPlayersToQuestion = (props: Props) => {
         if (disabled) {
             return;
         }
-        const index = selectedPlayers.indexOf(player);
+        const index = selectedPlayers.findIndex((p) => p.id === player.id);
         let newList = [];
         if (index === -1) {
             newList = [...selectedPlayers, player];
