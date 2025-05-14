@@ -34,15 +34,17 @@ export const OnboardingWizard = ({ performance }: Props) => {
                     <h1 className="text-center text-xl">{performance.name}</h1>
                     <div className="flex flex-col gap-4">
                         <Paragraph>
-                            Naše aplikace je obyčejná webová stránka. Když ji nezavřete, najdete ji ve svém prohlížeči.
+                            Naše aplikace je obyčejná webová stránka. Dokud ji nezavřete, najdete ji ve svém prohlížeči.
                         </Paragraph>
                         <Paragraph>
-                            Vše důležité najdete na této jedné stránce (adrese). Nemusíte ji otevírat znovu.
+                            Vše důležité bude na této jedné stránce (adrese). Nemusíte ji otevírat znovu.
                         </Paragraph>
                         <Paragraph>
                             Moderátor vás upozorní pokaždé, když budete moci ovlivnit představení skrze aplikaci.
                         </Paragraph>
-                        <Paragraph>Teď vám ukážeme, jak taková interakce může vypadat, ať si to vyzkoušíte. </Paragraph>
+                        <Paragraph>
+                            Tady je pár tipů, jak s aplikací pracovat. Vyzkoušejte to, ať při představení netápete.
+                        </Paragraph>
                     </div>
                     <Button onClick={() => handleNextStep(STEPS.REFRESH)} className="w-full">
                         Jasný, ukaž mi jak to funguje
@@ -56,11 +58,13 @@ export const OnboardingWizard = ({ performance }: Props) => {
             {currentStep === STEPS.REFRESH && (
                 <div className="flex-g row flex flex-col items-center gap-8">
                     <div className="flex flex-col justify-center gap-4">
-                        <Paragraph>Aplikace se chová divně? Ukazuje něco jiného než by měla? </Paragraph>
-                        <Paragraph className={"text-2xl font-bold"}> Aktualizujte stránku</Paragraph>
                         <Paragraph>
-                            Většinou stačí &ldquo;stáhnout&rdquo; prostem obsah stránky dolů dokud se nezačně někde
-                            točit nějaké kolečko.
+                            Co když se aplikace se chová divně? Ukazuje něco jiného než by měla? Nebo neukazuje nic?
+                        </Paragraph>
+                        <Paragraph className={"text-2xl font-bold"}>Aktualizujte stránku</Paragraph>
+                        <Paragraph>
+                            Většinou stačí &ldquo;stáhnout&rdquo; prstem obsah stránky dolů dokud se nezačně někde točit
+                            nějaké kolečko.
                         </Paragraph>
                         <Paragraph className={"italic"}>
                             Občas se to někomu stane. Možná erupce na slunci, možná osud... 🤷‍♂️
@@ -81,7 +85,7 @@ export const OnboardingWizard = ({ performance }: Props) => {
                         <Paragraph>Raději si teď vyzkoušejte, že aplikaci snadno najdete.</Paragraph>
                         <Paragraph>Schovejte si telefon abyste si uvolnili ruce na drink nebo potlesk.</Paragraph>
                         <Paragraph>
-                            A pak si zkuste vrátit se do aplikace. Možná uvidíte aplikaci hned po odemčení, možná budete
+                            A pak se zkuste vrátit do aplikace. Možná uvidíte aplikaci hned po odemčení, možná budete
                             muset otevřít prohlížeč.
                         </Paragraph>
                     </div>

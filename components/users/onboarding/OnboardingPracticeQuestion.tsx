@@ -65,7 +65,7 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
             <h2 className="text-2xl font-bold">Ukázka hlasování</h2>
             <Paragraph>
                 Takhle bude vypadat hlasování. Hráči se zobrazí v náhodném pořadí. Stačí kliknout. Vybraný se označí
-                bíle
+                bíle.
             </Paragraph>
             <Paragraph>Rozhodnutí můžete libovolně měnit dokud moderátor neukončí hlasování.</Paragraph>
             <Paragraph>Odpovědi není třeba potvrzovat žádným tlačítkem.</Paragraph>
@@ -90,7 +90,7 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
             <div className="mt-4 flex flex-col items-center gap-4">
                 <Paragraph className={"italic"}>Nezapomeňte. Žádné tlačítko na odeslání odpovědi.</Paragraph>
                 <Button onClick={onComplete} className="w-full">
-                    Chápu. Jsem připraven si užít představení 💪
+                    Chápu. Jsem připraven/a si užít představení 💪
                 </Button>
             </div>
         </>
