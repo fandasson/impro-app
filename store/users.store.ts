@@ -10,6 +10,10 @@ type Store = {
     question: Question | null;
     answers: Record<number, string | number>;
     performance: Performance | null;
+    onboarding: {
+        completed: boolean;
+        currentStep: number;
+    };
 };
 
 export const useUsersStore = create<Store>()(
@@ -20,6 +24,10 @@ export const useUsersStore = create<Store>()(
             question: null,
             performance: null,
             answers: {},
+            onboarding: {
+                completed: false,
+                currentStep: 0,
+            },
         }),
         {
             name: "user-storage",
@@ -39,3 +47,17 @@ export const setQuestion = (question: Question | null) => useUsersStore.setState
 export const setPerformance = (performance: Performance | null) => useUsersStore.setState({ performance });
 export const storeAnswer = (questionId: number, answer: string | number) =>
     useUsersStore.setState((state) => ({ answers: { ...state.answers, [questionId]: answer } }));
+
+// Add new functions for onboarding state management
+export const completeOnboarding = () =>
+    useUsersStore.setState((state) => ({
+        onboarding: { ...state.onboarding, completed: true },
+    }));
+export const setOnboardingStep = (step: number) =>
+    useUsersStore.setState((state) => ({
+        onboarding: { ...state.onboarding, currentStep: step },
+    }));
+export const resetOnboarding = () =>
+    useUsersStore.setState({
+        onboarding: { completed: false, currentStep: 0 },
+    });
