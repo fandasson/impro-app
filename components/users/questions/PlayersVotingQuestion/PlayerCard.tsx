@@ -18,7 +18,7 @@ export const PlayerCard = ({ player, onClick, selected, hideResults, heightFract
             key={player.id}
             onClick={onClick}
             style={{
-                maxHeight: `calc((100svh - 48px - (${heightFraction - 1} * 16px)) / ${heightFraction})`,
+                minHeight: `calc((100svh - 48px - (${heightFraction - 1} * 16px)) / ${heightFraction})`,
             }}
         >
             <div className={"relative aspect-square h-[100px] w-[100px]"}>
