@@ -37,3 +37,6 @@ next-env.d.ts
 
 #IDEs
 .idea
+
+# Agents
+.claude/*.local.*
