@@ -25,7 +25,6 @@ export const OptionsAnswers = ({ options, questionId, initialAnswers }: Props) =
         }
     });
 
-    console.log(maxValue);
     return (
         <Table>
             <TableBody>
