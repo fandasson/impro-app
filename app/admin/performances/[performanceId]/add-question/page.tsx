@@ -7,7 +7,8 @@ import { QuestionUpsertRequest } from "@/api/types.api";
 import { QuestionForm } from "@/components/admin/question-form";
 import { Button } from "@/components/ui/Button";
 
-export default async function AddQuestion({ params }: { params: { performanceId: string } }) {
+export default async function AddQuestion(props: { params: Promise<{ performanceId: string }> }) {
+    const params = await props.params;
     const performanceId = parseInt(params.performanceId);
 
     const handleSubmit = async (data: QuestionUpsertRequest) => {

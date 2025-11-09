@@ -5,19 +5,19 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 
 export const fetchAvailablePools = async (performanceId: number) => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase.from("questions_pool").select("*").eq("performance_id", performanceId);
     return response.data ?? [];
 };
 
 export const fetchQuestionPool = async (poolId: number) => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase.from("questions_pool").select("*").eq("id", poolId).single();
     return response.data;
 };
 
 export const fetchVisiblePool = async (performanceId: number) => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase
         .from("questions_pool")
         .select("*")
@@ -32,7 +32,7 @@ export const setPoolAudienceVisibility = async (
     visibility: boolean,
     performanceId: number,
 ): Promise<void> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     // first, hide visible
     await supabase.from("questions_pool").update({ audience_visibility: false }).eq("audience_visibility", true);
     // also, hide all audience visible questions

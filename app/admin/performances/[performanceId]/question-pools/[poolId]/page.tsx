@@ -7,7 +7,8 @@ import { PoolVotingAnswers } from "@/components/admin/answers/PoolVotingAnswers"
 import { PoolAudienceStateToggle } from "@/components/admin/question-pools/PoolAudienceStateToggle";
 import { Button } from "@/components/ui/Button";
 
-export default async function QuestionPoolDetail({ params }: { params: { poolId: string } }) {
+export default async function QuestionPoolDetail(props: { params: Promise<{ poolId: string }> }) {
+    const params = await props.params;
     const poolId = parseInt(params.poolId);
     const pool = await fetchQuestionPool(poolId);
 

@@ -9,8 +9,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "types:gen": "supabase gen types typescript --project-id meudxrcsglqhfsylqmhs --schema public > utils/supabase/entity.types.ts",
     "types:check": "tsc --noEmit",
     "format:check": "prettier --cache --check --log-level warn .",
@@ -32,10 +32,10 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.553.0",
-    "next": "14.2.26",
+    "next": "16.0.1",
     "qrcode.react": "^4.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-hook-form": "^7.53.0",
     "tailwind-merge": "^2.5.3",
     "tailwindcss": "^3.4.13",
@@ -45,12 +45,12 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.14",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
     "postcss": "^8.4.47",
@@ -65,5 +65,11 @@
   "volta": {
     "node": "22.21.1",
     "pnpm": "10.9.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2"
+    }
   }
 }

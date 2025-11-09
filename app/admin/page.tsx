@@ -9,7 +9,7 @@ import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Performances() {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const {
         data: { user },

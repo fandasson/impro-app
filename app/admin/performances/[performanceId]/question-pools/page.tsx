@@ -7,7 +7,8 @@ import { fetchAvailablePools } from "@/api/question-pools.api";
 import { List } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
 
-export default async function QuestionPools({ params }: { params: { performanceId: string } }) {
+export default async function QuestionPools(props: { params: Promise<{ performanceId: string }> }) {
+    const params = await props.params;
     const performanceId = parseInt(params.performanceId);
     const { data: performance } = await fetchPerformance(performanceId);
 

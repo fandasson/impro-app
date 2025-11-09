@@ -10,7 +10,7 @@ import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
 
 export const submitTextAnswer = async (answer: TextAnswerInsert) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
@@ -24,7 +24,7 @@ export const submitTextAnswer = async (answer: TextAnswerInsert) => {
 };
 
 export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
@@ -38,7 +38,7 @@ export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
 };
 
 export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!user_id) {
@@ -71,7 +71,7 @@ export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
 };
 
 export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 

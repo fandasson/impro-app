@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/Input";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { createClient } from "@/utils/supabase/server";
 
-export default function Login({ searchParams }: { searchParams: { message: string } }) {
+export default async function Login(props: { searchParams: Promise<{ message: string }> }) {
+    const searchParams = await props.searchParams;
     const signIn = async (formData: FormData) => {
         "use server";
 
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const supabase = createClient(cookieStore);
 
         const { error } = await supabase.auth.signInWithPassword({

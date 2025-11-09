@@ -8,7 +8,8 @@ import { List, QuestionItem } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
 import { formatDate } from "@/utils/date.utils";
 
-export default async function PerformanceDetail({ params }: { params: { performanceId: string } }) {
+export default async function PerformanceDetail(props: { params: Promise<{ performanceId: string }> }) {
+    const params = await props.params;
     const performanceId = parseInt(params.performanceId);
     const { data: performance } = await fetchPerformance(performanceId);
 

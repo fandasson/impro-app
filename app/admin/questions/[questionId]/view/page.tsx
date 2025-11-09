@@ -11,7 +11,8 @@ import { QuestionOptions as QuestionOptionsHeader } from "@/components/admin/que
 import { QuestionUserStateToggle } from "@/components/admin/questions/QuestionUserStateToggle";
 import { Button } from "@/components/ui/Button";
 
-export default async function QuestionDetail({ params }: { params: { questionId: string } }) {
+export default async function QuestionDetail(props: { params: Promise<{ questionId: string }> }) {
+    const params = await props.params;
     const questionId = parseInt(params.questionId);
     const { data: question } = await fetchQuestion(questionId);
     let followUpQuestionRequest = null;

@@ -7,7 +7,8 @@ import { QuestionUpsertRequest } from "@/api/types.api";
 import { QuestionForm } from "@/components/admin/question-form";
 import { Button } from "@/components/ui/Button";
 
-export default async function QuestionDetail({ params }: { params: { questionId: string } }) {
+export default async function QuestionDetail(props: { params: Promise<{ questionId: string }> }) {
+    const params = await props.params;
     const questionId = parseInt(params.questionId);
     const { data: question } = await fetchQuestion(questionId);
 

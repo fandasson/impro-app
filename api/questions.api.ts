@@ -24,7 +24,7 @@ type QuestionsResponse = PostgrestSingleResponse<QuestionWithPool[]>;
 type QuestionDetailResponse = PostgrestSingleResponse<QuestionDetail>;
 
 export const fetchActiveOrLockedQuestion = async (performanceId: number): Promise<QuestionResponse> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     return supabase
         .from("questions")
         .select("*")
@@ -35,12 +35,12 @@ export const fetchActiveOrLockedQuestion = async (performanceId: number): Promis
 };
 
 export const findQuestion = async (performanceId: number, filter: string): Promise<QuestionResponse> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     return supabase.from("questions").select("*").eq("performance_id", performanceId).or(filter).limit(1).single();
 };
 
 export const checkUserAlreadyAnswered = async (questionId: number): Promise<boolean> => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const userId = cookieStore.get(COOKIE_USER_ID)?.value;
 
@@ -68,7 +68,7 @@ export const checkUserAlreadyAnswered = async (questionId: number): Promise<bool
 };
 
 export const fetchQuestion = async (questionId: number): Promise<QuestionDetailResponse> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const questionResponse = await supabase
         .from("questions")
         .select("*, players (*), questions_pool(id, name)")
@@ -82,13 +82,13 @@ export const fetchQuestion = async (questionId: number): Promise<QuestionDetailR
 };
 
 export const fetchQuestionState = async (questionId: number): Promise<QuestionState> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase.from("questions").select("state").eq("id", questionId).single();
     return response.data?.state ?? "draft";
 };
 
 export const fetchQuestions = async (performanceId: number): Promise<QuestionsResponse> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     return supabase
         .from("questions")
         .select("*, questions_pool(id, name)")
@@ -97,20 +97,20 @@ export const fetchQuestions = async (performanceId: number): Promise<QuestionsRe
 };
 
 export const fetchQuestionPlayers = cache(async (questionId: number): Promise<Player[]> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
     const players = response.data?.players ?? [];
     return players.sort((a, b) => a.name.localeCompare(b.name));
 });
 
 export const fetchQuestionCharacters = async (questionId: number): Promise<Character[]> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase.from("characters").select().eq("question_id", questionId);
     return response.data ?? [];
 };
 
 export const fetchQuestionOptions = async (questionId: number): Promise<QuestionOptions[]> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase
         .from("questions_options")
         .select()
@@ -120,7 +120,7 @@ export const fetchQuestionOptions = async (questionId: number): Promise<Question
 };
 
 export const setQuestionState = async (questionId: number, state: QuestionState): Promise<QuestionResponse> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     // first, hide all visible
     await supabase.from("questions").update({ state: "answered" }).in("state", ["active", "locked"]);
 
@@ -132,7 +132,7 @@ export const setQuestionState = async (questionId: number, state: QuestionState)
 };
 
 export const setAudienceVisibility = async (questionId: number, visibility: AudienceVisibility): Promise<void> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     // first, hide visible
     await supabase.from("questions").update({ audience_visibility: "hidden" }).neq("audience_visibility", "hidden");
     // hide pools
@@ -144,7 +144,7 @@ export const setAudienceVisibility = async (questionId: number, visibility: Audi
 };
 
 export const getNewIndexOrder = async (performanceId: number): Promise<number> => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     const response = await supabase
         .from("questions")
         .select("index_order")
@@ -157,7 +157,7 @@ export const getNewIndexOrder = async (performanceId: number): Promise<number> =
 };
 
 export const createQuestion = async (performanceId: number, question: QuestionUpsertRequest) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const { players, ...questionData } = question;
     const response = await supabase
@@ -187,7 +187,7 @@ export const createQuestion = async (performanceId: number, question: QuestionUp
 };
 
 export const updateQuestion = async (questionId: number, question: QuestionUpsertRequest) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
     const { players, ...questionData } = question;
 
@@ -218,7 +218,7 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
 };
 
 export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
-    const supabase = createClient(cookies());
+    const supabase = createClient(await cookies());
     await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);
     revalidatePath(`/admin/performances/${performanceId}`);
 };

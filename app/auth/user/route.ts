@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 
 export async function GET(_: Request, response: Response) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     let userId = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!userId) {

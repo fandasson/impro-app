@@ -6,7 +6,7 @@ import { UserIndex } from "@/components/users/UserIndex";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function PerformanceView({ params }: { params: { slug: string } }) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
     const { data: performances } = await supabase.from("performances").select("*").in("state", ["intro", "life"]);
