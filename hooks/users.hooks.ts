@@ -33,7 +33,7 @@ export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion
         if (performanceId) {
             const supabase = createClient();
             const channel = supabase
-                .channel("activeOrLockedQuestionChannel")
+                .channel(`user-performance-${performanceId}-active-question`)
                 .on<Question>(
                     "postgres_changes",
                     {
@@ -73,7 +73,7 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel("activePerformance")
+            .channel(`user-performance-${defaultPerformance.id}`)
             .on<Performance>(
                 "postgres_changes",
                 {

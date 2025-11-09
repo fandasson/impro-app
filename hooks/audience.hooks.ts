@@ -31,7 +31,7 @@ export const useQuestion = (performanceId: number, initialQuestion?: Question | 
         if (performanceId) {
             const supabase = createClient();
             const channel = supabase
-                .channel("activeOrLockedQuestionChannel")
+                .channel(`audience-performance-${performanceId}-question`)
                 .on<Question>(
                     "postgres_changes",
                     {
@@ -82,7 +82,7 @@ export const usePool = (performanceId: number, initialPool?: QuestionPool | null
         if (performanceId) {
             const supabase = createClient();
             const channel = supabase
-                .channel("visibleQuestionPoolChannel")
+                .channel(`audience-performance-${performanceId}-pool`)
                 .on<QuestionPool>(
                     "postgres_changes",
                     {

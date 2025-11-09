@@ -56,7 +56,7 @@ const useAnswers = <T extends Answer>(
     useEffect(() => {
         const supabase = createClient();
         const channel = supabase
-            .channel(`admin-${table}-answers`)
+            .channel(`admin-${table}-question-${questionId}`)
             .on<T>(
                 "postgres_changes",
                 {
