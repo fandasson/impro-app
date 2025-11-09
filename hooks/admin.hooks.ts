@@ -12,6 +12,7 @@ import {
 } from "@/api/types.api";
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
+import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
 export const useTextAnswers = (questionId: number, initialAnswers?: TextAnswer[]) =>
     useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers, initialAnswers);
@@ -55,8 +56,9 @@ const useAnswers = <T extends Answer>(
 
     useEffect(() => {
         const supabase = createClient();
+        const channelName = `admin-${table}-question-${questionId}`;
         const channel = supabase
-            .channel(`admin-${table}-question-${questionId}`)
+            .channel(channelName)
             .on<T>(
                 "postgres_changes",
                 {
@@ -77,7 +79,7 @@ const useAnswers = <T extends Answer>(
                 },
                 (payload) => modifyAnswer(payload.new.id, payload.new),
             )
-            .subscribe();
+            .subscribe(createSubscriptionStatusHandler(`[Admin] ${table}`, channelName));
 
         return () => {
             supabase.removeChannel(channel);

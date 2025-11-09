@@ -4,6 +4,7 @@ import { fetchActiveOrLockedQuestion, fetchQuestion } from "@/api/questions.api"
 import { Performance, Question } from "@/api/types.api";
 import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
+import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
 export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useUsersStore((state) => state.question);
@@ -32,8 +33,9 @@ export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion
     useEffect(() => {
         if (performanceId) {
             const supabase = createClient();
+            const channelName = `user-performance-${performanceId}-active-question`;
             const channel = supabase
-                .channel(`user-performance-${performanceId}-active-question`)
+                .channel(channelName)
                 .on<Question>(
                     "postgres_changes",
                     {
@@ -51,7 +53,7 @@ export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion
                         }
                     },
                 )
-                .subscribe();
+                .subscribe(createSubscriptionStatusHandler("[User] Questions", channelName));
             return () => {
                 supabase.removeChannel(channel);
             };
@@ -72,8 +74,9 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
 
     useEffect(() => {
         const supabase = createClient();
+        const channelName = `user-performance-${defaultPerformance.id}`;
         const channel = supabase
-            .channel(`user-performance-${defaultPerformance.id}`)
+            .channel(channelName)
             .on<Performance>(
                 "postgres_changes",
                 {
@@ -86,7 +89,7 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
                     setPerformance(payload.new);
                 },
             )
-            .subscribe();
+            .subscribe(createSubscriptionStatusHandler("[User] Performance", channelName));
 
         return () => {
             supabase.removeChannel(channel);

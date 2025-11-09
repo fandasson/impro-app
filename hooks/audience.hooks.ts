@@ -5,6 +5,7 @@ import { findQuestion } from "@/api/questions.api";
 import { Question, QuestionPool } from "@/api/types.api";
 import { setPool, setQuestion, useAudienceStore } from "@/store/audience.store";
 import { createClient } from "@/utils/supabase/client";
+import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
 export const useQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useAudienceStore((state) => state.question);
@@ -30,8 +31,9 @@ export const useQuestion = (performanceId: number, initialQuestion?: Question | 
     useEffect(() => {
         if (performanceId) {
             const supabase = createClient();
+            const channelName = `audience-performance-${performanceId}-question`;
             const channel = supabase
-                .channel(`audience-performance-${performanceId}-question`)
+                .channel(channelName)
                 .on<Question>(
                     "postgres_changes",
                     {
@@ -49,7 +51,7 @@ export const useQuestion = (performanceId: number, initialQuestion?: Question | 
                         }
                     },
                 )
-                .subscribe();
+                .subscribe(createSubscriptionStatusHandler("[Audience] Questions", channelName));
             return () => {
                 supabase.removeChannel(channel);
             };
@@ -81,8 +83,9 @@ export const usePool = (performanceId: number, initialPool?: QuestionPool | null
     useEffect(() => {
         if (performanceId) {
             const supabase = createClient();
+            const channelName = `audience-performance-${performanceId}-pool`;
             const channel = supabase
-                .channel(`audience-performance-${performanceId}-pool`)
+                .channel(channelName)
                 .on<QuestionPool>(
                     "postgres_changes",
                     {
@@ -100,7 +103,7 @@ export const usePool = (performanceId: number, initialPool?: QuestionPool | null
                         }
                     },
                 )
-                .subscribe();
+                .subscribe(createSubscriptionStatusHandler("[Audience] Pool", channelName));
             return () => {
                 supabase.removeChannel(channel);
             };
