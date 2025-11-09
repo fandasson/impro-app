@@ -18,8 +18,9 @@ type Props = {
 
 export const PlayersVotingQuestion = ({ question }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
-    const [selectedPlayer, setSelectedPlayer] = useState<number>();
-    const answered = useUsersStore((state) => state.answers[question.id] as number | undefined);
+    // Optimistic approach: Use store as single source of truth for selected player
+    // UI updates immediately when store updates (via storeAnswer)
+    const selectedPlayer = useUsersStore((state) => state.answers[question.id] as number | undefined);
 
     useEffect(() => {
         fetchQuestionPlayers(question.id).then((response) => {
@@ -34,19 +35,13 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
         });
     }, [question.id]);
 
-    useEffect(() => {
-        if (answered && !selectedPlayer) {
-            setSelectedPlayer(answered);
-        }
-    }, [answered, selectedPlayer]);
-
     const handleSubmit = async (playerId: number) => {
-        setSelectedPlayer(playerId);
+        // Optimistic update: Update store immediately for instant UI feedback
+        storeAnswer(question.id, playerId);
+        // Then submit to server
         await submitVoteAnswer({
             question_id: question.id,
             player_id: playerId,
-        }).then(() => {
-            storeAnswer(question.id, playerId);
         });
     };
 

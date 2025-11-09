@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 import { submitTextAnswer } from "@/api/submit-answer";
 import { Button } from "@/components/ui/Button";
@@ -23,7 +23,7 @@ export const TextQuestion = (props: Props) => {
     const isLoading = useUsersStore((state) => state.loading);
     const question = useUsersStore((state) => state.question);
     const performance = useUsersStore((state) => state.performance);
-    const { register, handleSubmit, reset, watch } = useForm<Inputs>();
+    const { register, handleSubmit, reset, control } = useForm<Inputs>();
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
@@ -45,7 +45,8 @@ export const TextQuestion = (props: Props) => {
         });
     };
 
-    const inputLength = watch("answer")?.length || 0;
+    const answerValue = useWatch({ control, name: "answer" });
+    const inputLength = answerValue?.length || 0;
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={"flex flex-col gap-4"}>
             <Paragraph>{props.questionText}</Paragraph>

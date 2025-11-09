@@ -22,7 +22,6 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
 
     useEffect(() => {
         if (performance) {
-            setLoading(true);
             fetchAvailablePlayers(performance.id)
                 .then((fetchedPlayers) => {
                     const playersWithPhotos = fetchedPlayers.map((player) => {

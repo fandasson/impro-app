@@ -5,7 +5,7 @@ type Props = PropsWithChildren & {
     name: string;
     selected?: boolean;
 };
-// eslint-disable-next-line react/display-name
+ 
 export const Character = forwardRef((props: Props, ref: ForwardedRef<HTMLDivElement>) => {
     return (
         <div ref={ref} className={"flex gap-1 rounded border px-2 py-1"}>

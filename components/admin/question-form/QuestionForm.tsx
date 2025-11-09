@@ -1,7 +1,7 @@
 "use client";
 import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 import { areThereVotesForQuestion } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
@@ -44,7 +44,7 @@ export const QuestionForm = (props: Props) => {
         handleSubmit: handleFormSubmit,
         formState: { errors },
         getFieldState,
-        watch,
+        control,
         getValues,
         setValue,
     } = useForm<QuestionUpsertRequest>({
@@ -72,7 +72,7 @@ export const QuestionForm = (props: Props) => {
         getNewIndexOrder(performanceId).then((index) => setValue("index_order", index));
     }, [getFieldState, getValues, performanceId, setValue]);
 
-    const type = watch("type");
+    const type = useWatch({ control, name: "type" });
     useEffect(() => {
         if (type === "voting") {
             setLoading(true);

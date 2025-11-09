@@ -431,4 +431,4 @@ SUPABASE_SERVICE_KEY=...  # Server-side only
 ---
 
 **Last Updated**: Analysis of v2.0.0 branch
-**Stack**: Next.js 14 + Supabase + Zustand
+**Stack**: Next.js 15 + Supabase + Zustand
