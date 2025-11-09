@@ -1,6 +1,6 @@
 .env*
-yarn*
-.yarn/*
+pnpm-lock.yaml
+.pnpm-store
 .husky/*
 .editorconfig
 .gitattributes
