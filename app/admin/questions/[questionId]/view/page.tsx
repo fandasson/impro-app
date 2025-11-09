@@ -2,8 +2,14 @@ import { ChevronLeft, ProjectorIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import {
+    fetchMatchingAnswers,
+    fetchOptionsAnswers,
+    fetchTextAnswers,
+    fetchVoteAnswers,
+} from "@/api/answers.api";
 import { fetchQuestion, fetchQuestionOptions } from "@/api/questions.api";
-import { QuestionOptions } from "@/api/types.api";
+import { Answer, QuestionOptions } from "@/api/types.api";
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionMatch } from "@/components/admin/questions";
 import { QuestionAudienceStateToggle } from "@/components/admin/questions/QuestionAudienceStateToggle";
@@ -29,6 +35,28 @@ export default async function QuestionDetail(props: { params: Promise<{ question
     if (question.type === "options") {
         const results = await fetchQuestionOptions(question.id);
         options.push(...results);
+    }
+
+    // Fetch initial answers based on question type
+    let initialAnswers: Answer[] | undefined;
+    switch (question.type) {
+        case "text":
+            const textAnswersResponse = await fetchTextAnswers(questionId);
+            initialAnswers = textAnswersResponse.data ?? undefined;
+            break;
+        case "voting":
+        case "player-pick":
+            const voteAnswersResponse = await fetchVoteAnswers(questionId);
+            initialAnswers = voteAnswersResponse.data ?? undefined;
+            break;
+        case "match":
+            const matchAnswersResponse = await fetchMatchingAnswers(questionId);
+            initialAnswers = matchAnswersResponse.data ?? undefined;
+            break;
+        case "options":
+            const optionsAnswersResponse = await fetchOptionsAnswers(questionId);
+            initialAnswers = optionsAnswersResponse.data ?? undefined;
+            break;
     }
 
     return (
@@ -86,7 +114,7 @@ export default async function QuestionDetail(props: { params: Promise<{ question
                 <QuestionOptionsHeader question={question} />
             </article>
             <aside className={"mt-4"}>
-                <Answers question={question} questionOptions={options} />
+                <Answers question={question} questionOptions={options} initialAnswers={initialAnswers} />
             </aside>
         </>
     );

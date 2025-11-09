@@ -13,36 +13,45 @@ import {
 import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 
-export const useTextAnswers = (questionId: number) =>
-    useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers);
+export const useTextAnswers = (questionId: number, initialAnswers?: TextAnswer[]) =>
+    useAnswers<TextAnswer>("answers_text", questionId, fetchTextAnswers, initialAnswers);
 
-export const useVoteAnswers = (questionId: number) => {
-    return useAnswers<VoteAnswer>("answers_vote", questionId, fetchVoteAnswers);
+export const useVoteAnswers = (questionId: number, initialAnswers?: VoteAnswer[]) => {
+    return useAnswers<VoteAnswer>("answers_vote", questionId, fetchVoteAnswers, initialAnswers);
 };
 
-export const useMatchingAnswers = (questionId: number) => {
-    return useAnswers<MatchAnswer>("answers_match", questionId, fetchMatchingAnswers);
+export const useMatchingAnswers = (questionId: number, initialAnswers?: MatchAnswer[]) => {
+    return useAnswers<MatchAnswer>("answers_match", questionId, fetchMatchingAnswers, initialAnswers);
 };
 
-export const useOptionsAnswers = (questionId: number) => {
-    return useAnswers<OptionsAnswer>("answers_options", questionId, fetchOptionsAnswers);
+export const useOptionsAnswers = (questionId: number, initialAnswers?: OptionsAnswer[]) => {
+    return useAnswers<OptionsAnswer>("answers_options", questionId, fetchOptionsAnswers, initialAnswers);
 };
 
 const useAnswers = <T extends Answer>(
     table: TableNames,
     questionId: number,
     fetcher: (questionId: number) => Promise<AnswersResponse>,
+    initialAnswers?: T[],
 ) => {
     const answers = useAdminStore((state) => state.answers);
 
     useEffect(() => {
+        if (initialAnswers) {
+            // Use server-provided data, skip fetch
+            setAnswers(initialAnswers);
+            setLoading(false);
+            return;
+        }
+
+        // Fallback: fetch if no initial data provided
         setLoading(true);
         fetcher(questionId)
             .then((response) => {
                 setAnswers(response.data ?? []);
             })
             .finally(() => setLoading(false));
-    }, [fetcher, questionId]);
+    }, [fetcher, questionId, initialAnswers]);
 
     useEffect(() => {
         const supabase = createClient();

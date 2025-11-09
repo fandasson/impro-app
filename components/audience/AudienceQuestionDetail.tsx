@@ -1,3 +1,6 @@
+"use client";
+
+import { Question as QuestionType } from "@/api/types.api";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
 import { PlayersVotingAnswers } from "@/components/audience/answers/PlayersVotingAnswers";
 import { TextQuestionAnswers } from "@/components/audience/answers/TextQuestionAnswers";
@@ -6,9 +9,10 @@ import { useQuestion } from "@/hooks/audience.hooks";
 
 type Props = {
     performanceId: number;
+    initialQuestion: QuestionType | null;
 };
-export const AudienceQuestionDetail = ({ performanceId }: Props) => {
-    const question = useQuestion(performanceId);
+export const AudienceQuestionDetail = ({ performanceId, initialQuestion }: Props) => {
+    const question = useQuestion(performanceId, initialQuestion);
 
     if (!question || question.audience_visibility === "hidden") {
         return null;

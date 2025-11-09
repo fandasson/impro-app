@@ -12,9 +12,10 @@ import { removeAnswers as removeAnswersLocal, useAdminStore } from "@/store/admi
 
 type Props = {
     questionId: number;
+    initialAnswers?: TextAnswer[];
 };
-export const TextAnswers = memo(({ questionId }: Props) => {
-    const answers = useTextAnswers(questionId);
+export const TextAnswers = memo(({ questionId, initialAnswers }: Props) => {
+    const answers = useTextAnswers(questionId, initialAnswers);
     const loading = useAdminStore((state) => state.loading);
 
     const removeAnswer = async (answerId: number) => {

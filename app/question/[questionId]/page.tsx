@@ -1,13 +1,11 @@
-"use client";;
-import { use } from "react";
-
+import { fetchQuestion } from "@/api/questions.api";
 import { AuthUser } from "@/components/users/AuthUser";
 import { UserQuestionDetail } from "@/components/users/questions/UserQuestionDetail";
-import { useQuestion } from "@/hooks/users.hooks";
 
-export default function QuestionView(props: { params: Promise<{ questionId: string }> }) {
-    const params = use(props.params);
-    const question = useQuestion(parseInt(params.questionId));
+export default async function QuestionView(props: { params: Promise<{ questionId: string }> }) {
+    const params = await props.params;
+    const questionId = parseInt(params.questionId);
+    const { data: question } = await fetchQuestion(questionId);
 
     return (
         <AuthUser>

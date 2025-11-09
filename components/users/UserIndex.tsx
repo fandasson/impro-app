@@ -1,6 +1,6 @@
 "use client";
 
-import { Performance } from "@/api/types.api";
+import { Performance, Question } from "@/api/types.api";
 import { Intro } from "@/components/users/Intro";
 import { OnboardingWizard } from "@/components/users/onboarding/OnboardingWizard";
 import { UserQuestionDetailPage } from "@/components/users/questions/UserQuestionDetailPage";
@@ -9,9 +9,10 @@ import { useUsersStore } from "@/store/users.store";
 
 type Props = {
     defaultPerformance: Performance;
+    initialQuestion: Question | null;
 };
 
-export const UserIndex = ({ defaultPerformance }: Props) => {
+export const UserIndex = ({ defaultPerformance, initialQuestion }: Props) => {
     const performance = usePerformance(defaultPerformance);
     const onboardingCompleted = useUsersStore((state) => state.onboarding.completed);
 
@@ -28,6 +29,6 @@ export const UserIndex = ({ defaultPerformance }: Props) => {
     }
 
     if (performance.state === "life") {
-        return <UserQuestionDetailPage performanceId={performance.id} />;
+        return <UserQuestionDetailPage performanceId={performance.id} initialQuestion={initialQuestion} />;
     }
 };

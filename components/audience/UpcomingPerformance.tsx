@@ -1,13 +1,15 @@
+"use client";
+
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 
-import { getUpcomingPerformances } from "@/api/web.api";
+import { WebPerformance } from "@/api/web.api";
 
-export async function UpcomingPerformance() {
-    const upcomingPerformances = await getUpcomingPerformances();
+type Props = {
+    upcomingPerformances: WebPerformance[];
+};
 
-    console.log(upcomingPerformances);
-
+export function UpcomingPerformance({ upcomingPerformances }: Props) {
     if (!upcomingPerformances.length) {
         return null;
     }
@@ -17,7 +19,9 @@ export async function UpcomingPerformance() {
         <div>
             <h2 className="mb-4 text-center text-3xl font-bold">Přijďte příště!</h2>
             <div className="rounded-xl border-2 bg-white/5 p-6 shadow-md backdrop-blur-sm">
-                <h3 className="mb-2 text-2xl font-bold">{performance.title}</h3>
+                <h3 className="mb-2 text-2xl font-bold">
+                    <div dangerouslySetInnerHTML={{ __html: performance.title ?? "" }} />
+                </h3>
                 <div className="flex flex-col justify-between gap-4 md:flex-row">
                     <div className="text-xl">
                         <div className="font-medium">

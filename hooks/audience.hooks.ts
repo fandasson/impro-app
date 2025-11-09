@@ -6,10 +6,17 @@ import { Question, QuestionPool } from "@/api/types.api";
 import { setPool, setQuestion, useAudienceStore } from "@/store/audience.store";
 import { createClient } from "@/utils/supabase/client";
 
-export const useQuestion = (performanceId: number) => {
+export const useQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useAudienceStore((state) => state.question);
 
     useEffect(() => {
+        if (initialQuestion !== undefined) {
+            // Use server-provided data, skip fetch
+            setQuestion(initialQuestion);
+            return;
+        }
+
+        // Fallback: fetch if no initial data provided
         findQuestion(performanceId, "audience_visibility.eq.question,audience_visibility.eq.results").then(
             (response) => {
                 if (!response.data) {
@@ -18,7 +25,7 @@ export const useQuestion = (performanceId: number) => {
                 setQuestion(response.data);
             },
         );
-    }, [performanceId]);
+    }, [performanceId, initialQuestion]);
 
     useEffect(() => {
         if (performanceId) {
@@ -52,17 +59,24 @@ export const useQuestion = (performanceId: number) => {
     return question;
 };
 
-export const usePool = (performanceId: number) => {
+export const usePool = (performanceId: number, initialPool?: QuestionPool | null) => {
     const pool = useAudienceStore((state) => state.pool);
 
     useEffect(() => {
+        if (initialPool !== undefined) {
+            // Use server-provided data, skip fetch
+            setPool(initialPool);
+            return;
+        }
+
+        // Fallback: fetch if no initial data provided
         fetchVisiblePool(performanceId).then((response) => {
             if (!response) {
                 return;
             }
             setPool(response);
         });
-    }, [performanceId]);
+    }, [performanceId, initialPool]);
 
     useEffect(() => {
         if (performanceId) {

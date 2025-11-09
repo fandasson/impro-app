@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 
+import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
 import { AuthUser } from "@/components/users/AuthUser";
 import { UpcomingPerformances } from "@/components/users/UpcomingPerformances";
 import { UserIndex } from "@/components/users/UserIndex";
@@ -18,9 +19,12 @@ export default async function PerformanceView({ params }: { params: { slug: stri
         return <UpcomingPerformances />;
     }
 
+    // Fetch initial active or locked question
+    const { data: initialQuestion } = await fetchActiveOrLockedQuestion(performances[0].id);
+
     return (
         <AuthUser>
-            <UserIndex defaultPerformance={performances[0]} />
+            <UserIndex defaultPerformance={performances[0]} initialQuestion={initialQuestion ?? null} />
         </AuthUser>
     );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { QuestionOptions } from "@/api/types.api";
+import { OptionsAnswer, QuestionOptions } from "@/api/types.api";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/Table";
 import { useOptionsAnswers } from "@/hooks/admin.hooks";
 import { countOptions } from "@/utils/answers.utils";
@@ -7,10 +7,11 @@ import { countOptions } from "@/utils/answers.utils";
 type Props = {
     options: QuestionOptions[];
     questionId: number;
+    initialAnswers?: OptionsAnswer[];
 };
 
-export const OptionsAnswers = ({ options, questionId }: Props) => {
-    const answers = useOptionsAnswers(questionId);
+export const OptionsAnswers = ({ options, questionId, initialAnswers }: Props) => {
+    const answers = useOptionsAnswers(questionId, initialAnswers);
     const countedOptions = countOptions(options, answers);
 
     if (options.length === 0) {

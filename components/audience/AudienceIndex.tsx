@@ -1,6 +1,7 @@
 "use client";
 
-import { Performance } from "@/api/types.api";
+import { Performance, Question, QuestionPool } from "@/api/types.api";
+import { WebPerformance } from "@/api/web.api";
 import { AudiencePoolResults } from "@/components/audience/AudiencePoolResults";
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";
 import { Intro } from "@/components/audience/Intro";
@@ -10,11 +11,14 @@ import { usePerformance } from "@/hooks/users.hooks";
 
 type Props = {
     defaultPerformance: Performance;
+    initialQuestion: Question | null;
+    initialPool: QuestionPool | null;
+    upcomingPerformances: WebPerformance[];
 };
 
-export const AudienceIndex = ({ defaultPerformance }: Props) => {
+export const AudienceIndex = ({ defaultPerformance, initialQuestion, initialPool, upcomingPerformances }: Props) => {
     const performance = usePerformance(defaultPerformance);
-    const pool = usePool(defaultPerformance.id);
+    const pool = usePool(defaultPerformance.id, initialPool);
 
     if (!performance) {
         return null;
@@ -28,11 +32,11 @@ export const AudienceIndex = ({ defaultPerformance }: Props) => {
         if (pool) {
             return <AudiencePoolResults pool={pool} />;
         } else {
-            return <AudienceQuestionDetail performanceId={defaultPerformance.id} />;
+            return <AudienceQuestionDetail performanceId={defaultPerformance.id} initialQuestion={initialQuestion} />;
         }
     }
 
     if (performance.state === "closing") {
-        return <UpcomingPerformance />;
+        return <UpcomingPerformance upcomingPerformances={upcomingPerformances} />;
     }
 };

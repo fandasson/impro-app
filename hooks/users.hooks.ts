@@ -5,11 +5,18 @@ import { Performance, Question } from "@/api/types.api";
 import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
 
-export const useActiveOrLockedQuestion = (performanceId: number) => {
+export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useUsersStore((state) => state.question);
 
     useEffect(() => {
-        // only setting the loading state to true; fetchUserAnswer will set it to false
+        if (initialQuestion !== undefined) {
+            // Use server-provided data, skip fetch
+            setQuestion(initialQuestion);
+            setLoading(false);
+            return;
+        }
+
+        // Fallback: fetch if no initial data provided
         setLoading(true);
         fetchActiveOrLockedQuestion(performanceId)
             .then((response) => {
@@ -20,7 +27,7 @@ export const useActiveOrLockedQuestion = (performanceId: number) => {
                 setQuestion(response.data);
             })
             .finally(() => setLoading(false));
-    }, [performanceId]);
+    }, [performanceId, initialQuestion]);
 
     useEffect(() => {
         if (performanceId) {
@@ -89,15 +96,27 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
     return performance;
 };
 
-export const useQuestion = (questionId: number | null) => {
+export const useQuestion = (questionId: number | null, initialQuestion?: Question | null) => {
     const question = useUsersStore((state) => state.question);
-    if (!questionId) {
-        return null;
-    }
-    if (!question || question.id !== questionId) {
-        fetchQuestion(questionId).then((response) => {
-            setQuestion(response.data);
-        });
-    }
+
+    useEffect(() => {
+        if (!questionId) {
+            return;
+        }
+
+        if (initialQuestion !== undefined) {
+            // Use server-provided data, skip fetch
+            setQuestion(initialQuestion);
+            return;
+        }
+
+        // Fallback: fetch if no initial data and question doesn't match
+        if (!question || question.id !== questionId) {
+            fetchQuestion(questionId).then((response) => {
+                setQuestion(response.data);
+            });
+        }
+    }, [questionId, initialQuestion, question]);
+
     return question;
 };
