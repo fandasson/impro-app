@@ -15,7 +15,10 @@ export function PerformanceList({ performances }: PerformanceListProps) {
         <div className="space-y-4">
             {performances.map((performance) => (
                 <div key={performance.id} className="rounded-lg border p-4 shadow-lg">
-                    <h3 className="text-lg font-semibold">{performance.title}</h3>
+                    <h3
+                        className="text-lg font-semibold"
+                        dangerouslySetInnerHTML={{ __html: performance.title ?? "" }}
+                    />
                     <div className="mt-2 flex flex-col gap-2">
                         <Link href={performance.link}>
                             <Image

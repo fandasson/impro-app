@@ -1,11 +1,16 @@
-import { getUpcomingPerformances } from "@/api/web.api";
+"use client";
+
+import { WebPerformance } from "@/api/web.api";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { PerformanceList } from "@/components/ui/PerformanceList";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { SharingActions } from "@/components/users/SharingActions";
 
-export const UpcomingPerformances = async () => {
-    const upcomingPerformances = await getUpcomingPerformances();
+type Props = {
+    upcomingPerformances: WebPerformance[];
+};
+
+export const UpcomingPerformances = ({ upcomingPerformances }: Props) => {
     return (
         <MobileContainer>
             <div className="flex flex-grow flex-col">
