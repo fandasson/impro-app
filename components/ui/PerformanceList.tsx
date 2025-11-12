@@ -31,7 +31,8 @@ export function PerformanceList({ performances }: PerformanceListProps) {
                         </Link>
                         <div className="mb-3 text-sm">
                             <div className="font-medium">
-                                {format(performance.date, "EEEE d. MMMM, HH:mm", { locale: cs })}
+                                {/*Input date is not UTC but UTC+1 - set in WordPress */}
+                                {format(new Date(performance.date + "+01:00"), "EEEE d. MMMM, HH:mm", { locale: cs })}
                             </div>
                             {performance.venue && <div className="text-muted-foreground">{performance.venue}</div>}
                         </div>
