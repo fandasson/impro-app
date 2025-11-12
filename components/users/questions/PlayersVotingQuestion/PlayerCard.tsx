@@ -17,9 +17,6 @@ export const PlayerCard = ({ player, onClick, selected, hideResults, heightFract
             className={cn("flex flex-col items-center rounded p-2", selected ? "bg-white text-black" : "")}
             key={player.id}
             onClick={onClick}
-            style={{
-                minHeight: `calc((100svh - 48px - (${heightFraction - 1} * 16px)) / ${heightFraction})`,
-            }}
         >
             <div className={"relative aspect-square h-[100px] w-[100px]"}>
                 <Image
