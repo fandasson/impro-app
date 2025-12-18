@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import {
   fetchPerformanceWithPlayers,
   fetchAllPlayers,
 } from "@/api/performances.api";
 import { TabletContainer } from "@/components/ui/layout/TabletContainer";
+import { Button } from "@/components/ui/Button";
 import { EditPerformanceClient } from "./EditPerformanceClient";
 
 export default async function EditPerformancePage({
@@ -44,11 +47,25 @@ export default async function EditPerformancePage({
   return (
     <TabletContainer>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Upravit představení</h1>
-          <p className="text-gray-300 mt-2">
-            {performanceResult.data.name}
-          </p>
+        <div className="flex items-stretch">
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="h-auto"
+          >
+            <Link
+              href={`/admin/performances/${performanceResult.data.id}`}
+            >
+              <ChevronLeft size={28} />
+            </Link>
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Upravit představení</h1>
+            <p className="text-gray-300 mt-2">
+              {performanceResult.data.name}
+            </p>
+          </div>
         </div>
 
         <EditPerformanceClient
