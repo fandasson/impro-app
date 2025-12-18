@@ -58,3 +58,20 @@ export type QuestionState = Enums<"question-state">;
 export type QuestionType = Enums<"question-type">;
 export type AudienceVisibility = Enums<"audience_visibility">;
 export type PerformanceState = Enums<"performance-state">;
+
+// Performance Management Types (T008)
+export type PerformanceWithPlayers = Performance & {
+  players: Player[];
+};
+
+export type PerformanceFormData = {
+  name: string;
+  date: string; // ISO 8601
+  intro_text?: string;
+  url_slug?: string;
+  state?: "draft" | "intro" | "life" | "finished" | "closing";
+};
+
+export type ServerActionResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string; fieldErrors?: Record<string, string[]> };
