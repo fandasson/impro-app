@@ -27,7 +27,12 @@ export default async function Performances() {
 
     return (
         <>
-            <h1 className="mb-4 text-4xl font-bold">Představení</h1>
+            <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-4xl font-bold">Představení</h1>
+                <Button asChild>
+                    <Link href="/admin/performances/new">Vytvořit představení</Link>
+                </Button>
+            </div>
             <Table>
                 <TableHeader>
                     <TableRow>
