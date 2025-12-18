@@ -28,25 +28,9 @@ export function PerformanceForm({
 }: PerformanceFormProps) {
   const [state, formAction, isPending] = useActionState(action, null);
 
-  // Converts UTC date string to local datetime-local format (YYYY-MM-DDTHH:MM)
-  // Database stores UTC, but datetime-local input works in browser's timezone
-  // Uses Date object's local getters to extract components in user's timezone
-  const formatDateTimeLocal = (utcDate: string) => {
-    const date = new Date(utcDate);
-    // Get local time components (automatically adjusted from UTC)
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
-
   // Controlled form state
   const [name, setName] = useState(initialData?.name || "");
-  const [date, setDate] = useState(
-    initialData?.date ? formatDateTimeLocal(initialData.date) : ""
-  );
+  const [date, setDate] = useState(initialData?.date?.split("T")[0] || "");
   const [introText, setIntroText] = useState(initialData?.intro_text || "");
   const [slug, setSlug] = useState(initialData?.url_slug || "");
   const [performanceState, setPerformanceState] = useState<string>(
@@ -59,7 +43,7 @@ export function PerformanceForm({
   useEffect(() => {
     const hasChanges =
       name !== (initialData?.name || "") ||
-      date !== (initialData?.date ? formatDateTimeLocal(initialData.date) : "") ||
+      date !== (initialData?.date?.split("T")[0] || "") ||
       introText !== (initialData?.intro_text || "") ||
       (isSlugManual && slug !== (initialData?.url_slug || "")) ||
       performanceState !== (initialData?.state || "draft");
@@ -114,11 +98,11 @@ export function PerformanceForm({
 
       {/* Date */}
       <div>
-        <Label htmlFor="date">Datum a čas *</Label>
+        <Label htmlFor="date">Datum *</Label>
         <Input
           id="date"
           name="date"
-          type="datetime-local"
+          type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
           required

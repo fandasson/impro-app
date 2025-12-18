@@ -63,7 +63,7 @@ export type ServerActionResult<T> =
 
 const createPerformanceSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name too long"),
-  date: z.string().datetime("Invalid date format"),
+  date: z.string().date("Invalid date format"),
   intro_text: z.string().max(10000, "Intro text too long").optional(),
   url_slug: z
     .string()
@@ -78,7 +78,7 @@ const updatePerformanceSchema = z
   .object({
     id: z.number().int().positive(),
     name: z.string().min(1).max(255).optional(),
-    date: z.string().datetime().optional(),
+    date: z.string().date().optional(),
     intro_text: z.string().max(10000).optional(),
     url_slug: z
       .string()
