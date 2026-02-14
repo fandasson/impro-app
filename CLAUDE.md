@@ -412,6 +412,8 @@ SUPABASE_SERVICE_KEY=...  # Server-side only
 - **Add Answer Type**: Create table + api functions + admin/audience components
 - **Change Visibility Logic**: Modify `setAudienceVisibility()` + add subscription filter
 - **Add Audience Feature**: Create audience component + hook with Supabase subscription
+- **Add Performance CRUD**: Use PerformanceForm pattern (controlled components, datetime-local handling)
+- **Add Entity Management**: Follow PlayerAssignment pattern (server actions with loading states, referential integrity checks)
 
 ## Performance Considerations
 
@@ -432,3 +434,19 @@ SUPABASE_SERVICE_KEY=...  # Server-side only
 
 **Last Updated**: Analysis of v2.0.0 branch
 **Stack**: Next.js 15 + Supabase + Zustand
+
+## Active Technologies
+- TypeScript (Next.js 14+) + Next.js 14 App Router, Supabase (@supabase/ssr), Zustand, Radix UI, Tailwind CSS (001-manage-performances)
+- Supabase PostgreSQL (tables: performances, players, performances_players, questions_players) (001-manage-performances)
+
+## Recent Changes
+- 001-manage-performances: Admin performance management implementation
+  - Server actions: createPerformance, updatePerformance, assignPlayerToPerformance, removePlayerFromPerformance in api/performances.api.ts
+  - Components: PerformanceForm (controlled form, create/edit), PlayerAssignment (player add/remove), PerformanceList
+  - Pages: /admin/performances/new, /admin/performances/[id]/edit integrated into detail page
+  - Datetime pattern: datetime-local input with UTC storage, append ":00" for cross-browser parsing reliability
+  - Referential integrity: SQL JOIN check prevents player removal if assigned to questions, Czech error message
+  - Slug generation: auto-generates unique URL slugs with collision handling (slugify + counter: -2, -3, etc.)
+  - Loading states: useActionState isPending in forms, per-action loading (isAssigning, removingPlayerId) in PlayerAssignment
+  - Accessibility: aria-labels on interactive elements, role="alert|status", aria-live regions for messages
+  - Player display: formatPlayerName() shows "Name Surname (host)" format
