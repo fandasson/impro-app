@@ -10,12 +10,14 @@ import { MatchQuestion } from "@/components/users/questions/MatchQuestion";
 import { OptionsQuestion } from "@/components/users/questions/OptionsQuestion";
 import { PlayersVotingQuestion } from "@/components/users/questions/PlayersVotingQuestion";
 import { TextQuestion } from "@/components/users/questions/TextQuestion";
+import { useQuestion } from "@/hooks/users.hooks";
 import { useUsersStore } from "@/store/users.store";
 
 type Props = {
     question: Question | null;
 };
-export const UserQuestionDetail = ({ question }: Props) => {
+export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
+    const question = useQuestion(initialQuestion?.id ?? null, initialQuestion);
     const alreadyAnswered = useUsersStore((state) => (question ? state.answeredQuestions[question.id] : false));
 
     if (!question) {
