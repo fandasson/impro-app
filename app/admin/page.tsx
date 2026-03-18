@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -9,8 +8,7 @@ import { formatDate } from "@/utils/date.utils";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Performances() {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();

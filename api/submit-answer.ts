@@ -11,7 +11,7 @@ import { createClient } from "@/utils/supabase/server";
 
 export const submitTextAnswer = async (answer: TextAnswerInsert) => {
     const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!user_id) {
@@ -25,7 +25,7 @@ export const submitTextAnswer = async (answer: TextAnswerInsert) => {
 
 export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
     const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!user_id) {
@@ -45,7 +45,7 @@ export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
         throw new Error("User not found");
     }
 
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     const state = await fetchQuestionState(answer.question_id);
     if (state !== "active") {
@@ -72,7 +72,7 @@ export const submitVoteAnswer = async (answer: VoteAnswerInsert) => {
 
 export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
     const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const user_id = cookieStore.get(COOKIE_USER_ID)?.value;
 
     if (!user_id) {

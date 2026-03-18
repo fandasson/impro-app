@@ -1,19 +1,32 @@
-import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { createClient } from "@/utils/supabase/server";
+import { Database } from "@/utils/supabase/entity.types";
 
 export async function updateSession(request: NextRequest) {
-    let response = NextResponse.next({
-        request: {
-            headers: request.headers,
+    let supabaseResponse = NextResponse.next({ request });
+
+    const supabase = createServerClient<Database>(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll();
+                },
+                setAll(cookiesToSet) {
+                    cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+                    supabaseResponse = NextResponse.next({ request });
+                    cookiesToSet.forEach(({ name, value, options }) =>
+                        supabaseResponse.cookies.set(name, value, options),
+                    );
+                },
+            },
         },
-    });
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    );
 
     // refreshing the auth token
     await supabase.auth.getUser();
 
-    return response;
+    return supabaseResponse;
 }
