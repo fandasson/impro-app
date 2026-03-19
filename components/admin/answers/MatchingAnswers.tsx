@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { Character, MatchAnswer, Player } from "@/api/types.api";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/Table";
 import { useMatchingAnswers } from "@/hooks/admin.hooks";

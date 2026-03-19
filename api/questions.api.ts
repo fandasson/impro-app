@@ -215,6 +215,54 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
     return response.data?.[0];
 };
 
+export const fetchExcludedPlayerIdsForChain = async (questionId: number): Promise<number[]> => {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get(COOKIE_USER_ID)?.value;
+    if (!userId) {
+        return [];
+    }
+
+    const supabase = await createClient();
+
+    // Walk backwards through the chain collecting predecessor question IDs
+    const predecessorIds: number[] = [];
+    let currentId = questionId;
+    const visited = new Set<number>();
+
+    while (true) {
+        if (visited.has(currentId)) break; // cycle guard
+        visited.add(currentId);
+
+        const { data } = await supabase
+            .from("questions")
+            .select("id")
+            .eq("following_question_id", currentId)
+            .limit(1)
+            .single();
+
+        if (!data) break;
+        predecessorIds.push(data.id);
+        currentId = data.id;
+    }
+
+    if (predecessorIds.length === 0) {
+        return [];
+    }
+
+    // Fetch player_ids from user's answers to all predecessor questions
+    const { data: answers } = await supabase
+        .from("answers_match")
+        .select("player_id")
+        .eq("user_id", userId)
+        .in("question_id", predecessorIds);
+
+    if (!answers) {
+        return [];
+    }
+
+    return [...new Set(answers.map((a) => a.player_id))];
+};
+
 export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
     const supabase = await createClient();
     await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);

@@ -5,7 +5,8 @@ import type { DragStartEvent, UniqueIdentifier } from "@dnd-kit/core/dist/types"
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-import { fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
+import { fetchAvailablePlayers } from "@/api/performances.api";
+import { fetchExcludedPlayerIdsForChain, fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
 import { Character, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
@@ -42,9 +43,17 @@ export const MatchQuestion = ({ question }: Props) => {
     const sensors = useSensors(mouseSensor, touchSensor);
 
     useEffect(() => {
-        fetchQuestionPlayers(question.id).then((response) => setPlayers(response));
+        // select all performance players as backup in case question doesn't have any
+        Promise.all([
+            fetchQuestionPlayers(question.id),
+            fetchAvailablePlayers(question.performance_id),
+            fetchExcludedPlayerIdsForChain(question.id),
+        ]).then(([questionPlayers, performancePlayers, excludedIds]) => {
+            const playersToUse = questionPlayers.length > 0 ? questionPlayers : performancePlayers;
+            setPlayers(playersToUse.filter((p) => !excludedIds.includes(p.id)));
+        });
         fetchQuestionCharacters(question.id).then((response) => setCharacters(response));
-    }, [question.id]);
+    }, [question.id, question.performance_id]);
 
     const findCharacter = (id: UniqueIdentifier) => {
         return characters?.find((character) => character.id === id);
