@@ -82,3 +82,12 @@ export const areThereVotesForQuestion = async (questionId: number): Promise<bool
         .eq("question_id", questionId);
     return !!response.count;
 };
+
+export const areThereMatchAnswersForQuestion = async (questionId: number): Promise<boolean> => {
+    const supabase = await createClient();
+    const response = await supabase
+        .from("answers_match")
+        .select("id", { head: true, count: "exact" })
+        .eq("question_id", questionId);
+    return !!response.count;
+};

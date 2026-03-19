@@ -3,12 +3,13 @@ import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
-import { areThereVotesForQuestion } from "@/api/answers.api";
+import { areThereMatchAnswersForQuestion, areThereVotesForQuestion } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchAvailablePools } from "@/api/question-pools.api";
-import { getNewIndexOrder } from "@/api/questions.api";
-import { Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
+import { fetchAnsweredCharacterIds, getNewIndexOrder } from "@/api/questions.api";
+import { CharacterInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
+import { ManageCharacters } from "@/components/admin/question-form/ManageCharacters";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -37,6 +38,8 @@ export const QuestionForm = (props: Props) => {
     const [players, setPlayers] = useState<Player[]>([]);
     const [pools, setPools] = useState<QuestionPool[]>([]);
     const [freezeVoting, setFreezeVoting] = useState(false);
+    const [freezeMatch, setFreezeMatch] = useState(false);
+    const [answeredCharacterIds, setAnsweredCharacterIds] = useState<number[]>([]);
     const loading = useAdminStore((state) => state.loading);
 
     const {
@@ -55,6 +58,7 @@ export const QuestionForm = (props: Props) => {
             index_order: question?.index_order || 1,
             multiple: question?.multiple || false,
             players: question?.players || [],
+            characters: question?.characters?.map(({ id, name, description }) => ({ id, name, description })) || [],
         },
     });
 
@@ -62,7 +66,13 @@ export const QuestionForm = (props: Props) => {
         if (!question) {
             return;
         }
-        areThereVotesForQuestion(question.id).then((votesExists) => setFreezeVoting(votesExists));
+        if (question.type === "voting") {
+            areThereVotesForQuestion(question.id).then((votesExists) => setFreezeVoting(votesExists));
+        }
+        if (question.type === "match") {
+            areThereMatchAnswersForQuestion(question.id).then((hasAnswers) => setFreezeMatch(hasAnswers));
+            fetchAnsweredCharacterIds(question.id).then(setAnsweredCharacterIds);
+        }
     }, [question]);
 
     useEffect(() => {
@@ -73,23 +83,28 @@ export const QuestionForm = (props: Props) => {
     }, [getFieldState, getValues, performanceId, setValue]);
 
     const type = useWatch({ control, name: "type" });
+    const characters = useWatch({ control, name: "characters" });
     useEffect(() => {
-        if (type === "voting") {
+        if (type === "voting" || type === "match") {
             setLoading(true);
 
-            const _fetchPlayers = fetchAvailablePlayers(performanceId).then(setPlayers);
-            const _fetchPools = fetchAvailablePools(performanceId).then(setPools);
-            Promise.all([_fetchPlayers, _fetchPools]).then(() => setLoading(false));
+            const promises: Promise<unknown>[] = [fetchAvailablePlayers(performanceId).then(setPlayers)];
+            if (type === "voting") {
+                promises.push(fetchAvailablePools(performanceId).then(setPools));
+            }
+            Promise.all(promises).then(() => setLoading(false));
         }
     }, [type, performanceId]);
 
     const handlePlayersChange = (_players: Player[]) => {
-        if (type === "voting") {
-            setValue("players", _players);
-            if (!getFieldState("name").isDirty) {
-                setValue("name", _players.map(({ name }) => name).join(", "));
-            }
+        setValue("players", _players);
+        if (type === "voting" && !getFieldState("name").isDirty) {
+            setValue("name", _players.map(({ name }) => name).join(", "));
         }
+    };
+
+    const handleCharactersChange = (chars: CharacterInput[]) => {
+        setValue("characters", chars);
     };
 
     const onSubmit: SubmitHandler<QuestionUpsertRequest> = async (data) => {
@@ -100,9 +115,9 @@ export const QuestionForm = (props: Props) => {
 
     return (
         <form onSubmit={handleFormSubmit(onSubmit)} className={"flex flex-col gap-4"}>
-            {freezeVoting && !loading && (
+            {(freezeVoting || freezeMatch) && !loading && (
                 <div className={"mb-2 rounded border p-4 text-center font-bold"}>
-                    Na otázku se už hlasovalo - některé údaje nelze změnit
+                    Na otázku už někdo odpověděl - některé údaje nelze změnit
                 </div>
             )}
             <div className={"flex flex-col gap-4"}>
@@ -186,12 +201,19 @@ export const QuestionForm = (props: Props) => {
                     )}
                 </div>
             </div>
-            {type === "voting" && (
+            {(type === "voting" || type === "match") && (
                 <AssignPlayersToQuestion
                     players={players}
                     handlePlayersChange={handlePlayersChange}
                     initialSelectedPlayers={question?.players}
-                    disabled={freezeVoting}
+                    disabled={type === "voting" ? freezeVoting : freezeMatch}
+                />
+            )}
+            {type === "match" && (
+                <ManageCharacters
+                    characters={characters ?? []}
+                    answeredCharacterIds={answeredCharacterIds}
+                    onCharactersChange={handleCharactersChange}
                 />
             )}
             <Button variant={"default"} type={"submit"} disabled={loading}>
