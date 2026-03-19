@@ -109,6 +109,16 @@ export const fetchQuestionCharacters = async (questionId: number): Promise<Chara
     return response.data ?? [];
 };
 
+export const fetchAnsweredCharacterIds = async (questionId: number): Promise<number[]> => {
+    const supabase = await createClient();
+    const response = await supabase
+        .from("answers_match")
+        .select("character_id")
+        .eq("question_id", questionId);
+    if (!response.data) return [];
+    return [...new Set(response.data.map((a) => a.character_id))];
+};
+
 export const fetchQuestionOptions = async (questionId: number): Promise<QuestionOptions[]> => {
     const supabase = await createClient();
     const response = await supabase
@@ -158,7 +168,7 @@ export const getNewIndexOrder = async (performanceId: number): Promise<number> =
 
 export const createQuestion = async (performanceId: number, question: QuestionUpsertRequest) => {
     const supabase = await createClient();
-    const { players, ...questionData } = question;
+    const { players, characters, ...questionData } = question;
     const response = await supabase
         .from("questions")
         .insert({
@@ -181,13 +191,22 @@ export const createQuestion = async (performanceId: number, question: QuestionUp
         await supabase.from("questions_players").insert(playersToInsert);
     }
 
+    if (characters?.length) {
+        const charactersToInsert = characters.map(({ name, description }) => ({
+            question_id: newQuestionId,
+            name,
+            description: description ?? null,
+        }));
+        await supabase.from("characters").insert(charactersToInsert);
+    }
+
     revalidatePath(`/admin/performances/${performanceId}`);
     return newQuestionId;
 };
 
 export const updateQuestion = async (questionId: number, question: QuestionUpsertRequest) => {
     const supabase = await createClient();
-    const { players, ...questionData } = question;
+    const { players, characters, ...questionData } = question;
 
     const response = await supabase
         .from("questions")
@@ -209,6 +228,42 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
 
     if (playersToInsert) {
         await supabase.from("questions_players").insert(playersToInsert);
+    }
+
+    // sync characters for match questions
+    if (characters !== undefined) {
+        const existingChars = await supabase
+            .from("characters")
+            .select("id")
+            .eq("question_id", questionId);
+        const existingIds = new Set((existingChars.data ?? []).map((c) => c.id));
+        const submittedIds = new Set(characters.filter((c) => c.id !== undefined).map((c) => c.id!));
+
+        // delete removed characters (FK constraint prevents if answers exist)
+        const toDelete = [...existingIds].filter((id) => !submittedIds.has(id));
+        if (toDelete.length > 0) {
+            await supabase.from("characters").delete().in("id", toDelete);
+        }
+
+        // update existing characters
+        for (const char of characters.filter((c) => c.id !== undefined)) {
+            await supabase
+                .from("characters")
+                .update({ name: char.name, description: char.description ?? null })
+                .eq("id", char.id!);
+        }
+
+        // insert new characters
+        const newChars = characters
+            .filter((c) => c.id === undefined)
+            .map(({ name, description }) => ({
+                question_id: questionId,
+                name,
+                description: description ?? null,
+            }));
+        if (newChars.length > 0) {
+            await supabase.from("characters").insert(newChars);
+        }
     }
 
     revalidatePath(`/admin/questions/${questionId}/view`);

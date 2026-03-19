@@ -5,11 +5,18 @@ import { Database, Enums, Tables, TablesInsert } from "@/utils/supabase/entity.t
 export type QuestionWithPlayersAndCharacters = Question & { players: Player[]; characters: Character[] };
 export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
 export type QuestionDetail = QuestionWithPlayersAndCharacters & QuestionWithPool;
+export type CharacterInput = {
+    id?: number;  // undefined for new, present for existing
+    name: string;
+    description?: string | null;
+};
+
 export type QuestionUpsertRequest = Pick<
     Question,
     "name" | "question" | "type" | "index_order" | "multiple" | "pool_id"
 > & {
     players?: Player[];
+    characters?: CharacterInput[];
 };
 
 export type Answer = {
