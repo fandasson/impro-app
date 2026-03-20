@@ -10,7 +10,7 @@ import {
     TextAnswer,
     VoteAnswer,
 } from "@/api/types.api";
-import { addAnswer, modifyAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
+import { addAnswer, modifyAnswer, removeAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
@@ -78,6 +78,18 @@ const useAnswers = <T extends Answer>(
                     filter: `question_id=eq.${questionId}`,
                 },
                 (payload) => modifyAnswer(payload.new.id, payload.new),
+            )
+            .on<T>(
+                "postgres_changes",
+                {
+                    event: "DELETE",
+                    schema: "public",
+                    table,
+                    filter: `question_id=eq.${questionId}`,
+                },
+                (payload) => {
+                    if (payload.old.id) removeAnswer(payload.old.id);
+                },
             )
             .subscribe(createSubscriptionStatusHandler(`[Admin] ${table}`, channelName));
 

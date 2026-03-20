@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { Switch } from "@/components/ui/Switch";
 import { Textarea } from "@/components/ui/Textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 import { setLoading, useAdminStore } from "@/store/admin.store";
@@ -57,6 +58,7 @@ export const QuestionForm = (props: Props) => {
             type: question?.type || "text",
             index_order: question?.index_order || 1,
             multiple: question?.multiple || false,
+            optional: question?.optional || false,
             players: question?.players || [],
             characters: question?.characters?.map(({ id, name, description }) => ({ id, name, description })) || [],
         },
@@ -84,6 +86,7 @@ export const QuestionForm = (props: Props) => {
 
     const type = useWatch({ control, name: "type" });
     const characters = useWatch({ control, name: "characters" });
+    const optionalValue = useWatch({ control, name: "optional" });
     useEffect(() => {
         if (type === "voting" || type === "match") {
             setLoading(true);
@@ -200,6 +203,16 @@ export const QuestionForm = (props: Props) => {
                         </>
                     )}
                 </div>
+            </div>
+            <div className={"flex items-center gap-3"}>
+                <Switch
+                    id={"optional"}
+                    checked={optionalValue}
+                    onCheckedChange={(checked) => setValue("optional", checked)}
+                />
+                <Label htmlFor={"optional"} className={"font-medium"}>
+                    Volitelná otázka (lze přeskočit)
+                </Label>
             </div>
             {(type === "voting" || type === "match") && (
                 <AssignPlayersToQuestion

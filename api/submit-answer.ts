@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { fetchQuestionState } from "@/api/questions.api";
-import { MatchAnswerCreate, OptionsAnswerInsert, TextAnswerInsert, VoteAnswerInsert } from "@/api/types.api";
+import { MatchAnswer, MatchAnswerCreate, OptionsAnswer, OptionsAnswerInsert, TextAnswer, TextAnswerInsert, VoteAnswer, VoteAnswerInsert } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
 
@@ -18,8 +18,20 @@ export const submitTextAnswer = async (answer: TextAnswerInsert) => {
         throw new Error("User not found");
     }
 
-    const response = await supabase.from("answers_text").insert({ ...answer, user_id: user_id! });
-    // FIXME handle response
+    const { data: existing } = await supabase
+        .from("answers_text")
+        .select("id")
+        .eq("question_id", answer.question_id)
+        .eq("user_id", user_id)
+        .limit(1)
+        .single();
+
+    let response;
+    if (existing) {
+        response = await supabase.from("answers_text").update({ value: answer.value }).eq("id", existing.id);
+    } else {
+        response = await supabase.from("answers_text").insert({ ...answer, user_id });
+    }
     console.log("submit-answer", response.status);
 };
 
@@ -32,8 +44,20 @@ export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
         throw new Error("User not found");
     }
 
-    const response = await supabase.from("answers_options").insert({ ...answer, user_id: user_id! });
-    // FIXME handle response
+    const { data: existing } = await supabase
+        .from("answers_options")
+        .select("id")
+        .eq("question_id", answer.question_id)
+        .eq("user_id", user_id)
+        .limit(1)
+        .single();
+
+    let response;
+    if (existing) {
+        response = await supabase.from("answers_options").update({ question_options_id: answer.question_options_id }).eq("id", existing.id);
+    } else {
+        response = await supabase.from("answers_options").insert({ ...answer, user_id });
+    }
     console.log("submit-answer", response.status);
 };
 
@@ -79,13 +103,79 @@ export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
         throw new Error("User not found");
     }
 
-    const responses = [];
+    // Delete existing matches for this question, then insert new ones
+    if (answers.length > 0) {
+        await supabase
+            .from("answers_match")
+            .delete()
+            .eq("question_id", answers[0].question_id)
+            .eq("user_id", user_id);
+    }
 
+    const responses = [];
     for (const answer of answers) {
-        const response = await supabase.from("answers_match").insert({ ...answer, user_id: user_id! });
+        const response = await supabase.from("answers_match").insert({ ...answer, user_id });
         responses.push(response);
     }
-    // FIXME handle response
     console.log("submit-answer", responses);
     revalidatePath("/[slug]", "page");
+};
+
+async function getUserId(): Promise<string> {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get(COOKIE_USER_ID)?.value;
+    if (!userId) {
+        throw new Error("User not found");
+    }
+    return userId;
+}
+
+export const fetchMyTextAnswer = async (questionId: number): Promise<TextAnswer | null> => {
+    const userId = await getUserId();
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("answers_text")
+        .select("*")
+        .eq("question_id", questionId)
+        .eq("user_id", userId)
+        .limit(1)
+        .single();
+    return data;
+};
+
+export const fetchMyVoteAnswer = async (questionId: number): Promise<VoteAnswer | null> => {
+    const userId = await getUserId();
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("answers_vote")
+        .select("*")
+        .eq("question_id", questionId)
+        .eq("user_id", userId)
+        .limit(1)
+        .single();
+    return data;
+};
+
+export const fetchMyMatchAnswers = async (questionId: number): Promise<MatchAnswer[]> => {
+    const userId = await getUserId();
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("answers_match")
+        .select("*")
+        .eq("question_id", questionId)
+        .eq("user_id", userId);
+    return data ?? [];
+};
+
+export const fetchMyOptionsAnswer = async (questionId: number): Promise<OptionsAnswer | null> => {
+    const userId = await getUserId();
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("answers_options")
+        .select("*")
+        .eq("question_id", questionId)
+        .eq("user_id", userId)
+        .limit(1)
+        .single();
+    return data;
 };

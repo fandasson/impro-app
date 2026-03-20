@@ -318,6 +318,47 @@ export const fetchExcludedPlayerIdsForChain = async (questionId: number): Promis
     return [...new Set(answers.map((a) => a.player_id))];
 };
 
+export const fetchFirstQuestionInChain = async (questionId: number): Promise<number | null> => {
+    const supabase = await createClient();
+
+    // Walk backwards through chain via following_question_id pointers
+    let currentId = questionId;
+    const visited = new Set<number>();
+    let foundPredecessor = false;
+
+    while (true) {
+        if (visited.has(currentId)) break; // cycle guard
+        visited.add(currentId);
+
+        const { data } = await supabase
+            .from("questions")
+            .select("id")
+            .eq("following_question_id", currentId)
+            .limit(1)
+            .single();
+
+        if (!data) break;
+        foundPredecessor = true;
+        currentId = data.id;
+    }
+
+    if (!foundPredecessor) {
+        // Check if this question itself has a following_question_id (i.e., it's the start of a chain)
+        const { data } = await supabase
+            .from("questions")
+            .select("following_question_id")
+            .eq("id", questionId)
+            .single();
+
+        if (!data?.following_question_id) {
+            return null; // Not part of any chain
+        }
+        return questionId; // This question IS the first in the chain
+    }
+
+    return currentId;
+};
+
 export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
     const supabase = await createClient();
     await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);

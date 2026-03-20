@@ -8,25 +8,37 @@ import { useEffect, useState, useTransition } from "react";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchExcludedPlayerIdsForChain, fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
-import { Character, MatchAnswerCreate, Player, Question } from "@/api/types.api";
+import { Character, MatchAnswer, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
-import { Character as CharacterTile } from "@/components/users/questions/MatchQuestion/Character";
-import { PlayerMatch } from "@/components/users/questions/MatchQuestion/PlayerMatch";
+import { CharacterMatch } from "@/components/users/questions/MatchQuestion/CharacterMatch";
+import { DraggableTile } from "@/components/users/questions/MatchQuestion/DraggableTile";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
 type Props = {
     question: Question;
+    navigateNext?: () => void;
+    skipQuestion?: () => void;
+    isOptional?: boolean;
+    isChained?: boolean;
+    previousMatches?: MatchAnswer[];
 };
 
-export const MatchQuestion = ({ question }: Props) => {
+export const MatchQuestion = ({
+    question,
+    navigateNext,
+    skipQuestion,
+    isOptional,
+    isChained,
+    previousMatches,
+}: Props) => {
     const [players, setPlayers] = useState<Player[] | null>(null);
     const [characters, setCharacters] = useState<Character[] | null>(null);
-    const [draggingCharacter, setDraggingCharacter] = useState<UniqueIdentifier | null>(null);
-    const [matches, setMatches] = useState<Record<number, Character>>({});
-    const [isPending, startTransition] = useTransition();
+    const [draggingPlayer, setDraggingPlayer] = useState<UniqueIdentifier | null>(null);
+    const [matches, setMatches] = useState<Record<number, Player>>({});
     const isLoading = useUsersStore((state) => state.loading);
+    const [isPending, startTransition] = useTransition();
     const router = useRouter();
     const performance = useUsersStore((state) => state.performance);
 
@@ -43,7 +55,6 @@ export const MatchQuestion = ({ question }: Props) => {
     const sensors = useSensors(mouseSensor, touchSensor);
 
     useEffect(() => {
-        // select all performance players as backup in case question doesn't have any
         Promise.all([
             fetchQuestionPlayers(question.id),
             fetchAvailablePlayers(question.performance_id),
@@ -52,37 +63,50 @@ export const MatchQuestion = ({ question }: Props) => {
             const playersToUse = questionPlayers.length > 0 ? questionPlayers : performancePlayers;
             setPlayers(playersToUse.filter((p) => !excludedIds.includes(p.id)));
         });
-        fetchQuestionCharacters(question.id).then((response) => setCharacters(response));
+        fetchQuestionCharacters(question.id).then((fetchedCharacters) => {
+            setCharacters(fetchedCharacters);
+        });
     }, [question.id, question.performance_id]);
 
-    const findCharacter = (id: UniqueIdentifier) => {
-        return characters?.find((character) => character.id === id);
+    // Initialize matches from previous answers once both players and characters are loaded
+    useEffect(() => {
+        if (!previousMatches || previousMatches.length === 0 || !players || !characters) return;
+
+        const initialMatches: Record<number, Player> = {};
+        for (const answer of previousMatches) {
+            const player = players.find((p) => p.id === answer.player_id);
+            if (player) {
+                initialMatches[answer.character_id] = player;
+            }
+        }
+        setMatches(initialMatches);
+    }, [players, characters, previousMatches]);
+
+    const findPlayer = (id: UniqueIdentifier) => {
+        return players?.find((player) => player.id === id);
     };
 
     const handleDragStart = (event: DragStartEvent) => {
-        setDraggingCharacter(event.active.id);
+        setDraggingPlayer(event.active.id);
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { over, active } = event;
         if (over) {
-            // Find the name associated with the active draggable item
-            const character = findCharacter(active.id);
+            const player = findPlayer(active.id);
 
             setMatches((prevMatches) => {
-                // Create a new matches object, adding the new match
-                let matches: Record<number, Character> = {
+                let matches: Record<number, Player> = {
                     ...prevMatches,
-                    [over.id]: character,
+                    [over.id]: player,
                 };
 
-                // Check if the player was already matched with a different character
-                const occupied = Object.entries(prevMatches).find(([key, value]) => value.id === character?.id);
+                // Check if this player was already assigned to a different character
+                const occupied = Object.entries(prevMatches).find(([key, value]) => value.id === player?.id);
                 if (occupied) {
                     const id = parseInt(occupied[0]);
 
-                    // If the player was already matched, remove the old match
-                    // This prevents removing the newly added match
+                    // If the player was already matched elsewhere, remove the old match
                     if (id !== over.id) {
                         delete matches[id];
                     }
@@ -91,21 +115,22 @@ export const MatchQuestion = ({ question }: Props) => {
             });
         }
 
-        // Reset the draggingCharacter state to null after the drag operation is complete
-        setDraggingCharacter(null);
+        setDraggingPlayer(null);
     };
 
     const handleSubmit = async () => {
         setLoading(true);
-        const data: MatchAnswerCreate[] = Object.entries(matches).map(([key, character]) => ({
-            player_id: parseInt(key),
+        const data: MatchAnswerCreate[] = Object.entries(matches).map(([key, player]) => ({
+            player_id: player.id,
             question_id: question.id,
-            character_id: character.id,
+            character_id: parseInt(key),
         }));
         await submitMatchAnswer(data);
         markQuestionAsAnswered(question.id);
         startTransition(() => {
-            if (question.following_question_id) {
+            if (navigateNext) {
+                navigateNext();
+            } else if (question.following_question_id) {
                 router.push(`/question/${question.following_question_id}`);
             } else {
                 router.push(`/`);
@@ -114,44 +139,50 @@ export const MatchQuestion = ({ question }: Props) => {
         });
     };
 
-    const renderDraggingCharacter = (id: UniqueIdentifier) => {
-        const character = findCharacter(id);
-        if (character) {
-            return <CharacterTile name={character.name} />;
+    const renderDraggingPlayer = (id: UniqueIdentifier) => {
+        const player = findPlayer(id);
+        if (player) {
+            return <DraggableTile name={player.name} />;
         }
     };
 
-    const canBeSubmitted = players?.every((player) => matches[player.id] !== undefined) ?? false;
+    const canBeSubmitted = characters?.every((c) => matches[c.id] !== undefined) ?? false;
+    const oneWayQuestion = !question.following_question_id && !question.multiple;
     return (
         <>
-            <p className={"text-lg font-medium"}>{question.question}</p>
+            <div className={"text-lg font-medium"} dangerouslySetInnerHTML={{ __html: question.question }} />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"grid gap-4"}>
-                    {players &&
-                        players.map((player) => (
-                            <Droppable key={player.id} id={player.id}>
-                                <PlayerMatch player={player} character={matches[player.id]} />
+                    {characters &&
+                        characters.map((character) => (
+                            <Droppable key={character.id} id={character.id}>
+                                <CharacterMatch character={character} player={matches[character.id]} />
                             </Droppable>
                         ))}
                 </div>
                 <div className={"flex flex-wrap gap-4"}>
-                    {characters &&
-                        characters.map(({ id, name }) => {
-                            const isSelected = Object.values(matches).some((character) => character.id === id);
+                    {players &&
+                        players.map(({ id, name }) => {
+                            const isSelected = Object.values(matches).some((player) => player.id === id);
                             return (
                                 <Draggable id={id} key={id}>
-                                    <CharacterTile name={name} selected={isSelected} />
+                                    <DraggableTile name={name} selected={isSelected} />
                                 </Draggable>
                             );
                         })}
                 </div>
                 <DragOverlay dropAnimation={null}>
-                    {draggingCharacter ? renderDraggingCharacter(draggingCharacter) : null}
+                    {draggingPlayer ? renderDraggingPlayer(draggingPlayer) : null}
                 </DragOverlay>
             </DndContext>
-            <Button type={"submit"} disabled={!canBeSubmitted || isPending || isLoading} onClick={handleSubmit}>
-                {isPending ? "Odesílám..." : `Odeslat ${!question.multiple ? "(není cesty zpět)" : ""}`}
+            <Button type={"submit"} disabled={!canBeSubmitted || isLoading || isPending} onClick={handleSubmit}>
+                {isLoading || isPending ? "Odesílám..." : `Pokračovat ${oneWayQuestion ? "(není cesty zpět)" : ""}`}
             </Button>
+            {isOptional && isChained && (
+                <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={isLoading || isPending}>
+                    Možná později
+                </Button>
+            )}
         </>
     );
 };

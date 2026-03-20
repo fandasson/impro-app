@@ -10,6 +10,7 @@ import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users
 type Props = {
     questionId: number;
     questionText: string;
+    navigateNext?: () => void;
 };
 
 /**
@@ -24,7 +25,9 @@ export const InfoQuestion = (props: Props) => {
         setLoading(true);
         markQuestionAsAnswered(props.questionId);
         startTransition(() => {
-            if (question?.following_question_id) {
+            if (props.navigateNext) {
+                props.navigateNext();
+            } else if (question?.following_question_id) {
                 router.push(`/question/${question.following_question_id}`);
             } else {
                 router.push(`/`);

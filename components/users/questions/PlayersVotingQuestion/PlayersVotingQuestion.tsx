@@ -6,6 +6,7 @@ import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
+import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
 import { storeAnswer, useUsersStore } from "@/store/users.store";
@@ -14,9 +15,13 @@ import { cn } from "@/utils/styling.utils";
 
 type Props = {
     question: Question;
+    navigateNext?: () => void;
+    skipQuestion?: () => void;
+    isOptional?: boolean;
+    isChained?: boolean;
 };
 
-export const PlayersVotingQuestion = ({ question }: Props) => {
+export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, isOptional, isChained }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
     // Optimistic approach: Use store as single source of truth for selected player
     // UI updates immediately when store updates (via storeAnswer)
@@ -68,6 +73,11 @@ export const PlayersVotingQuestion = ({ question }: Props) => {
                         />
                     ))}
             </div>
+            {isOptional && isChained && (
+                <Button type={"button"} variant={"outline"} onClick={skipQuestion}>
+                    Možná později
+                </Button>
+            )}
         </>
     );
 };

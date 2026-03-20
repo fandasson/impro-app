@@ -13,6 +13,11 @@ import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users
 type Props = {
     questionId: number;
     questionText: string;
+    navigateNext?: () => void;
+    skipQuestion?: () => void;
+    isOptional?: boolean;
+    isChained?: boolean;
+    previousAnswer?: string;
 };
 
 type Inputs = {
@@ -22,8 +27,11 @@ const MIN_LENGTH = 3;
 export const TextQuestion = (props: Props) => {
     const isLoading = useUsersStore((state) => state.loading);
     const question = useUsersStore((state) => state.question);
-    const performance = useUsersStore((state) => state.performance);
-    const { register, handleSubmit, reset, control } = useForm<Inputs>();
+    const { register, handleSubmit, reset, control } = useForm<Inputs>({
+        defaultValues: {
+            answer: props.previousAnswer ?? "",
+        },
+    });
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
@@ -35,7 +43,9 @@ export const TextQuestion = (props: Props) => {
         });
         markQuestionAsAnswered(props.questionId);
         startTransition(() => {
-            if (question?.following_question_id) {
+            if (props.navigateNext) {
+                props.navigateNext();
+            } else if (question?.following_question_id) {
                 router.push(`/question/${question.following_question_id}`);
             } else {
                 router.push(`/`);
@@ -62,6 +72,16 @@ export const TextQuestion = (props: Props) => {
             <Button type={"submit"} disabled={isLoading || isPending || inputLength < MIN_LENGTH}>
                 Odeslat
             </Button>
+            {props.isOptional && props.isChained && (
+                <Button
+                    type={"button"}
+                    variant={"outline"}
+                    onClick={props.skipQuestion}
+                    disabled={isLoading || isPending}
+                >
+                    Možná později
+                </Button>
+            )}
         </form>
     );
 };
