@@ -77,7 +77,9 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
                     <Badge
                         key={option.id}
                         className={"text-md flex-col items-start p-4"}
-                        onClick={() => hasFollowingQuestion ? setSelectedOption(option.id) : handleAutoSubmit(option.id)}
+                        onClick={() =>
+                            hasFollowingQuestion ? setSelectedOption(option.id) : handleAutoSubmit(option.id)
+                        }
                         variant={selectedOption === option.id ? "default" : "outline"}
                         dangerouslySetInnerHTML={{ __html: option.option ?? "" }}
                     />
@@ -90,7 +92,7 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
             )}
             {isOptional && isChained && (
                 <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={loading}>
-                    Možná później
+                    Možná později
                 </Button>
             )}
         </>
