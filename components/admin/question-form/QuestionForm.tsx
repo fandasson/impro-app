@@ -1,15 +1,16 @@
 "use client";
-import { HandIcon, NotebookPenIcon, TextIcon } from "lucide-react";
+import { HandIcon, ListIcon, NotebookPenIcon, TextIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
-import { areThereMatchAnswersForQuestion, areThereVotesForQuestion } from "@/api/answers.api";
+import { areThereMatchAnswersForQuestion, areThereVotesForQuestion, fetchAnsweredOptionIds } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchAvailablePools } from "@/api/question-pools.api";
 import { fetchAnsweredCharacterIds, getNewIndexOrder } from "@/api/questions.api";
-import { CharacterInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
+import { CharacterInput, OptionInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { ManageCharacters } from "@/components/admin/question-form/ManageCharacters";
+import { ManageOptions } from "@/components/admin/question-form/ManageOptions";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -41,6 +42,7 @@ export const QuestionForm = (props: Props) => {
     const [freezeVoting, setFreezeVoting] = useState(false);
     const [freezeMatch, setFreezeMatch] = useState(false);
     const [answeredCharacterIds, setAnsweredCharacterIds] = useState<number[]>([]);
+    const [answeredOptionIds, setAnsweredOptionIds] = useState<number[]>([]);
     const loading = useAdminStore((state) => state.loading);
 
     const {
@@ -61,6 +63,7 @@ export const QuestionForm = (props: Props) => {
             optional: question?.optional || false,
             players: question?.players || [],
             characters: question?.characters?.map(({ id, name, description }) => ({ id, name, description })) || [],
+            options: question?.options?.map(({ id, option }) => ({ id, option: option ?? "" })) || [],
         },
     });
 
@@ -75,6 +78,9 @@ export const QuestionForm = (props: Props) => {
             areThereMatchAnswersForQuestion(question.id).then((hasAnswers) => setFreezeMatch(hasAnswers));
             fetchAnsweredCharacterIds(question.id).then(setAnsweredCharacterIds);
         }
+        if (question.type === "options") {
+            fetchAnsweredOptionIds(question.id).then(setAnsweredOptionIds);
+        }
     }, [question]);
 
     useEffect(() => {
@@ -86,6 +92,7 @@ export const QuestionForm = (props: Props) => {
 
     const type = useWatch({ control, name: "type" });
     const characters = useWatch({ control, name: "characters" });
+    const options = useWatch({ control, name: "options" });
     const optionalValue = useWatch({ control, name: "optional" });
     useEffect(() => {
         if (type === "voting" || type === "match") {
@@ -108,6 +115,10 @@ export const QuestionForm = (props: Props) => {
 
     const handleCharactersChange = (chars: CharacterInput[]) => {
         setValue("characters", chars);
+    };
+
+    const handleOptionsChange = (opts: OptionInput[]) => {
+        setValue("options", opts);
     };
 
     const onSubmit: SubmitHandler<QuestionUpsertRequest> = async (data) => {
@@ -152,6 +163,10 @@ export const QuestionForm = (props: Props) => {
                     <ToggleGroupItem value="match">
                         <NotebookPenIcon className={"mr-2"} />
                         Přiřazování
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="options">
+                        <ListIcon className={"mr-2"} />
+                        Možnosti
                     </ToggleGroupItem>
                 </ToggleGroup>
             </div>
@@ -227,6 +242,13 @@ export const QuestionForm = (props: Props) => {
                     characters={characters ?? []}
                     answeredCharacterIds={answeredCharacterIds}
                     onCharactersChange={handleCharactersChange}
+                />
+            )}
+            {type === "options" && (
+                <ManageOptions
+                    options={options ?? []}
+                    answeredOptionIds={answeredOptionIds}
+                    onOptionsChange={handleOptionsChange}
                 />
             )}
             <Button variant={"default"} type={"submit"} disabled={loading}>
