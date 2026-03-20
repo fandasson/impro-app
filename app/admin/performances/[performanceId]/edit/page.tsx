@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
@@ -17,8 +16,7 @@ export default async function EditPerformancePage({
   params: Promise<{ performanceId: string }>;
 }) {
   const { performanceId } = await params;
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient();
 
   // Auth check
   const {

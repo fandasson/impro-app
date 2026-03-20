@@ -2,7 +2,6 @@
 import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { z } from "zod";
 import slugify from "slugify";
 
@@ -14,17 +13,17 @@ type PerformanceResponse = PostgrestSingleResponse<Performance>;
 type PerformancesResponse = PostgrestSingleResponse<Performance[]>;
 
 export const fetchPerformances = async (): Promise<PerformancesResponse> => {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
     return supabase.from("performances").select("*").order("date", { ascending: false });
 };
 
 export const fetchPerformance = async (performanceId: number): Promise<PerformanceResponse> => {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
     return supabase.from("performances").select("*").eq("id", performanceId).single();
 };
 
 export const fetchVisiblePerformance = async (): Promise<PerformanceResponse> => {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
     return supabase.from("performances").select("*").in("state", ["intro", "life", "closing"]).limit(1).single();
 };
 
@@ -32,12 +31,12 @@ export const setPerformanceState = async (
     performanceId: number,
     state: PerformanceState,
 ): Promise<PerformanceResponse> => {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
     return supabase.from("performances").update({ state }).eq("id", performanceId).select().single();
 };
 
 export const fetchAvailablePlayers = async (performanceId: number) => {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
     const response = await supabase.from("performances").select("players(*)").eq("id", performanceId).single();
     const players = response.data?.players ?? [];
     return players.sort((a, b) => a.name.localeCompare(b.name));
@@ -136,7 +135,7 @@ async function generateUniqueSlug(
 export const fetchAllPerformances = cache(
   async (): Promise<ServerActionResult<Performance[]>> => {
     try {
-      const supabase = createClient(await cookies());
+      const supabase = await createClient();
 
       // Auth check
       const {
@@ -168,7 +167,7 @@ export const fetchAllPerformances = cache(
 export const fetchPerformanceWithPlayers = cache(
   async (id: number): Promise<ServerActionResult<PerformanceWithPlayers>> => {
     try {
-      const supabase = createClient(await cookies());
+      const supabase = await createClient();
 
       // Auth check
       const {
@@ -222,7 +221,7 @@ export const fetchPerformanceWithPlayers = cache(
 export const fetchAllPlayers = cache(
   async (): Promise<ServerActionResult<Player[]>> => {
     try {
-      const supabase = createClient(await cookies());
+      const supabase = await createClient();
 
       // Auth check
       const {
@@ -259,7 +258,7 @@ export async function createPerformance(
   input: z.infer<typeof createPerformanceSchema>,
 ): Promise<ServerActionResult<Performance>> {
   try {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
 
     // Auth check
     const {
@@ -322,7 +321,7 @@ export async function updatePerformance(
   input: z.infer<typeof updatePerformanceSchema>,
 ): Promise<ServerActionResult<Performance>> {
   try {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
 
     // Auth check
     const {
@@ -399,7 +398,7 @@ export async function assignPlayerToPerformance(
   input: z.infer<typeof assignPlayerSchema>,
 ): Promise<ServerActionResult<void>> {
   try {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
 
     // Auth check
     const {
@@ -457,7 +456,7 @@ export async function removePlayerFromPerformance(
   input: z.infer<typeof removePlayerSchema>,
 ): Promise<ServerActionResult<void>> {
   try {
-    const supabase = createClient(await cookies());
+    const supabase = await createClient();
 
     // Auth check
     const {

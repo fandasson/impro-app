@@ -1,5 +1,4 @@
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -14,8 +13,7 @@ export default async function Login(props: { searchParams: Promise<{ message: st
 
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-        const cookieStore = await cookies();
-        const supabase = createClient(cookieStore);
+        const supabase = await createClient();
 
         const { error } = await supabase.auth.signInWithPassword({
             email,
