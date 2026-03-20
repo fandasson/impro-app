@@ -1,7 +1,6 @@
 "use server";
 
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { fetchQuestionState } from "@/api/questions.api";
@@ -118,7 +117,6 @@ export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
         responses.push(response);
     }
     console.log("submit-answer", responses);
-    revalidatePath("/[slug]", "page");
 };
 
 async function getUserId(): Promise<string> {
