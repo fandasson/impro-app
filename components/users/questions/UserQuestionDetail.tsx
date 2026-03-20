@@ -41,7 +41,10 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
         optionId?: number;
     } | null>(null);
 
-    const needsPrefill = !!question && isChained && !!alreadyAnswered;
+    // Don't trigger prefill loading while a navigation transition is in progress —
+    // server action calls during a pending router.push carry the current page's
+    // router state tree and cause Next.js to cancel the transition.
+    const needsPrefill = !!question && isChained && !!alreadyAnswered && !isLoading;
 
     useEffect(() => {
         if (!needsPrefill || !question) return;
@@ -76,7 +79,8 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
     }
 
     // Non-chained, non-multiple, already answered → show AlreadyAnswered
-    if (alreadyAnswered && !question.multiple && !isChained) {
+    // Skip while isLoading: unmounting during a pending router.push transition aborts navigation.
+    if (alreadyAnswered && !question.multiple && !isChained && !isLoading) {
         return <AlreadyAnswered />;
     }
 

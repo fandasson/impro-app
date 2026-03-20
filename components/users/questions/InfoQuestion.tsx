@@ -27,12 +27,9 @@ export const InfoQuestion = (props: Props) => {
         startTransition(() => {
             if (props.navigateNext) {
                 props.navigateNext();
-            } else if (question?.following_question_id) {
-                router.push(`/question/${question.following_question_id}`);
             } else {
                 router.push(`/`);
             }
-            setLoading(false);
         });
     };
 

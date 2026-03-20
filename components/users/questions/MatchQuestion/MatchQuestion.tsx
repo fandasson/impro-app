@@ -10,6 +10,7 @@ import { fetchExcludedPlayerIdsForChain, fetchQuestionCharacters, fetchQuestionP
 import { submitMatchAnswer } from "@/api/submit-answer";
 import { Character, MatchAnswer, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
+import { UseFormattedContent } from "@/components/ui/UserFormattedContent";
 import { Draggable } from "@/components/ui/dnd/Draggable";
 import { Droppable } from "@/components/ui/dnd/Droppable";
 import { CharacterMatch } from "@/components/users/questions/MatchQuestion/CharacterMatch";
@@ -40,7 +41,6 @@ export const MatchQuestion = ({
     const isLoading = useUsersStore((state) => state.loading);
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
-    const performance = useUsersStore((state) => state.performance);
 
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
@@ -130,12 +130,9 @@ export const MatchQuestion = ({
         startTransition(() => {
             if (navigateNext) {
                 navigateNext();
-            } else if (question.following_question_id) {
-                router.push(`/question/${question.following_question_id}`);
             } else {
                 router.push(`/`);
             }
-            setLoading(false);
         });
     };
 
@@ -147,10 +144,9 @@ export const MatchQuestion = ({
     };
 
     const canBeSubmitted = characters?.every((c) => matches[c.id] !== undefined) ?? false;
-    const oneWayQuestion = !question.following_question_id && !question.multiple;
     return (
         <>
-            <div className={"text-lg font-medium"} dangerouslySetInnerHTML={{ __html: question.question }} />
+            <UseFormattedContent className={"text-lg font-medium"}>{question.question}</UseFormattedContent>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"grid gap-4"}>
                     {characters &&
@@ -176,7 +172,7 @@ export const MatchQuestion = ({
                 </DragOverlay>
             </DndContext>
             <Button type={"submit"} disabled={!canBeSubmitted || isLoading || isPending} onClick={handleSubmit}>
-                {isLoading || isPending ? "Odesílám..." : `Pokračovat ${oneWayQuestion ? "(není cesty zpět)" : ""}`}
+                {isLoading || isPending ? "Odesílám..." : `Pokračovat`}
             </Button>
             {isOptional && isChained && (
                 <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={isLoading || isPending}>
