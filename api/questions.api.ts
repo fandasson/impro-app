@@ -75,10 +75,22 @@ export const fetchQuestion = async (questionId: number): Promise<QuestionDetailR
         .eq("id", questionId)
         .single();
     const characters = await supabase.from("characters").select().eq("question_id", questionId);
+    const options = await supabase
+        .from("questions_options")
+        .select()
+        .eq("question_id", questionId)
+        .order("id", { ascending: true });
     if (questionResponse.data === null) {
         return questionResponse;
     }
-    return { ...questionResponse, data: { ...questionResponse.data, characters: characters.data || [] } };
+    return {
+        ...questionResponse,
+        data: {
+            ...questionResponse.data,
+            characters: characters.data || [],
+            options: options.data || [],
+        },
+    };
 };
 
 export const fetchQuestionState = async (questionId: number): Promise<QuestionState> => {
@@ -168,7 +180,7 @@ export const getNewIndexOrder = async (performanceId: number): Promise<number> =
 
 export const createQuestion = async (performanceId: number, question: QuestionUpsertRequest) => {
     const supabase = await createClient();
-    const { players, characters, ...questionData } = question;
+    const { players, characters, options, ...questionData } = question;
     const response = await supabase
         .from("questions")
         .insert({
@@ -200,13 +212,19 @@ export const createQuestion = async (performanceId: number, question: QuestionUp
         await supabase.from("characters").insert(charactersToInsert);
     }
 
+    if (options?.length) {
+        await supabase
+            .from("questions_options")
+            .insert(options.map(({ option }) => ({ question_id: newQuestionId, option })));
+    }
+
     revalidatePath(`/admin/performances/${performanceId}`);
     return newQuestionId;
 };
 
 export const updateQuestion = async (questionId: number, question: QuestionUpsertRequest) => {
     const supabase = await createClient();
-    const { players, characters, ...questionData } = question;
+    const { players, characters, options, ...questionData } = question;
 
     const response = await supabase
         .from("questions")
@@ -263,6 +281,29 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
             }));
         if (newChars.length > 0) {
             await supabase.from("characters").insert(newChars);
+        }
+    }
+
+    // sync options for options questions
+    if (options !== undefined) {
+        const existing = await supabase.from("questions_options").select("id").eq("question_id", questionId);
+        const existingIds = new Set((existing.data ?? []).map((o) => o.id));
+        const submittedIds = new Set(options.filter((o) => o.id !== undefined).map((o) => o.id!));
+
+        const toDelete = [...existingIds].filter((id) => !submittedIds.has(id));
+        if (toDelete.length > 0) {
+            await supabase.from("questions_options").delete().in("id", toDelete);
+        }
+
+        for (const opt of options.filter((o) => o.id !== undefined)) {
+            await supabase.from("questions_options").update({ option: opt.option }).eq("id", opt.id!);
+        }
+
+        const newOpts = options
+            .filter((o) => o.id === undefined)
+            .map(({ option }) => ({ question_id: questionId, option }));
+        if (newOpts.length > 0) {
+            await supabase.from("questions_options").insert(newOpts);
         }
     }
 

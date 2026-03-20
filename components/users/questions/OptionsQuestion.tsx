@@ -9,7 +9,7 @@ import { QuestionOptions } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
-import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
+import { markQuestionAsAnswered, setLoading, storeAnswer, useUsersStore } from "@/store/users.store";
 
 type Props = {
     navigateNext?: () => void;
@@ -25,6 +25,8 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
     const [options, setOptions] = useState<QuestionOptions[]>([]);
     const question = useUsersStore((state) => state.question);
     const router = useRouter();
+
+    const hasFollowingQuestion = !!question?.following_question_id;
 
     useEffect(() => {
         if (question?.id) {
@@ -53,6 +55,16 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
             .finally(() => setLoading(false));
     };
 
+    const handleAutoSubmit = async (optionId: number) => {
+        if (!question) return;
+        setSelectedOption(optionId);
+        storeAnswer(question.id, optionId);
+        await submitOptionsAnswer({
+            question_id: question.id,
+            question_options_id: optionId,
+        });
+    };
+
     if (!question) {
         return null;
     }
@@ -65,18 +77,20 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
                     <Badge
                         key={option.id}
                         className={"text-md flex-col items-start p-4"}
-                        onClick={() => setSelectedOption(option.id)}
+                        onClick={() => hasFollowingQuestion ? setSelectedOption(option.id) : handleAutoSubmit(option.id)}
                         variant={selectedOption === option.id ? "default" : "outline"}
                         dangerouslySetInnerHTML={{ __html: option.option ?? "" }}
                     />
                 ))}
             </div>
-            <Button onClick={handleSubmit} disabled={loading || !selectedOption}>
-                Odeslat
-            </Button>
+            {hasFollowingQuestion && (
+                <Button onClick={handleSubmit} disabled={loading || !selectedOption}>
+                    Odeslat
+                </Button>
+            )}
             {isOptional && isChained && (
                 <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={loading}>
-                    Možná později
+                    Možná później
                 </Button>
             )}
         </>

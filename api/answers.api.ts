@@ -83,6 +83,16 @@ export const areThereVotesForQuestion = async (questionId: number): Promise<bool
     return !!response.count;
 };
 
+export const fetchAnsweredOptionIds = async (questionId: number): Promise<number[]> => {
+    const supabase = await createClient();
+    const response = await supabase
+        .from("answers_options")
+        .select("question_options_id")
+        .eq("question_id", questionId);
+    if (!response.data) return [];
+    return [...new Set(response.data.map((a) => a.question_options_id))];
+};
+
 export const areThereMatchAnswersForQuestion = async (questionId: number): Promise<boolean> => {
     const supabase = await createClient();
     const response = await supabase

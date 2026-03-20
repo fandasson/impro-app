@@ -2,7 +2,12 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 import { Database, Enums, Tables, TablesInsert } from "@/utils/supabase/entity.types";
 
-export type QuestionWithPlayersAndCharacters = Question & { players: Player[]; characters: Character[] };
+export type OptionInput = {
+    id?: number;
+    option: string;
+};
+
+export type QuestionWithPlayersAndCharacters = Question & { players: Player[]; characters: Character[]; options: QuestionOptions[] };
 export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
 export type QuestionDetail = QuestionWithPlayersAndCharacters & QuestionWithPool;
 export type CharacterInput = {
@@ -17,6 +22,7 @@ export type QuestionUpsertRequest = Pick<
 > & {
     players?: Player[];
     characters?: CharacterInput[];
+    options?: OptionInput[];
 };
 
 export type Answer = {
