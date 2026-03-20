@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
-import { fetchActiveOrLockedQuestion, fetchQuestion } from "@/api/questions.api";
+import { fetchActiveOrLockedQuestion, fetchFirstQuestionInChain, fetchQuestion } from "@/api/questions.api";
 import { Performance, Question } from "@/api/types.api";
 import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
@@ -122,4 +123,45 @@ export const useQuestion = (questionId: number | null, initialQuestion?: Questio
     }, [questionId, initialQuestion, question]);
 
     return question;
+};
+
+export const useChainNavigation = (question: Question | null) => {
+    const [chainFirstId, setChainFirstId] = useState<number | null>(null);
+    const [isChained, setIsChained] = useState(false);
+    const router = useRouter();
+
+    const questionId = question?.id ?? null;
+    const followingQuestionId = question?.following_question_id ?? null;
+
+    useEffect(() => {
+        if (questionId === null) return;
+
+        fetchFirstQuestionInChain(questionId).then((firstId) => {
+            if (firstId !== null) {
+                setIsChained(true);
+                setChainFirstId(firstId);
+            } else {
+                setIsChained(followingQuestionId !== null);
+                setChainFirstId(null);
+            }
+        });
+    }, [questionId, followingQuestionId]);
+
+    const navigateNext = useCallback(() => {
+        if (!question) return;
+        if (question.following_question_id) {
+            router.push(`/question/${question.following_question_id}`);
+        } else if (chainFirstId !== null) {
+            // Loop back to chain start
+            router.push(`/question/${chainFirstId}`);
+        } else {
+            router.push(`/`);
+        }
+    }, [question, chainFirstId, router]);
+
+    const skipQuestion = useCallback(() => {
+        navigateNext();
+    }, [navigateNext]);
+
+    return { navigateNext, skipQuestion, isChained, chainFirstId };
 };

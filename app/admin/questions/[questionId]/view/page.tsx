@@ -8,6 +8,7 @@ import {
     fetchTextAnswers,
     fetchVoteAnswers,
 } from "@/api/answers.api";
+import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchQuestion, fetchQuestionOptions } from "@/api/questions.api";
 import { Answer, QuestionOptions } from "@/api/types.api";
 import { Answers } from "@/components/admin/answers/Answers";
@@ -29,6 +30,11 @@ export default async function QuestionDetail(props: { params: Promise<{ question
 
     if (!question) {
         notFound();
+    }
+
+    if (question.type === "match" && question.players.length === 0) {
+        const performancePlayers = await fetchAvailablePlayers(question.performance_id);
+        question.players = performancePlayers;
     }
 
     const options: QuestionOptions[] = [];

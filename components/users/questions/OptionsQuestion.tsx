@@ -11,12 +11,19 @@ import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
-export const OptionsQuestion = () => {
+type Props = {
+    navigateNext?: () => void;
+    skipQuestion?: () => void;
+    isOptional?: boolean;
+    isChained?: boolean;
+    previousOptionId?: number;
+};
+
+export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChained, previousOptionId }: Props) => {
     const loading = useUsersStore((state) => state.loading);
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [selectedOption, setSelectedOption] = useState<number | null>(previousOptionId ?? null);
     const [options, setOptions] = useState<QuestionOptions[]>([]);
     const question = useUsersStore((state) => state.question);
-    const performance = useUsersStore((state) => state.performance);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,9 +41,10 @@ export const OptionsQuestion = () => {
             question_options_id: selectedOption,
         })
             .then(() => {
-                // it is possible to save several anwers for one user
                 markQuestionAsAnswered(question.id);
-                if (question?.following_question_id) {
+                if (navigateNext) {
+                    navigateNext();
+                } else if (question?.following_question_id) {
                     router.push(`/question/${question.following_question_id}`);
                 } else {
                     router.push(`/`);
@@ -66,6 +74,11 @@ export const OptionsQuestion = () => {
             <Button onClick={handleSubmit} disabled={loading || !selectedOption}>
                 Odeslat
             </Button>
+            {isOptional && isChained && (
+                <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={loading}>
+                    Možná později
+                </Button>
+            )}
         </>
     );
 };

@@ -1,15 +1,15 @@
 import { Character, Player } from "@/api/types.api";
 
 type Props = {
-    player: Player;
-    character?: Character;
+    character: Character;
+    player?: Player;
 };
-export const PlayerMatch = ({ player, character }: Props) => {
+export const CharacterMatch = ({ character, player }: Props) => {
     return (
         <div className={"flex justify-between rounded border px-3 py-3"}>
-            <strong>{player.name}</strong>
+            <strong>{character.name}</strong>
             <span>{" -> "}</span>
-            <div>{character?.name ?? "?"}</div>
+            <div>{player?.name ?? "?"}</div>
         </div>
     );
 };
