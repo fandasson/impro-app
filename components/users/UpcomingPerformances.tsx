@@ -1,9 +1,7 @@
 "use client";
 
 import { WebPerformance } from "@/api/web.api";
-import { Paragraph } from "@/components/ui/Paragraph";
 import { PerformanceList } from "@/components/ui/PerformanceList";
-import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { SharingActions } from "@/components/users/SharingActions";
 
 type Props = {
@@ -12,25 +10,31 @@ type Props = {
 
 export const UpcomingPerformances = ({ upcomingPerformances }: Props) => {
     return (
-        <MobileContainer>
+        <div className="flex min-h-svh flex-col pb-10">
+            <div className="from-background/75 via-background/30 pointer-events-none sticky top-0 z-10 bg-gradient-to-b to-transparent pb-16 pt-6 backdrop-blur-md [-webkit-mask-image:linear-gradient(to_bottom,black_55%,transparent)] [mask-image:linear-gradient(to_bottom,black_55%,transparent)]">
+                <div className="pointer-events-auto px-6">
+                    <h1 className="text-[26px] font-bold leading-tight">
+                        Nejbližší
+                        <br />
+                        představení
+                    </h1>
+                </div>
+            </div>
+
             <div className="flex flex-grow flex-col">
                 {upcomingPerformances.length === 0 && (
-                    <div className="flex flex-grow flex-col justify-center text-center">
-                        <Paragraph>
+                    <div className="flex flex-grow flex-col items-center justify-center px-6 text-center">
+                        <p className="text-base leading-relaxed text-muted-foreground">
                             Nemáme teď v kalendáři žádné další představení. Tak to asi máme prázdniny ☀️🌴🏖️
-                        </Paragraph>
+                        </p>
                     </div>
                 )}
-                {upcomingPerformances.length > 0 && (
-                    <div>
-                        <div className="py-2 pb-4 text-center">
-                            <h1 className="text-xl font-bold">Nejbližší představení</h1>
-                        </div>
-                        <PerformanceList performances={upcomingPerformances} />
-                    </div>
-                )}
+                {upcomingPerformances.length > 0 && <PerformanceList performances={upcomingPerformances} />}
             </div>
-            <SharingActions />
-        </MobileContainer>
+
+            <div className="mt-8 px-6">
+                <SharingActions />
+            </div>
+        </div>
     );
 };

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 import { fetchMyMatchAnswers, fetchMyOptionsAnswer, fetchMyTextAnswer } from "@/api/submit-answer";
 import { MatchAnswer, Question } from "@/api/types.api";
-import { MobileContainer } from "@/components/ui/layout/MobileContainer";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAnswers";
 import { InfoQuestion } from "@/components/users/questions/InfoQuestion";
@@ -19,7 +18,7 @@ type Props = {
 };
 
 const ModificationNotice = () => (
-    <div className="mb-4 rounded-md bg-yellow-100 px-4 py-2 text-sm text-yellow-800">
+    <div className="mx-6 mb-4 rounded-[10px] bg-secondary px-4 py-2.5 text-sm text-muted-foreground">
         Už jste odpověděli — můžete svou odpověď upravit.
     </div>
 );
@@ -30,7 +29,6 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
     const isLoading = useUsersStore((state) => state.loading);
     const { navigateNext, skipQuestion, isChained } = useChainNavigation(question);
 
-    // Reset loading when question changes (after navigation commits)
     useEffect(() => {
         setLoading(false);
     }, [question?.id]);
@@ -41,9 +39,6 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
         optionId?: number;
     } | null>(null);
 
-    // Don't trigger prefill loading while a navigation transition is in progress —
-    // server action calls during a pending router.push carry the current page's
-    // router state tree and cause Next.js to cancel the transition.
     const needsPrefill = !!question && isChained && !!alreadyAnswered && !isLoading;
 
     useEffect(() => {
@@ -71,27 +66,27 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
             if (!cancelled) setPrefillData(result);
         };
         loadPrevious();
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, [needsPrefill, question]);
 
     if (!question) {
         return null;
     }
 
-    // Non-chained, non-multiple, already answered → show AlreadyAnswered
-    // Skip while isLoading: unmounting during a pending router.push transition aborts navigation.
     if (alreadyAnswered && !question.multiple && !isChained && !isLoading) {
         return <AlreadyAnswered />;
     }
 
-    // Wait for prefill data before rendering chained questions.
-    // Skip this guard while isLoading (submission in progress) — unmounting the
-    // component tree during a pending router.push transition aborts navigation.
     if (needsPrefill && prefillData === null && !isLoading) {
         return null;
     }
 
     const showModificationNotice = isChained && alreadyAnswered;
+
+    // Voting and player-pick screens manage their own header layout
+    const isFullBleed = question.type === "voting" || question.type === "player-pick";
 
     let component: React.JSX.Element | null = null;
     switch (question.type) {
@@ -157,10 +152,22 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
             );
     }
 
+    if (isFullBleed) {
+        return (
+            <div className="flex min-h-svh flex-col pb-10">
+                {showModificationNotice && <ModificationNotice />}
+                {component}
+            </div>
+        );
+    }
+
     return (
-        <MobileContainer className={""}>
+        <div className="flex min-h-svh flex-col pb-10">
             {showModificationNotice && <ModificationNotice />}
-            {component}
-        </MobileContainer>
+            <div className="sticky top-0 z-10 bg-gradient-to-b from-background via-background/95 to-transparent px-6 pb-4 pt-6">
+                <h2 className="text-[22px] font-bold leading-snug">{question.name}</h2>
+            </div>
+            <div className="flex flex-col gap-4 px-6 pt-2">{component}</div>
+        </div>
     );
 };
