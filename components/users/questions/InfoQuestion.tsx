@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { Paragraph } from "@/components/ui/Paragraph";
 import { markQuestionAsAnswered, setLoading, useUsersStore } from "@/store/users.store";
 
 type Props = {
@@ -13,11 +12,7 @@ type Props = {
     navigateNext?: () => void;
 };
 
-/**
- * This is not really a question as it not ask about anything. But it works as Question in flow, visibility and everything els
- */
 export const InfoQuestion = (props: Props) => {
-    const question = useUsersStore((state) => state.question);
     const [_isPending, startTransition] = useTransition();
     const router = useRouter();
 
@@ -34,10 +29,12 @@ export const InfoQuestion = (props: Props) => {
     };
 
     return (
-        <div className={"flex flex-col gap-8"}>
-            <Paragraph className={"text-2xl font-bold"}>Čtěte pozorně zápletku příběhu</Paragraph>
-            <div className={"flex flex-col gap-4"} dangerouslySetInnerHTML={{ __html: props.questionText || "" }} />
-            <Button type={"button"} onClick={handleClick}>
+        <div className="flex flex-col gap-6">
+            <div
+                className="flex flex-col gap-3 text-base leading-relaxed text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
+                dangerouslySetInnerHTML={{ __html: props.questionText || "" }}
+            />
+            <Button type="button" className="w-full" onClick={handleClick}>
                 To chci vidět!
             </Button>
         </div>

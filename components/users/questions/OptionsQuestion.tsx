@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import { fetchQuestionOptions } from "@/api/questions.api";
 import { submitOptionsAnswer } from "@/api/submit-answer";
 import { QuestionOptions } from "@/api/types.api";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Paragraph } from "@/components/ui/Paragraph";
 import { markQuestionAsAnswered, setLoading, storeAnswer, useUsersStore } from "@/store/users.store";
+import { cn } from "@/utils/styling.utils";
 
 type Props = {
     navigateNext?: () => void;
@@ -71,27 +70,33 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
 
     return (
         <>
-            <Paragraph>{question.question}</Paragraph>
-            <div className={"flex flex-col gap-4"}>
+            {question.question && (
+                <p className="text-base leading-relaxed text-muted-foreground">{question.question}</p>
+            )}
+            <div className="flex flex-col gap-3">
                 {options.map((option) => (
-                    <Badge
+                    <div
                         key={option.id}
-                        className={"text-md flex-col items-start p-4"}
+                        className={cn(
+                            "cursor-pointer rounded-[12px] border-2 border-transparent px-4 py-3.5 text-sm font-medium leading-snug transition-all duration-200",
+                            selectedOption === option.id
+                                ? "border-primary [background:var(--amber-dim)] text-foreground"
+                                : "border-border bg-card text-foreground hover:border-border/60",
+                        )}
                         onClick={() =>
                             hasFollowingQuestion ? setSelectedOption(option.id) : handleAutoSubmit(option.id)
                         }
-                        variant={selectedOption === option.id ? "default" : "outline"}
                         dangerouslySetInnerHTML={{ __html: option.option ?? "" }}
                     />
                 ))}
             </div>
             {hasFollowingQuestion && (
-                <Button onClick={handleSubmit} disabled={loading || !selectedOption}>
+                <Button onClick={handleSubmit} disabled={loading || !selectedOption} className="w-full">
                     Odeslat
                 </Button>
             )}
             {isOptional && isChained && (
-                <Button type={"button"} variant={"outline"} onClick={skipQuestion} disabled={loading}>
+                <Button type="button" variant="outline" className="w-full" onClick={skipQuestion} disabled={loading}>
                     Možná později
                 </Button>
             )}

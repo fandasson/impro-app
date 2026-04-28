@@ -7,7 +7,6 @@ import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
-import { Paragraph } from "@/components/ui/Paragraph";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
 import { storeAnswer, useUsersStore } from "@/store/users.store";
 import { shufflePlayers } from "@/utils/data.utils";
@@ -23,8 +22,6 @@ type Props = {
 
 export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, isOptional, isChained }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
-    // Optimistic approach: Use store as single source of truth for selected player
-    // UI updates immediately when store updates (via storeAnswer)
     const selectedPlayer = useUsersStore((state) => state.answers[question.id] as number | undefined);
 
     useEffect(() => {
@@ -41,9 +38,7 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
     }, [question.id]);
 
     const handleSubmit = async (playerId: number) => {
-        // Optimistic update: Update store immediately for instant UI feedback
         storeAnswer(question.id, playerId);
-        // Then submit to server
         await submitVoteAnswer({
             question_id: question.id,
             player_id: playerId,
@@ -52,15 +47,18 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
 
     const rows = Math.ceil(players.length / 2) || 1;
     const shuffledPlayers = useMemo(() => shufflePlayers(players), [players]);
+
     return (
         <>
-            {question.question && (
-                <>
-                    <h2 className={"text-2xl font-bold"}>{question.name}</h2>
-                    <Paragraph>{question.question}</Paragraph>
-                </>
-            )}
-            <div className={cn("grid grid-cols-2 items-center justify-center gap-x-2 gap-y-4", `grid-rows-${rows}`)}>
+            <div className="px-6 pb-2 pt-7">
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                    Odpovědi není třeba potvrzovat{" "}
+                    <strong className="font-semibold text-foreground">žádným tlačítkem.</strong>
+                </p>
+                {question.question && <h2 className="text-md mt-4 font-medium leading-snug">{question.question}</h2>}
+            </div>
+
+            <div className={cn("grid grid-cols-2 gap-2.5 px-5 pt-5", `grid-rows-${rows}`)}>
                 {shuffledPlayers &&
                     shuffledPlayers.map((player) => (
                         <PlayerCard
@@ -73,10 +71,13 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
                         />
                     ))}
             </div>
+
             {isOptional && isChained && (
-                <Button type={"button"} variant={"outline"} onClick={skipQuestion}>
-                    Možná později
-                </Button>
+                <div className="px-5 pt-4">
+                    <Button type="button" variant="outline" className="w-full" onClick={skipQuestion}>
+                        Možná později
+                    </Button>
+                </div>
             )}
         </>
     );
