@@ -8,6 +8,7 @@ import { submitVoteAnswer } from "@/api/submit-answer";
 import { PlayerWithPhotos, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
+import { VotedOverlay } from "@/components/users/questions/PlayersVotingQuestion/VotedOverlay";
 import { storeAnswer, useUsersStore } from "@/store/users.store";
 import { shufflePlayers } from "@/utils/data.utils";
 import { cn } from "@/utils/styling.utils";
@@ -22,6 +23,7 @@ type Props = {
 
 export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, isOptional, isChained }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
+    const [overlayPlayer, setOverlayPlayer] = useState<PlayerWithPhotos | null>(null);
     const selectedPlayer = useUsersStore((state) => state.answers[question.id] as number | undefined);
 
     useEffect(() => {
@@ -37,12 +39,15 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
         });
     }, [question.id]);
 
-    const handleSubmit = async (playerId: number) => {
-        storeAnswer(question.id, playerId);
+    const handleSubmit = async (player: PlayerWithPhotos) => {
+        storeAnswer(question.id, player.id);
         await submitVoteAnswer({
             question_id: question.id,
-            player_id: playerId,
+            player_id: player.id,
         });
+        if (question.show_player_motto) {
+            setOverlayPlayer(player);
+        }
     };
 
     const rows = Math.ceil(players.length / 2) || 1;
@@ -66,7 +71,7 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
                             key={player.id}
                             hideResults={true}
                             selected={selectedPlayer === player.id}
-                            onClick={() => handleSubmit(player.id)}
+                            onClick={() => handleSubmit(player)}
                             heightFraction={rows}
                         />
                     ))}
@@ -78,6 +83,15 @@ export const PlayersVotingQuestion = ({ question, navigateNext, skipQuestion, is
                         Možná později
                     </Button>
                 </div>
+            )}
+
+            {overlayPlayer && question.show_player_motto && (
+                <VotedOverlay
+                    key={overlayPlayer.id}
+                    questionName={question.name}
+                    player={overlayPlayer}
+                    onDismiss={() => setOverlayPlayer(null)}
+                />
             )}
         </>
     );

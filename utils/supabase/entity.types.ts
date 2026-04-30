@@ -259,18 +259,21 @@ export type Database = {
       players: {
         Row: {
           id: number
+          motto: string | null
           name: string
           quest: boolean | null
           surname: string | null
         }
         Insert: {
           id?: number
+          motto?: string | null
           name: string
           quest?: boolean | null
           surname?: string | null
         }
         Update: {
           id?: number
+          motto?: string | null
           name?: string
           quest?: boolean | null
           surname?: string | null
@@ -289,6 +292,7 @@ export type Database = {
           performance_id: number
           pool_id: number | null
           question: string
+          show_player_motto: boolean
           state: Database["public"]["Enums"]["question-state"]
           type: Database["public"]["Enums"]["question-type"]
         }
@@ -303,6 +307,7 @@ export type Database = {
           performance_id: number
           pool_id?: number | null
           question: string
+          show_player_motto?: boolean
           state: Database["public"]["Enums"]["question-state"]
           type?: Database["public"]["Enums"]["question-type"]
         }
@@ -317,6 +322,7 @@ export type Database = {
           performance_id?: number
           pool_id?: number | null
           question?: string
+          show_player_motto?: boolean
           state?: Database["public"]["Enums"]["question-state"]
           type?: Database["public"]["Enums"]["question-type"]
         }
