@@ -1,4 +1,4 @@
-import { fetchActiveOrLockedQuestion } from "@/api/questions.api";
+import { fetchActiveOrLockedQuestion, fetchHasMottoQuestion } from "@/api/questions.api";
 import { getUpcomingPerformances } from "@/api/web.api";
 import { AuthUser } from "@/components/users/AuthUser";
 import { UpcomingPerformances } from "@/components/users/UpcomingPerformances";
@@ -23,12 +23,17 @@ export default async function PerformanceView({ params }: { params: { slug: stri
     // Fetch initial active or locked question
     const { data: initialQuestion } = await fetchActiveOrLockedQuestion(performances[0].id);
 
+    const hasMottoQuestion = performances[0].state === "intro"
+        ? await fetchHasMottoQuestion(performances[0].id)
+        : false;
+
     return (
         <AuthUser>
             <UserIndex
                 defaultPerformance={performances[0]}
                 initialQuestion={initialQuestion ?? null}
                 upcomingPerformances={upcomingPerformances}
+                hasMottoQuestion={hasMottoQuestion}
             />
         </AuthUser>
     );
