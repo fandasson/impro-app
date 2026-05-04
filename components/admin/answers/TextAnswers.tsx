@@ -4,9 +4,9 @@ import React, { memo } from "react";
 
 import { favoriteTextAnswer, randomDrawAnswer, removeTextAnswers as removeAnswersRemote } from "@/api/answers.api";
 import { TextAnswer } from "@/api/types.api";
-import { Loading } from "@/components/admin/Loading";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Loading } from "@/components/ui/Loading";
 import { useTextAnswers } from "@/hooks/admin.hooks";
 import { removeAnswers as removeAnswersLocal, useAdminStore } from "@/store/admin.store";
 
