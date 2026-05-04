@@ -13,9 +13,10 @@ type Props = {
     defaultPerformance: Performance;
     initialQuestion: Question | null;
     upcomingPerformances: WebPerformance[];
+    hasMottoQuestion: boolean;
 };
 
-export const UserIndex = ({ defaultPerformance, initialQuestion, upcomingPerformances }: Props) => {
+export const UserIndex = ({ defaultPerformance, initialQuestion, upcomingPerformances, hasMottoQuestion }: Props) => {
     const performance = usePerformance(defaultPerformance);
     const onboardingCompleted = useUsersStore((state) => state.onboarding.completed);
 
@@ -27,7 +28,7 @@ export const UserIndex = ({ defaultPerformance, initialQuestion, upcomingPerform
         return onboardingCompleted ? (
             <Intro performance={performance} />
         ) : (
-            <OnboardingWizard performance={performance} />
+            <OnboardingWizard performance={performance} hasMottoQuestion={hasMottoQuestion} />
         );
     }
 

@@ -7,6 +7,7 @@ import { completeOnboarding, setOnboardingStep, useUsersStore } from "@/store/us
 
 type Props = {
     performance: Performance;
+    hasMottoQuestion: boolean;
 };
 
 const STEPS = {
@@ -16,7 +17,7 @@ const STEPS = {
     VOTING: 3,
 };
 
-export const OnboardingWizard = ({ performance }: Props) => {
+export const OnboardingWizard = ({ performance, hasMottoQuestion }: Props) => {
     const { currentStep } = useUsersStore((state) => state.onboarding);
 
     const handleNextStep = (step: number) => {
@@ -95,7 +96,9 @@ export const OnboardingWizard = ({ performance }: Props) => {
                 </div>
             )}
 
-            {currentStep === STEPS.VOTING && <OnboardingPracticeQuestion onComplete={handleComplete} />}
+            {currentStep === STEPS.VOTING && (
+                <OnboardingPracticeQuestion onComplete={handleComplete} hasMottoQuestion={hasMottoQuestion} />
+            )}
         </MobileContainer>
     );
 };

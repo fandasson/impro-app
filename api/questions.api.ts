@@ -108,6 +108,16 @@ export const fetchQuestions = async (performanceId: number): Promise<QuestionsRe
         .order("index_order", { ascending: false });
 };
 
+export const fetchHasMottoQuestion = cache(async (performanceId: number): Promise<boolean> => {
+    const supabase = await createClient();
+    const { count } = await supabase
+        .from("questions")
+        .select("id", { count: "exact", head: true })
+        .eq("performance_id", performanceId)
+        .eq("show_player_motto", true);
+    return (count ?? 0) > 0;
+});
+
 export const fetchQuestionPlayers = cache(async (questionId: number): Promise<Player[]> => {
     const supabase = await createClient();
     const response = await supabase.from("questions").select("players(*)").eq("id", questionId).single();
