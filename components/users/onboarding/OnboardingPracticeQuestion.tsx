@@ -6,17 +6,20 @@ import { PlayerWithPhotos } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
+import { VotedOverlay } from "@/components/users/questions/PlayersVotingQuestion/VotedOverlay";
 import { useUsersStore } from "@/store/users.store";
 import { shufflePlayers } from "@/utils/data.utils";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {
     onComplete: () => void;
+    hasMottoQuestion: boolean;
 };
 
-export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
+export const OnboardingPracticeQuestion = ({ onComplete, hasMottoQuestion }: Props) => {
     const [players, setPlayers] = useState<PlayerWithPhotos[]>([]);
     const [selectedPlayer, setSelectedPlayer] = useState<number>();
+    const [overlayPlayer, setOverlayPlayer] = useState<PlayerWithPhotos | null>(null);
     const [loading, setLoading] = useState(true);
     const performance = useUsersStore((state) => state.performance);
 
@@ -43,8 +46,11 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
         }
     }, [performance]);
 
-    const handleSelect = (playerId: number) => {
-        setSelectedPlayer(playerId);
+    const handleSelect = (player: PlayerWithPhotos) => {
+        setSelectedPlayer(player.id);
+        if (hasMottoQuestion) {
+            setOverlayPlayer(player);
+        }
     };
 
     const shuffledPlayers = useMemo(() => shufflePlayers(players), [players]);
@@ -79,7 +85,7 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
                             key={player.id}
                             hideResults={true}
                             selected={selectedPlayer === player.id}
-                            onClick={() => handleSelect(player.id)}
+                            onClick={() => handleSelect(player)}
                             heightFraction={rows}
                         />
                     ))}
@@ -92,6 +98,15 @@ export const OnboardingPracticeQuestion = ({ onComplete }: Props) => {
                     Chápu. Jsem připraven/a si užít představení 💪
                 </Button>
             </div>
+
+            {overlayPlayer && (
+                <VotedOverlay
+                    key={overlayPlayer.id}
+                    questionName="Ukázka hlasování"
+                    player={overlayPlayer}
+                    onDismiss={() => setOverlayPlayer(null)}
+                />
+            )}
         </>
     );
 };
