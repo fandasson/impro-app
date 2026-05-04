@@ -46,7 +46,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
                             border: "none",
                         }}
                     >
-                        Tlačítko co asi nepomůže
+                        Tlačítko, co asi nepomůže
                     </button>
                 </div>
             </body>
