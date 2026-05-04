@@ -32,7 +32,7 @@ export function PerformanceList({ performances }: PerformanceListProps) {
                         />
                         <div className="mb-3.5 flex flex-col gap-0.5">
                             <div className="text-sm font-medium text-foreground">
-                                {format(new Date(performance.date + "+01:00"), "EEEE d. MMMM, HH:mm", {
+                                {format(new Date(performance.date), "EEEE d. MMMM, HH:mm", {
                                     locale: cs,
                                 })}
                             </div>
