@@ -31,9 +31,9 @@ export function PerformanceList({ performances }: PerformanceListProps) {
         return (
             <div className="py-12 text-center">
                 <p className="text-gray-500">Zatím žádná představení</p>
-                <Link href="/admin/performances/new">
-                    <Button className="mt-4">Vytvořit první představení</Button>
-                </Link>
+                <Button className="mt-4" asChild>
+                    <Link href="/admin/performances/new">Vytvořit první představení</Link>
+                </Button>
             </div>
         );
     }
@@ -59,16 +59,12 @@ export function PerformanceList({ performances }: PerformanceListProps) {
                             </Badge>
                         </TableCell>
                         <TableCell className="space-x-2 text-right">
-                            <Link href={`/admin/performances/${performance.id}`}>
-                                <Button variant="outline" size="sm">
-                                    Detail
-                                </Button>
-                            </Link>
-                            <Link href={`/admin/performances/${performance.id}/edit`}>
-                                <Button variant="outline" size="sm">
-                                    Upravit
-                                </Button>
-                            </Link>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={`/admin/performances/${performance.id}`}>Detail</Link>
+                            </Button>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={`/admin/performances/${performance.id}/edit`}>Upravit</Link>
+                            </Button>
                         </TableCell>
                     </TableRow>
                 ))}
