@@ -12,7 +12,7 @@ interface PerformanceListProps {
 
 export function PerformanceList({ performances }: PerformanceListProps) {
     return (
-        <div className="flex flex-col gap-2.5 px-4">
+        <div className="flex flex-col gap-5 px-4">
             {performances.map((performance) => (
                 <div key={performance.id} className="overflow-hidden rounded-[14px] border bg-card">
                     <Link href={performance.link} target="_blank">
