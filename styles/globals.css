@@ -44,7 +44,7 @@
         --destructive: oklch(45% 0.2 25);
         --destructive-foreground: oklch(98% 0 0);
         --border: oklch(28% 0.008 260);
-        --input: oklch(18% 0.009 260);
+        --input: oklch(28% 0.008 260);
         --ring: oklch(72% 0.14 72);
         --amber: oklch(72% 0.14 72);
         --amber-dim: oklch(72% 0.14 72 / 0.18);

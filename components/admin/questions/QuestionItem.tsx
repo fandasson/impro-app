@@ -49,7 +49,7 @@ export const QuestionItem = (props: Props) => {
         <div className={"flex items-center justify-between gap-4"}>
             <Link
                 href={`/admin/questions/${id}/view`}
-                className={"grid flex-grow grid-cols-7 gap-2 rounded border bg-gray-700 px-3.5 py-3"}
+                className={"grid flex-grow grid-cols-7 gap-2 rounded border bg-gray-900 px-3.5 py-2"}
             >
                 <strong className={"col-span-4"}>{name}</strong>
                 <span>{pool?.name}</span>
@@ -68,7 +68,7 @@ export const QuestionItem = (props: Props) => {
                     variant={"outline"}
                     type={"submit"}
                     size={"icon"}
-                    className={"rounded border-destructive bg-destructive"}
+                    className={"rounded border-destructive bg-destructive text-white"}
                 >
                     <EyeOff />
                 </Button>
