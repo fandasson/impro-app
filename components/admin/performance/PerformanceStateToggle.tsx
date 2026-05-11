@@ -30,6 +30,7 @@ export const PerformanceStateToggle = ({ performanceId, defaultState }: Props) =
         <ToggleGroup
             type="single"
             size={"lg"}
+            variant={"outline"}
             defaultValue={defaultState}
             value={performance?.state}
             onValueChange={(newValue) => toggleState(newValue as PerformanceState)}
