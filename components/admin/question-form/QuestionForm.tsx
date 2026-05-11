@@ -1,6 +1,6 @@
 "use client";
 import { HandIcon, ListIcon, NotebookPenIcon, TextIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 import { areThereMatchAnswersForQuestion, areThereVotesForQuestion, fetchAnsweredOptionIds } from "@/api/answers.api";
@@ -44,6 +44,7 @@ export const QuestionForm = (props: Props) => {
     const [answeredCharacterIds, setAnsweredCharacterIds] = useState<number[]>([]);
     const [answeredOptionIds, setAnsweredOptionIds] = useState<number[]>([]);
     const loading = useAdminStore((state) => state.loading);
+    const nameManuallyEdited = useRef(!!question?.name);
 
     const {
         register,
@@ -108,7 +109,7 @@ export const QuestionForm = (props: Props) => {
 
     const handlePlayersChange = (_players: Player[]) => {
         setValue("players", _players);
-        if (type === "voting" && !getFieldState("name").isDirty) {
+        if (type === "voting" && !nameManuallyEdited.current) {
             setValue("name", _players.map(({ name }) => name).join(", "));
         }
     };
@@ -179,6 +180,10 @@ export const QuestionForm = (props: Props) => {
                     placeholder={"Diváci to neuvidí"}
                     id={"name"}
                     {...register("name", { required: true })}
+                    onChange={(e) => {
+                        register("name").onChange(e);
+                        nameManuallyEdited.current = true;
+                    }}
                 />
             </div>
             <div className={"flex flex-col gap-4"}>
