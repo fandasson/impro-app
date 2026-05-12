@@ -11,6 +11,7 @@ type Props = {
 
 export const QuestionAudienceStateToggle = ({ question, defaultState }: Props) => {
     const handleVisibilityChange = async (visibility: AudienceVisibility) => {
+        if (!visibility || visibility === question?.audience_visibility) return;
         await setAudienceVisibility(question.id, visibility);
     };
 
