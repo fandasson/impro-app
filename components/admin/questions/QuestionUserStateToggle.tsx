@@ -11,7 +11,7 @@ type Props = {
 
 export const QuestionUserStateToggle = ({ question, defaultState }: Props) => {
     const handleStateChange = async (newState: QuestionState) => {
-        if (newState === question?.state) {
+        if (!newState || newState === question?.state) {
             return;
         }
         await setQuestionState(question.id, newState);
