@@ -12,18 +12,14 @@ export const useQuestion = (performanceId: number, initialQuestion?: Question | 
 
     useEffect(() => {
         if (initialQuestion !== undefined) {
-            // Use server-provided data, skip fetch
             setQuestion(initialQuestion);
-            return;
         }
-
-        // Fallback: fetch if no initial data provided
+        // Always reconcile with the DB on mount: the component can remount after
+        // pool visibility toggles, and any question UPDATE events that fired while
+        // unmounted would otherwise be lost, leaving a stale question in the store.
         findQuestion(performanceId, "audience_visibility.eq.question,audience_visibility.eq.results").then(
             (response) => {
-                if (!response.data) {
-                    return;
-                }
-                setQuestion(response.data);
+                setQuestion(response.data ?? null);
             },
         );
     }, [performanceId, initialQuestion]);
