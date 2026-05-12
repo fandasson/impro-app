@@ -58,10 +58,20 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
         if (!question) return;
         setSelectedOption(optionId);
         storeAnswer(question.id, optionId);
+        setLoading(true);
         await submitOptionsAnswer({
             question_id: question.id,
             question_options_id: optionId,
-        });
+        })
+            .then(() => {
+                markQuestionAsAnswered(question.id);
+                if (navigateNext) {
+                    navigateNext();
+                } else {
+                    router.push(`/`);
+                }
+            })
+            .finally(() => setLoading(false));
     };
 
     if (!question) {
