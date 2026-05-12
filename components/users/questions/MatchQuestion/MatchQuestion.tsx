@@ -94,6 +94,7 @@ export const MatchQuestion = ({
         const { over, active } = event;
         if (over) {
             const player = findPlayer(active.id);
+            if (!player) return;
 
             setMatches((prevMatches) => {
                 let matches: Record<number, Player> = {
@@ -146,7 +147,7 @@ export const MatchQuestion = ({
     const canBeSubmitted = characters?.every((c) => matches[c.id] !== undefined) ?? false;
     return (
         <>
-            <UseFormattedContent className={"text-lg font-medium"}>{question.question}</UseFormattedContent>
+            <UseFormattedContent className={"text-lg font-medium"} html={question.question ?? ""} />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className={"grid gap-4"}>
                     {characters &&

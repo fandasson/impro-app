@@ -2,15 +2,17 @@ import * as React from "react";
 
 import { cn } from "@/utils/styling.utils";
 
-interface Props extends React.InputHTMLAttributes<HTMLDivElement> {}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+    html: string;
+}
 
-const UseFormattedContent = React.forwardRef<HTMLDivElement, Props>(({ className, children, ...props }, ref) => {
+const UseFormattedContent = React.forwardRef<HTMLDivElement, Props>(({ className, html, ...props }, ref) => {
     return (
         <div
             className={cn("text-lg", className)}
             ref={ref}
             {...props}
-            dangerouslySetInnerHTML={{ __html: children || "" }}
+            dangerouslySetInnerHTML={{ __html: html }}
         />
     );
 });
