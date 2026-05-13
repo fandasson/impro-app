@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Answer, QuestionDetail, QuestionOptions } from "@/api/types.api";
+import type { Answer, QuestionDetail, QuestionOptions } from "@/api/types.api";
 import { AnswersHeadline } from "@/components/admin/answers/AnswersHeadline";
 import { MatchingAnswers } from "@/components/admin/answers/MatchingAnswers";
 import { OptionsAnswers } from "@/components/admin/answers/OptionsAnswers";

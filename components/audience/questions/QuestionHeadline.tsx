@@ -1,4 +1,4 @@
-import { Question } from "@/api/types.api";
+import type { Question } from "@/api/types.api";
 
 type Props = {
     question: Question;

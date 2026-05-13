@@ -1,4 +1,4 @@
-import { PlayerWithPhotos } from "@/api/types.api";
+import type { PlayerWithPhotos } from "@/api/types.api";
 
 export const shufflePlayers = (players: PlayerWithPhotos[]) => {
     if (!players.length) return [];

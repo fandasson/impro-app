@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetchMatchingQuestionResults } from "@/api/answers.api";
 import { fetchQuestion } from "@/api/questions.api";
-import { MatchAnswerResults, Player } from "@/api/types.api";
+import type { MatchAnswerResults, Player } from "@/api/types.api";
 
 type Props = {
     questionId: number;

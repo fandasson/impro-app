@@ -1,5 +1,5 @@
 "use client";
-import { OptionsAnswer, QuestionOptions } from "@/api/types.api";
+import type { OptionsAnswer, QuestionOptions } from "@/api/types.api";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/Table";
 import { useOptionsAnswers } from "@/hooks/admin.hooks";
 import { countOptions } from "@/utils/answers.utils";

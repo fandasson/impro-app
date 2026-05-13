@@ -1,5 +1,5 @@
 "use client";
-import { Character, MatchAnswer, Player } from "@/api/types.api";
+import type { Character, MatchAnswer, Player } from "@/api/types.api";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/Table";
 import { useMatchingAnswers } from "@/hooks/admin.hooks";
 import { countMatches } from "@/utils/answers.utils";

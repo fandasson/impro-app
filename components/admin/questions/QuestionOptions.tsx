@@ -1,5 +1,5 @@
 import { fetchQuestionOptions } from "@/api/questions.api";
-import { QuestionWithPlayersAndCharacters } from "@/api/types.api";
+import type { QuestionWithPlayersAndCharacters } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 
 type Props = {

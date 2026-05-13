@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { fetchMatchingAnswers, fetchOptionsAnswers, fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
-import {
+import type {
     Answer,
     AnswersResponse,
     MatchAnswer,

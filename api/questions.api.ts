@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
-import {
+import type {
     AudienceVisibility,
     Character,
     Player,

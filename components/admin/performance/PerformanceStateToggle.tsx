@@ -4,7 +4,7 @@ import { Archive, Calendar, Eye, EyeOff, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { fetchPerformance, setPerformanceState } from "@/api/performances.api";
-import { PerformanceState } from "@/api/types.api";
+import type { PerformanceState } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 import { Tables } from "@/utils/supabase/entity.types";
 

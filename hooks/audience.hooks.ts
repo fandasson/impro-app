@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { fetchVisiblePool } from "@/api/question-pools.api";
 import { findQuestion } from "@/api/questions.api";
-import { Question, QuestionPool } from "@/api/types.api";
+import type { Question, QuestionPool } from "@/api/types.api";
 import { setPool, setQuestion, useAudienceStore } from "@/store/audience.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";

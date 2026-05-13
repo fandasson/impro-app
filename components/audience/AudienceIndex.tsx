@@ -1,6 +1,6 @@
 "use client";
 
-import { Performance, Question, QuestionPool } from "@/api/types.api";
+import type { Performance, Question, QuestionPool } from "@/api/types.api";
 import { WebPerformance } from "@/api/web.api";
 import { AudiencePoolResults } from "@/components/audience/AudiencePoolResults";
 import { AudienceQuestionDetail } from "@/components/audience/AudienceQuestionDetail";

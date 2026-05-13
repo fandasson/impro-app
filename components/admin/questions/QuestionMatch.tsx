@@ -1,4 +1,4 @@
-import { QuestionWithPlayersAndCharacters } from "@/api/types.api";
+import type { QuestionWithPlayersAndCharacters } from "@/api/types.api";
 
 type Props = {
     question: QuestionWithPlayersAndCharacters;

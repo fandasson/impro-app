@@ -1,7 +1,7 @@
 "use client";
 
 import { setAudienceVisibility } from "@/api/questions.api";
-import { AudienceVisibility, QuestionDetail } from "@/api/types.api";
+import type { AudienceVisibility, QuestionDetail } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 
 type Props = {

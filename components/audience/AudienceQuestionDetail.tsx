@@ -1,6 +1,6 @@
 "use client";
 
-import { Question as QuestionType } from "@/api/types.api";
+import type { Question as QuestionType } from "@/api/types.api";
 import { MatchQuestionAnswers } from "@/components/audience/answers/MatchAnswer";
 import { PlayersVotingAnswers } from "@/components/audience/answers/PlayersVotingAnswers";
 import { TextQuestionAnswers } from "@/components/audience/answers/TextQuestionAnswers";

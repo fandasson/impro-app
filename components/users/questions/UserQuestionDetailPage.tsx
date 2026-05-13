@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Question } from "@/api/types.api";
+import type { Question } from "@/api/types.api";
 import { NoQuestion } from "@/components/users/NoQuestion";
 import { UserQuestionDetail } from "@/components/users/questions/UserQuestionDetail";
 import { useActiveOrLockedQuestion } from "@/hooks/users.hooks";

@@ -1,6 +1,6 @@
 "use client";
 
-import { QuestionPool } from "@/api/types.api";
+import type { QuestionPool } from "@/api/types.api";
 import { PoolVotingAnswers } from "@/components/audience/answers/PoolVotingAnswers";
 
 type Props = {

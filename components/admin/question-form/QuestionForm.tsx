@@ -7,7 +7,7 @@ import { areThereMatchAnswersForQuestion, areThereVotesForQuestion, fetchAnswere
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchAvailablePools } from "@/api/question-pools.api";
 import { fetchAnsweredCharacterIds, getNewIndexOrder } from "@/api/questions.api";
-import { CharacterInput, OptionInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
+import type { CharacterInput, OptionInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { ManageCharacters } from "@/components/admin/question-form/ManageCharacters";
 import { ManageOptions } from "@/components/admin/question-form/ManageOptions";

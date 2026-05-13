@@ -1,6 +1,6 @@
 "use server";
 
-import {
+import type {
     AnswersResponse,
     MatchAnswer,
     MatchAnswerResults,

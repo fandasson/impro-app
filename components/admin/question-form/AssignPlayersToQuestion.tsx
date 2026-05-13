@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Player } from "@/api/types.api";
+import type { Player } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 
 type Props = {

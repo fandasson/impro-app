@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { fetchTextAnswers } from "@/api/answers.api";
-import { TextAnswer } from "@/api/types.api";
+import type { TextAnswer } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 
 type Props = {

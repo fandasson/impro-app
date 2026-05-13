@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
+import type { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
 
 type Props = {
     player: VotedPlayer<PlayerWithPhotos>;

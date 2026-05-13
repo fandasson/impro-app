@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { Performance, Question } from "@/api/types.api";
+import type { Performance, Question } from "@/api/types.api";
 
 type Store = {
     userId?: string;

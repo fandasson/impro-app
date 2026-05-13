@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { getPlayerPhotos } from "@/api/photos.api";
-import { PlayerWithPhotos } from "@/api/types.api";
+import type { PlayerWithPhotos } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";

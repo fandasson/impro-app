@@ -4,7 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import { fetchQuestionState } from "@/api/questions.api";
-import { MatchAnswer, MatchAnswerCreate, OptionsAnswer, OptionsAnswerInsert, TextAnswer, TextAnswerInsert, VoteAnswer, VoteAnswerInsert } from "@/api/types.api";
+import type { MatchAnswer, MatchAnswerCreate, OptionsAnswer, OptionsAnswerInsert, TextAnswer, TextAnswerInsert, VoteAnswer, VoteAnswerInsert } from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
 

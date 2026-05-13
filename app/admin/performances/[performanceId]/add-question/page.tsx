@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createQuestion } from "@/api/questions.api";
-import { QuestionUpsertRequest } from "@/api/types.api";
+import type { QuestionUpsertRequest } from "@/api/types.api";
 import { QuestionForm } from "@/components/admin/question-form";
 import { Button } from "@/components/ui/Button";
 

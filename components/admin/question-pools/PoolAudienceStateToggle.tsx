@@ -3,7 +3,7 @@
 import { Eye, EyeOff } from "lucide-react";
 
 import { setPoolAudienceVisibility } from "@/api/question-pools.api";
-import { AudienceVisibility, QuestionPool } from "@/api/types.api";
+import type { AudienceVisibility, QuestionPool } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { Question, QuestionPool } from "@/api/types.api";
+import type { Question, QuestionPool } from "@/api/types.api";
 
 type AudienceStore = {
     question: Question | null;

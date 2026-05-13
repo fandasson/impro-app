@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { fetchQuestionOptions } from "@/api/questions.api";
 import { submitOptionsAnswer } from "@/api/submit-answer";
-import { QuestionOptions } from "@/api/types.api";
+import type { QuestionOptions } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { markQuestionAsAnswered, setLoading, storeAnswer, useUsersStore } from "@/store/users.store";
 import { cn } from "@/utils/styling.utils";

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchPoolVoteAnswers } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { getPlayerPhotos } from "@/api/photos.api";
-import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
+import type { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
 import { VotingAnswers } from "@/components/audience/answers/VotingAnswers";
 import { setLoading, useAudienceStore } from "@/store/audience.store";
 import { countVotesForPlayers } from "@/utils/answers.utils";

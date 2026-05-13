@@ -1,4 +1,4 @@
-import { Performance } from "@/api/types.api";
+import type { Performance } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Paragraph } from "@/components/ui/Paragraph";
 import { MobileContainer } from "@/components/ui/layout/MobileContainer";

@@ -3,7 +3,7 @@ import { StarIcon, Trash2Icon, TrophyIcon } from "lucide-react";
 import React, { memo } from "react";
 
 import { favoriteTextAnswer, randomDrawAnswer, removeTextAnswers as removeAnswersRemote } from "@/api/answers.api";
-import { TextAnswer } from "@/api/types.api";
+import type { TextAnswer } from "@/api/types.api";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Loading } from "@/components/ui/Loading";

@@ -1,4 +1,4 @@
-import { VotedPlayer } from "@/api/types.api";
+import type { VotedPlayer } from "@/api/types.api";
 import { cn } from "@/utils/styling.utils";
 
 type Props = {

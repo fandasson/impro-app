@@ -1,7 +1,7 @@
 import { XIcon } from "lucide-react";
 import React, { useState } from "react";
 
-import { CharacterInput } from "@/api/types.api";
+import type { CharacterInput } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";

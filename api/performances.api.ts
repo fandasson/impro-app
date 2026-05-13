@@ -6,7 +6,7 @@ import slugify from "slugify";
 import { z } from "zod";
 
 import { hideAllQuestionsForPerformance } from "@/api/questions.api";
-import { Performance, PerformanceState } from "@/api/types.api";
+import type { Performance, PerformanceState } from "@/api/types.api";
 import type { Tables } from "@/utils/supabase/entity.types";
 import { createClient } from "@/utils/supabase/server";
 

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { Answer } from "@/api/types.api";
+import type { Answer } from "@/api/types.api";
 
 type AdminStore = {
     loading: boolean;

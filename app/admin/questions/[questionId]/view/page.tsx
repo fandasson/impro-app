@@ -10,7 +10,7 @@ import {
 } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchQuestion, fetchQuestionOptions } from "@/api/questions.api";
-import { Answer, QuestionOptions } from "@/api/types.api";
+import type { Answer, QuestionOptions } from "@/api/types.api";
 import { Answers } from "@/components/admin/answers/Answers";
 import { QuestionMatch } from "@/components/admin/questions";
 import { QuestionAudienceStateToggle } from "@/components/admin/questions/QuestionAudienceStateToggle";

@@ -1,5 +1,5 @@
 "use client";
-import { Player, VoteAnswer } from "@/api/types.api";
+import type { Player, VoteAnswer } from "@/api/types.api";
 import { VotingAnswers } from "@/components/admin/answers/VotingAnswers";
 import { useVoteAnswers } from "@/hooks/admin.hooks";
 import { countVotesForPlayers } from "@/utils/answers.utils";

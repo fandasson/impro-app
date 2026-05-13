@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import { fetchMyMatchAnswers, fetchMyOptionsAnswer, fetchMyTextAnswer } from "@/api/submit-answer";
-import { MatchAnswer, Question } from "@/api/types.api";
+import type { MatchAnswer, Question } from "@/api/types.api";
 import { AlreadyAnswered } from "@/components/users/AlreadyAnswered";
 import { PlayersVotingAnswers } from "@/components/users/answers/PlayersVotingAnswers";
 import { InfoQuestion } from "@/components/users/questions/InfoQuestion";

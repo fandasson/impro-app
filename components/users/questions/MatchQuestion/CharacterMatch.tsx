@@ -1,4 +1,4 @@
-import { Character, Player } from "@/api/types.api";
+import type { Character, Player } from "@/api/types.api";
 
 type Props = {
     character: Character;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchVoteAnswers } from "@/api/answers.api";
 import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestionPlayers } from "@/api/questions.api";
-import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
+import type { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
 import { VotingAnswers } from "@/components/audience/answers/VotingAnswers";
 import { VotingAnswersFinal } from "@/components/audience/answers/VotingAnswersFinal";
 import { setLoading, useAudienceStore } from "@/store/audience.store";

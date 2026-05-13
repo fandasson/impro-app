@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchVoteAnswers } from "@/api/answers.api";
 import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestion } from "@/api/questions.api";
-import { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
+import type { PlayerWithPhotos, VoteAnswer } from "@/api/types.api";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
 import { setLoading } from "@/store/users.store";
 import { countVotesForPlayers } from "@/utils/answers.utils";

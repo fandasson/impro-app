@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getPlayerPhotos } from "@/api/photos.api";
 import { fetchQuestionPlayers } from "@/api/questions.api";
 import { submitVoteAnswer } from "@/api/submit-answer";
-import { PlayerWithPhotos, Question } from "@/api/types.api";
+import type { PlayerWithPhotos, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { PlayerCard } from "@/components/users/questions/PlayersVotingQuestion/PlayerCard";
 import { VotedOverlay } from "@/components/users/questions/PlayersVotingQuestion/VotedOverlay";

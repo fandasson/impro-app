@@ -8,7 +8,7 @@ import { useEffect, useState, useTransition } from "react";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchExcludedPlayerIdsForChain, fetchQuestionCharacters, fetchQuestionPlayers } from "@/api/questions.api";
 import { submitMatchAnswer } from "@/api/submit-answer";
-import { Character, MatchAnswer, MatchAnswerCreate, Player, Question } from "@/api/types.api";
+import type { Character, MatchAnswer, MatchAnswerCreate, Player, Question } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 import { UseFormattedContent } from "@/components/ui/UserFormattedContent";
 import { Draggable } from "@/components/ui/dnd/Draggable";
@@ -59,28 +59,23 @@ export const MatchQuestion = ({
             fetchQuestionPlayers(question.id),
             fetchAvailablePlayers(question.performance_id),
             fetchExcludedPlayerIdsForChain(question.id),
-        ]).then(([questionPlayers, performancePlayers, excludedIds]) => {
+            fetchQuestionCharacters(question.id),
+        ]).then(([questionPlayers, performancePlayers, excludedIds, fetchedCharacters]) => {
             const playersToUse = questionPlayers.length > 0 ? questionPlayers : performancePlayers;
-            setPlayers(playersToUse.filter((p) => !excludedIds.includes(p.id)));
-        });
-        fetchQuestionCharacters(question.id).then((fetchedCharacters) => {
+            const filtered = playersToUse.filter((p) => !excludedIds.includes(p.id));
+            setPlayers(filtered);
             setCharacters(fetchedCharacters);
-        });
-    }, [question.id, question.performance_id]);
 
-    // Initialize matches from previous answers once both players and characters are loaded
-    useEffect(() => {
-        if (!previousMatches || previousMatches.length === 0 || !players || !characters) return;
-
-        const initialMatches: Record<number, Player> = {};
-        for (const answer of previousMatches) {
-            const player = players.find((p) => p.id === answer.player_id);
-            if (player) {
-                initialMatches[answer.character_id] = player;
+            if (previousMatches && previousMatches.length > 0) {
+                const initialMatches: Record<number, Player> = {};
+                for (const answer of previousMatches) {
+                    const player = filtered.find((p) => p.id === answer.player_id);
+                    if (player) initialMatches[answer.character_id] = player;
+                }
+                setMatches(initialMatches);
             }
-        }
-        setMatches(initialMatches);
-    }, [players, characters, previousMatches]);
+        });
+    }, [question.id, question.performance_id, previousMatches]);
 
     const findPlayer = (id: UniqueIdentifier) => {
         return players?.find((player) => player.id === id);

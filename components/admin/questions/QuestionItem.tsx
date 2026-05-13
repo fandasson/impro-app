@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 import { hideAllForQuestion } from "@/api/questions.api";
-import { QuestionWithPool } from "@/api/types.api";
+import type { QuestionWithPool } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 
 type Props = QuestionWithPool;

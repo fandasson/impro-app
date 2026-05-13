@@ -1,7 +1,7 @@
 "use client";
 
 import { setQuestionState } from "@/api/questions.api";
-import { QuestionDetail, QuestionState } from "@/api/types.api";
+import type { QuestionDetail, QuestionState } from "@/api/types.api";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle";
 
 type Props = {

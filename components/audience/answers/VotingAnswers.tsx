@@ -1,4 +1,4 @@
-import { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
+import type { PlayerWithPhotos, VotedPlayer } from "@/api/types.api";
 import { VoteCard } from "@/components/audience/answers/VoteCard";
 
 type Props = {
