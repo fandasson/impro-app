@@ -6,6 +6,7 @@ import { z } from "zod";
 import slugify from "slugify";
 
 import { Performance, PerformanceState } from "@/api/types.api";
+import { hideAllQuestionsForPerformance } from "@/api/questions.api";
 import { createClient } from "@/utils/supabase/server";
 import type { Tables } from "@/utils/supabase/entity.types";
 
@@ -32,7 +33,11 @@ export const setPerformanceState = async (
     state: PerformanceState,
 ): Promise<PerformanceResponse> => {
     const supabase = await createClient();
-    return supabase.from("performances").update({ state }).eq("id", performanceId).select().single();
+    const result = await supabase.from("performances").update({ state }).eq("id", performanceId).select().single();
+    if (state !== "life") {
+        await hideAllQuestionsForPerformance(performanceId);
+    }
+    return result;
 };
 
 export const fetchAvailablePlayers = async (performanceId: number) => {

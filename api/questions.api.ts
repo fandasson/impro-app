@@ -415,3 +415,9 @@ export const hideAllForQuestion = async (questionId: number, performanceId: numb
     await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);
     revalidatePath(`/admin/performances/${performanceId}`);
 };
+
+export const hideAllQuestionsForPerformance = async (performanceId: number) => {
+    const supabase = await createClient();
+    await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("performance_id", performanceId);
+    revalidatePath(`/admin/performances/${performanceId}`);
+};
