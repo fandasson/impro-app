@@ -33,7 +33,7 @@ export const PlayerCard = ({ player, onClick, selected, hideResults }: Props) =>
                     alt={player.name}
                     width={150}
                     height={150}
-                    className={cn("h-full w-full object-cover transition-all duration-200", !selected && "grayscale")}
+                    className={cn("h-full w-full object-cover transition-all duration-200")}
                 />
             </div>
             <div
