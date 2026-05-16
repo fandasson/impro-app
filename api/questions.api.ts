@@ -99,14 +99,14 @@ export const fetchQuestionState = async (questionId: number): Promise<QuestionSt
     return response.data?.state ?? "draft";
 };
 
-export const fetchQuestions = async (performanceId: number): Promise<QuestionsResponse> => {
+export const fetchQuestions = cache(async (performanceId: number): Promise<QuestionsResponse> => {
     const supabase = await createClient();
     return supabase
         .from("questions")
         .select("*, questions_pool(id, name)")
         .eq("performance_id", performanceId)
         .order("index_order", { ascending: false });
-};
+});
 
 export const fetchHasMottoQuestion = cache(async (performanceId: number): Promise<boolean> => {
     const supabase = await createClient();
@@ -159,7 +159,7 @@ export const setQuestionState = async (questionId: number, state: QuestionState)
     const response = await supabase.from("questions").update({ state }).eq("id", questionId).select().single();
     const performanceId = response.data?.performance_id;
     revalidatePath(`/admin/performances/${performanceId}`);
-    revalidatePath(`/admin/question/${questionId}/view`);
+    revalidatePath(`/admin/questions/${questionId}/view`);
     return response;
 };
 
@@ -172,7 +172,7 @@ export const setAudienceVisibility = async (questionId: number, visibility: Audi
 
     // set required visibility
     await supabase.from("questions").update({ audience_visibility: visibility }).eq("id", questionId);
-    revalidatePath(`/admin/question/${questionId}/view`);
+    revalidatePath(`/admin/questions/${questionId}/view`);
 };
 
 export const getNewIndexOrder = async (performanceId: number): Promise<number> => {
