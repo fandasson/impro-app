@@ -1,11 +1,9 @@
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { fetchAllPlayers, fetchPerformanceWithPlayers, updatePerformance } from "@/api/performances.api";
+import { PerformanceHeader } from "@/components/admin/performance/PerformanceHeader";
 import { PerformanceForm } from "@/components/admin/performances/PerformanceForm";
 import { PlayerAssignment } from "@/components/admin/performances/PlayerAssignment";
-import { Button } from "@/components/ui/Button";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function EditPerformancePage({ params }: { params: Promise<{ performanceId: string }> }) {
@@ -51,18 +49,9 @@ export default async function EditPerformancePage({ params }: { params: Promise<
 
     return (
         <div className="space-y-6">
-            <div className="flex items-stretch">
-                <Button variant="ghost" size="icon" asChild className="h-auto">
-                    <Link href={`/admin/performances/${performance.id}`}>
-                        <ChevronLeft size={28} />
-                    </Link>
-                </Button>
-                <div>
-                    <h1 className="text-3xl font-bold">Upravit představení</h1>
-                    <p className="mt-2 text-gray-300">{performance.name}</p>
-                </div>
-            </div>
+            <PerformanceHeader performance={performance} backHref={`/admin/performances/${performance.id}`} />
 
+            <h2 className="text-xl font-semibold">Upravit představení</h2>
             <PerformanceForm initialData={performance} action={handleUpdate} submitLabel="Uložit změny" />
 
             <div className="mt-8 rounded-lg border border-gray-800 bg-gray-950 p-6">
