@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -27,9 +28,16 @@ export default async function PerformanceDetail(props: { params: Promise<{ perfo
     return (
         <>
             <div className={"flex justify-between"}>
-                <h1 className="mb-4 text-2xl font-bold">
-                    {performance.name} {formatDate(performance.date)}
-                </h1>
+                <div className={"flex items-stretch"}>
+                    <Button variant="ghost" size="icon" asChild className={"h-auto"}>
+                        <Link href={"/admin"}>
+                            <ChevronLeft size={28} />
+                        </Link>
+                    </Button>
+                    <h1 className="mb-4 text-2xl font-bold">
+                        {performance.name} {formatDate(performance.date)}
+                    </h1>
+                </div>
                 <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
             </div>
             <div className={"flex justify-between gap-2"}>
