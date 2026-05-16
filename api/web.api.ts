@@ -2,6 +2,13 @@ import { subMinutes } from "date-fns";
 
 const WEB_API_URL = "https://improvariace.cz/wp-json/wp/v2";
 
+// ACF returns "YYYY-MM-DD HH:mm:ss" with no offset — it is the Prague wall-clock
+// time of the performance. We keep it as a raw string and never turn it into an
+// absolute instant: a Date would be serialized server→client as UTC and then
+// re-rendered in a different zone. Parsing + formatting it in one consistent
+// zone always round-trips back to the original wall clock.
+const parseWallClock = (wallClock: string): Date => new Date(wallClock.replace(" ", "T"));
+
 interface CTA {
     title: string;
     url: string;
@@ -30,7 +37,8 @@ interface FollowUpAction {
 }
 export interface WebPerformance {
     id: number;
-    date: Date;
+    /** Raw Prague wall-clock string "YYYY-MM-DD HH:mm:ss" — see `parseWallClock`. */
+    date: string;
     title: string;
     link: string;
     soldOut: boolean;
@@ -131,7 +139,7 @@ async function fetchWebPerformances(): Promise<WebPerformance[]> {
                 id: performance.id,
                 title: performance.title.rendered,
                 link: performance.link,
-                date: new Date(performance.acf.date),
+                date: performance.acf.date,
                 soldOut: performance.acf.sold_out,
                 price: performance.acf.price,
                 facebookUrl: performance.acf.facebook_url,
@@ -153,7 +161,7 @@ export async function getUpcomingPerformances(): Promise<WebPerformance[]> {
     const performances = await fetchWebPerformances();
     return performances
         .filter((performance) => {
-            return performance.date >= subMinutes(today, 30);
+            return parseWallClock(performance.date) >= subMinutes(today, 30);
         })
-        .sort((a, b) => a.date.getTime() - b.date.getTime());
+        .sort((a, b) => parseWallClock(a.date).getTime() - parseWallClock(b.date).getTime());
 }

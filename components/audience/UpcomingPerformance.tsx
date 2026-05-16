@@ -25,7 +25,9 @@ export function UpcomingPerformance({ upcomingPerformances }: Props) {
                 <div className="flex flex-col justify-between gap-4 md:flex-row">
                     <div className="text-xl">
                         <div className="font-medium">
-                            {format(new Date(performance.date), "EEEE d. MMMM, HH:mm", { locale: cs })}
+                            {format(new Date(performance.date.replace(" ", "T")), "EEEE d. MMMM, HH:mm", {
+                                locale: cs,
+                            })}
                         </div>
                         {performance?.venue && <div className="text-lg opacity-90">{performance.venue}</div>}
                     </div>
