@@ -26,17 +26,14 @@ export const QuestionUserStateToggle = ({ question, defaultState }: Props) => {
             variant={"outline"}
             onValueChange={(newValue) => handleStateChange(newValue as QuestionState)}
         >
-            <ToggleGroupItem value="draft" title={"Skrytá otázka"}>
-                Příprava
+            <ToggleGroupItem value="hidden" title={"Skrytá otázka"}>
+                Skrýt
             </ToggleGroupItem>
             <ToggleGroupItem value="active" title={"Aktivní otázka"}>
                 <strong>VYPLŇOVÁNÍ</strong>
             </ToggleGroupItem>
             <ToggleGroupItem value="locked" title={"Aktivní otázka bez možnosti hlasovat"}>
                 Výsledky
-            </ToggleGroupItem>
-            <ToggleGroupItem value="answered" title={"Zobrazená otázka"}>
-                Hotovo
             </ToggleGroupItem>
         </ToggleGroup>
     );
