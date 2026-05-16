@@ -1,4 +1,4 @@
-import { ChevronLeft, ProjectorIcon, SmartphoneIcon } from "lucide-react";
+import { ProjectorIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -8,11 +8,12 @@ import {
     fetchTextAnswers,
     fetchVoteAnswers,
 } from "@/api/answers.api";
-import { fetchAvailablePlayers } from "@/api/performances.api";
-import { fetchQuestion, fetchQuestionOptions } from "@/api/questions.api";
+import { fetchAvailablePlayers, fetchPerformance } from "@/api/performances.api";
+import { fetchQuestion, fetchQuestionOptions, fetchQuestions } from "@/api/questions.api";
 import type { Answer, QuestionOptions } from "@/api/types.api";
 import { Answers } from "@/components/admin/answers/Answers";
-import { QuestionMatch } from "@/components/admin/questions";
+import { PerformanceHeader } from "@/components/admin/performance/PerformanceHeader";
+import { QuestionMatch, QuestionSidebar, VisCard } from "@/components/admin/questions";
 import { QuestionAudienceStateToggle } from "@/components/admin/questions/QuestionAudienceStateToggle";
 import { QuestionOptions as QuestionOptionsHeader } from "@/components/admin/questions/QuestionOptions";
 import { QuestionUserStateToggle } from "@/components/admin/questions/QuestionUserStateToggle";
@@ -22,15 +23,24 @@ export default async function QuestionDetail(props: { params: Promise<{ question
     const params = await props.params;
     const questionId = parseInt(params.questionId);
     const { data: question } = await fetchQuestion(questionId);
-    let followUpQuestionRequest = null;
-    if (question && question.following_question_id) {
-        followUpQuestionRequest = await fetchQuestion(question.following_question_id);
-    }
-    const followUpQuestion = followUpQuestionRequest?.data;
 
     if (!question) {
         notFound();
     }
+
+    // Fetch performance, sidebar question list and the optional follow-up in parallel.
+    const [performanceResponse, questionsResponse, followUpResponse] = await Promise.all([
+        fetchPerformance(question.performance_id),
+        fetchQuestions(question.performance_id),
+        question.following_question_id ? fetchQuestion(question.following_question_id) : Promise.resolve(null),
+    ]);
+
+    const performance = performanceResponse.data;
+    if (!performance) {
+        notFound();
+    }
+    const questions = questionsResponse.data ?? [];
+    const followUpQuestion = followUpResponse?.data;
 
     if (question.type === "match" && question.players.length === 0) {
         const performancePlayers = await fetchAvailablePlayers(question.performance_id);
@@ -67,61 +77,69 @@ export default async function QuestionDetail(props: { params: Promise<{ question
 
     return (
         <>
-            <header className={"mb-4"}>
-                <div className={"flex justify-between"}>
-                    <div className={"flex items-stretch"}>
-                        <Button variant="ghost" size="icon" asChild className={"h-auto"}>
-                            <Link href={`/admin/performances/${question.performance_id}`}>
-                                <ChevronLeft size={28} />
-                            </Link>
-                        </Button>
-                        <div className={"flex flex-col gap-2"}>
-                            <h1 className="text-2xl font-bold">{question.name}</h1>
-                            <em className={"relative -left-0.5"}>{question.question}</em>
+            <PerformanceHeader
+                performance={performance}
+                backHref={`/admin/performances/${question.performance_id}`}
+            />
+            <div className={"flex min-h-0 flex-1 gap-6"}>
+                <QuestionSidebar
+                    questions={questions}
+                    currentQuestionId={question.id}
+                    performanceId={question.performance_id}
+                />
+                <main className={"flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto"}>
+                    <header className={"flex items-start justify-between gap-4 border-b border-border pb-5"}>
+                        <div className={"flex min-w-0 flex-col gap-1.5"}>
+                            <h1 className={"text-2xl font-bold"}>{question.name}</h1>
+                            <em className={"text-sm text-muted-foreground"}>{question.question}</em>
                             {followUpQuestion && (
-                                <span>
+                                <span className={"text-sm"}>
                                     pokračuje otázkou{" "}
                                     <Link
                                         href={`/admin/questions/${followUpQuestion.id}/view`}
-                                        style={{ textDecoration: "underline" }}
+                                        className={"underline"}
                                     >
                                         {followUpQuestion.name}
                                     </Link>
                                 </span>
                             )}
-                        </div>
-                        {question.questions_pool && (
-                            <Link
-                                href={`/admin/performances/${question.performance_id}/question-pools/${question.pool_id}`}
-                            >
-                                <Button variant="ghost" size="sm" className={"ml-4 gap-2"}>
+                            {question.questions_pool && (
+                                <Link
+                                    href={`/admin/performances/${question.performance_id}/question-pools/${question.pool_id}`}
+                                    className={"text-sm underline"}
+                                >
                                     Skupina otázek <strong>{question.questions_pool.name}</strong>
-                                </Button>
-                            </Link>
-                        )}
+                                </Link>
+                            )}
+                        </div>
+                        <Link href={`/admin/questions/${question.id}/edit`} className={"shrink-0"}>
+                            <Button variant={"outline"}>Upravit otázku</Button>
+                        </Link>
+                    </header>
+
+                    <div className={"grid gap-4 lg:grid-cols-2"}>
+                        <VisCard icon={<SmartphoneIcon size={14} />} title={"Hráči (telefon)"}>
+                            <QuestionUserStateToggle defaultState={question.state} question={question} />
+                        </VisCard>
+                        <VisCard icon={<ProjectorIcon size={14} />} title={"Diváci / projekce"}>
+                            <QuestionAudienceStateToggle question={question} />
+                        </VisCard>
                     </div>
-                    <Link href={`/admin/questions/${question.id}/edit`}>
-                        <Button variant={"outline"}>Upravit otázku</Button>
-                    </Link>
-                </div>
-            </header>
-            <div className={"flex flex-col justify-between gap-8 lg:flex-row"}>
-                <div className={"flex items-center"}>
-                    <SmartphoneIcon size={28} className={"mr-4"} />
-                    <QuestionUserStateToggle defaultState={question.state} question={question} />
-                </div>
-                <div className={"flex items-center"}>
-                    <ProjectorIcon size={28} className={"mr-4"} />
-                    <QuestionAudienceStateToggle question={question} />
-                </div>
+
+                    <article className={"grid grid-cols-2 gap-3"}>
+                        <QuestionMatch question={question} />
+                        <QuestionOptionsHeader question={question} />
+                    </article>
+
+                    <aside>
+                        <Answers
+                            question={question}
+                            questionOptions={options}
+                            initialAnswers={initialAnswers}
+                        />
+                    </aside>
+                </main>
             </div>
-            <article className={"mb-4 grid grid-cols-2 gap-3"}>
-                <QuestionMatch question={question} />
-                <QuestionOptionsHeader question={question} />
-            </article>
-            <aside className={"mt-4"}>
-                <Answers question={question} questionOptions={options} initialAnswers={initialAnswers} />
-            </aside>
         </>
     );
 }

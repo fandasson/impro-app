@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
 import { Button } from "@/components/ui/Button";
-import { Tables } from "@/utils/supabase/entity.types";
 import { formatDate } from "@/utils/date.utils";
+import { Tables } from "@/utils/supabase/entity.types";
 
 type Props = {
     performance: Tables<"performances">;
