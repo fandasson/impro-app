@@ -74,7 +74,7 @@ TDD MUST be followed for all new features and bug fixes. Write tests, get user a
 
 The application serves three distinct roles with zero UI overlap:
 
-**Admin** (`/admin/*`): Performance management, question lifecycle control (draft→active→locked→answered), answer review, visibility toggles. Requires Supabase authentication. Desktop-first layout via `TabletContainer`.
+**Admin** (`/admin/*`): Performance management, question lifecycle control (hidden→active→locked), answer review, visibility toggles. Requires Supabase authentication. Desktop-first layout via `TabletContainer`.
 
 **Audience** (`/audience`): Passive display for projector/screen. Shows intro text, active question, or voting results based on performance state (intro|life|closing) and audience_visibility settings. Real-time synchronized. Full-width black background via `CenteredContainer`.
 

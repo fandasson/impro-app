@@ -20,8 +20,7 @@ export const QuestionItem = (props: Props) => {
 
     let stateIcon: ReactNode | null = null;
     switch (state) {
-        case "draft":
-        case "answered":
+        case "hidden":
             stateIcon = <EyeOff />;
             break;
         case "active":

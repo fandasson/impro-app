@@ -96,7 +96,7 @@ export const fetchQuestion = async (questionId: number): Promise<QuestionDetailR
 export const fetchQuestionState = async (questionId: number): Promise<QuestionState> => {
     const supabase = await createClient();
     const response = await supabase.from("questions").select("state").eq("id", questionId).single();
-    return response.data?.state ?? "draft";
+    return response.data?.state ?? "hidden";
 };
 
 export const fetchQuestions = async (performanceId: number): Promise<QuestionsResponse> => {
@@ -154,7 +154,7 @@ export const fetchQuestionOptions = async (questionId: number): Promise<Question
 export const setQuestionState = async (questionId: number, state: QuestionState): Promise<QuestionResponse> => {
     const supabase = await createClient();
     // first, hide all visible
-    await supabase.from("questions").update({ state: "answered" }).in("state", ["active", "locked"]);
+    await supabase.from("questions").update({ state: "hidden" }).in("state", ["active", "locked"]);
 
     const response = await supabase.from("questions").update({ state }).eq("id", questionId).select().single();
     const performanceId = response.data?.performance_id;
@@ -195,7 +195,7 @@ export const createQuestion = async (performanceId: number, question: QuestionUp
         .from("questions")
         .insert({
             ...questionData,
-            state: "draft",
+            state: "hidden",
             performance_id: performanceId,
         })
         .select();
@@ -412,12 +412,12 @@ export const fetchFirstQuestionInChain = async (questionId: number): Promise<num
 
 export const hideAllForQuestion = async (questionId: number, performanceId: number) => {
     const supabase = await createClient();
-    await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("id", questionId);
+    await supabase.from("questions").update({ audience_visibility: "hidden", state: "hidden" }).eq("id", questionId);
     revalidatePath(`/admin/performances/${performanceId}`);
 };
 
 export const hideAllQuestionsForPerformance = async (performanceId: number) => {
     const supabase = await createClient();
-    await supabase.from("questions").update({ audience_visibility: "hidden", state: "answered" }).eq("performance_id", performanceId);
+    await supabase.from("questions").update({ audience_visibility: "hidden", state: "hidden" }).eq("performance_id", performanceId);
     revalidatePath(`/admin/performances/${performanceId}`);
 };

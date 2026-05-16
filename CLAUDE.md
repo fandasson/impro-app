@@ -60,7 +60,7 @@ A Next.js 14 application for managing interactive question-and-answer sessions d
 **Questions**
 - `id`, `name`, `question`, `type` (text|player-pick|voting|match|options|info|select)
 - `performance_id`: Links to performance
-- `state` (draft|active|locked|answered): Controls visibility
+- `state` (hidden|active|locked): Controls visibility
 - `audience_visibility` (hidden|question|results): Controls audience display
 - `pool_id`: Optional grouping in voting pools
 - `index_order`: Display order
@@ -273,10 +273,9 @@ export const createClient = () => createBrowserClient(...) // Deprecated; used o
 ### Three-Layer Visibility System
 
 **Question State** (controls answering):
-- `draft`: Not shown to anyone
+- `hidden`: Not shown to anyone (default for new questions; also where played questions end up)
 - `active`: Users can answer; admin can see answers
 - `locked`: No more answers accepted; admin reviews
-- `answered`: Results shown; no new answers
 
 **Audience Visibility** (controls audience display):
 - `hidden`: Not visible to audience
@@ -291,8 +290,8 @@ export const createClient = () => createBrowserClient(...) // Deprecated; used o
 ### State Transitions
 
 **Admin Controls**:
-- `setQuestionState()`: Admin moves question through draft→active→locked→answered
-  - When setting new state, auto-hides all other active questions
+- `setQuestionState()`: Admin moves question through hidden→active→locked
+  - When setting new state, auto-hides all other active/locked questions (back to `hidden`)
 - `setAudienceVisibility()`: Admin controls what audience sees
   - Setting visibility hides all other visible questions and pools
 - `setPoolAudienceVisibility()`: Toggle pool visibility
