@@ -3,26 +3,29 @@ import { useEffect } from "react";
 import { fetchVisiblePool } from "@/api/question-pools.api";
 import { findQuestion } from "@/api/questions.api";
 import type { Question, QuestionPool } from "@/api/types.api";
+import { useReconnectKey } from "@/hooks/realtime.hooks";
 import { setPool, setQuestion, useAudienceStore } from "@/store/audience.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
 export const useQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useAudienceStore((state) => state.question);
+    const reconnectKey = useReconnectKey();
 
     useEffect(() => {
-        if (initialQuestion !== undefined) {
+        if (reconnectKey === 0 && initialQuestion !== undefined) {
             setQuestion(initialQuestion);
         }
-        // Always reconcile with the DB on mount: the component can remount after
-        // pool visibility toggles, and any question UPDATE events that fired while
-        // unmounted would otherwise be lost, leaving a stale question in the store.
+        // Always reconcile with the DB: the component can remount after pool
+        // visibility toggles, and the reconnectKey bump fires after iOS Safari
+        // suspends the tab — question UPDATE events missed meanwhile would
+        // otherwise leave a stale question in the store.
         findQuestion(performanceId, "audience_visibility.eq.question,audience_visibility.eq.results").then(
             (response) => {
                 setQuestion(response.data ?? null);
             },
         );
-    }, [performanceId, initialQuestion]);
+    }, [performanceId, initialQuestion, reconnectKey]);
 
     useEffect(() => {
         if (performanceId) {
@@ -52,29 +55,26 @@ export const useQuestion = (performanceId: number, initialQuestion?: Question | 
                 supabase.removeChannel(channel);
             };
         }
-    }, [performanceId]);
+    }, [performanceId, reconnectKey]);
 
     return question;
 };
 
 export const usePool = (performanceId: number, initialPool?: QuestionPool | null) => {
     const pool = useAudienceStore((state) => state.pool);
+    const reconnectKey = useReconnectKey();
 
     useEffect(() => {
-        if (initialPool !== undefined) {
-            // Use server-provided data, skip fetch
+        // On reconnect (reconnectKey > 0) always refetch: server-provided data is stale.
+        if (reconnectKey === 0 && initialPool !== undefined) {
             setPool(initialPool);
             return;
         }
 
-        // Fallback: fetch if no initial data provided
         fetchVisiblePool(performanceId).then((response) => {
-            if (!response) {
-                return;
-            }
-            setPool(response);
+            setPool(response ?? null);
         });
-    }, [performanceId, initialPool]);
+    }, [performanceId, initialPool, reconnectKey]);
 
     useEffect(() => {
         if (performanceId) {
@@ -104,7 +104,7 @@ export const usePool = (performanceId: number, initialPool?: QuestionPool | null
                 supabase.removeChannel(channel);
             };
         }
-    }, [performanceId]);
+    }, [performanceId, reconnectKey]);
 
     return pool;
 };

@@ -1,35 +1,33 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
+import { fetchPerformance } from "@/api/performances.api";
 import { fetchActiveOrLockedQuestion, fetchFirstQuestionInChain, fetchQuestion } from "@/api/questions.api";
 import type { Performance, Question } from "@/api/types.api";
+import { useReconnectKey } from "@/hooks/realtime.hooks";
 import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
 
 export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion?: Question | null) => {
     const question = useUsersStore((state) => state.question);
+    const reconnectKey = useReconnectKey();
 
     useEffect(() => {
-        if (initialQuestion !== undefined) {
-            // Use server-provided data, skip fetch
+        // On reconnect (reconnectKey > 0) always refetch: server-provided data is stale.
+        if (reconnectKey === 0 && initialQuestion !== undefined) {
             setQuestion(initialQuestion);
             setLoading(false);
             return;
         }
 
-        // Fallback: fetch if no initial data provided
         setLoading(true);
         fetchActiveOrLockedQuestion(performanceId)
             .then((response) => {
-                if (!response.data) {
-                    setLoading(false);
-                    return;
-                }
-                setQuestion(response.data);
+                setQuestion(response.data ?? null);
             })
             .finally(() => setLoading(false));
-    }, [performanceId, initialQuestion]);
+    }, [performanceId, initialQuestion, reconnectKey]);
 
     useEffect(() => {
         if (performanceId) {
@@ -59,19 +57,29 @@ export const useActiveOrLockedQuestion = (performanceId: number, initialQuestion
                 supabase.removeChannel(channel);
             };
         }
-    }, [performanceId]);
+    }, [performanceId, reconnectKey]);
 
     return question;
 };
 
 export const usePerformance = (defaultPerformance: Performance): Performance | null => {
     const performance = useUsersStore((state) => state.performance);
+    const reconnectKey = useReconnectKey();
 
     useEffect(() => {
-        if (!performance) {
-            setPerformance(defaultPerformance);
+        // On mount use the server-provided prop; on reconnect refetch since it is stale.
+        if (reconnectKey === 0) {
+            if (!performance) {
+                setPerformance(defaultPerformance);
+            }
+            return;
         }
-    }, [defaultPerformance, performance]);
+        fetchPerformance(defaultPerformance.id).then((response) => {
+            if (response.data) {
+                setPerformance(response.data);
+            }
+        });
+    }, [defaultPerformance, performance, reconnectKey]);
 
     useEffect(() => {
         const supabase = createClient();
@@ -95,7 +103,7 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [defaultPerformance.id]);
+    }, [defaultPerformance.id, reconnectKey]);
 
     return performance;
 };

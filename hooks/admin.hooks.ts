@@ -10,6 +10,7 @@ import type {
     TextAnswer,
     VoteAnswer,
 } from "@/api/types.api";
+import { useReconnectKey } from "@/hooks/realtime.hooks";
 import { addAnswer, modifyAnswer, removeAnswer, setAnswers, setLoading, useAdminStore } from "@/store/admin.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
@@ -36,23 +37,23 @@ const useAnswers = <T extends Answer>(
     initialAnswers?: T[],
 ) => {
     const answers = useAdminStore((state) => state.answers);
+    const reconnectKey = useReconnectKey();
 
     useEffect(() => {
-        if (initialAnswers) {
-            // Use server-provided data, skip fetch
+        // On reconnect (reconnectKey > 0) always refetch: server-provided data is stale.
+        if (reconnectKey === 0 && initialAnswers) {
             setAnswers(initialAnswers);
             setLoading(false);
             return;
         }
 
-        // Fallback: fetch if no initial data provided
         setLoading(true);
         fetcher(questionId)
             .then((response) => {
                 setAnswers(response.data ?? []);
             })
             .finally(() => setLoading(false));
-    }, [fetcher, questionId, initialAnswers]);
+    }, [fetcher, questionId, initialAnswers, reconnectKey]);
 
     useEffect(() => {
         const supabase = createClient();
@@ -96,7 +97,7 @@ const useAnswers = <T extends Answer>(
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [table, questionId]);
+    }, [table, questionId, reconnectKey]);
 
     return answers as T[];
 };
