@@ -1,13 +1,11 @@
-import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchPerformance } from "@/api/performances.api";
 import { fetchQuestions } from "@/api/questions.api";
-import { PerformanceStateToggle } from "@/components/admin/performance/PerformanceStateToggle";
+import { PerformanceHeader } from "@/components/admin/performance/PerformanceHeader";
 import { List, QuestionItem } from "@/components/admin/questions";
 import { Button } from "@/components/ui/Button";
-import { formatDate } from "@/utils/date.utils";
 
 export default async function PerformanceDetail(props: { params: Promise<{ performanceId: string }> }) {
     const params = await props.params;
@@ -27,19 +25,7 @@ export default async function PerformanceDetail(props: { params: Promise<{ perfo
 
     return (
         <>
-            <div className={"flex justify-between"}>
-                <div className={"flex items-stretch"}>
-                    <Button variant="ghost" size="icon" asChild className={"h-auto"}>
-                        <Link href={"/admin"}>
-                            <ChevronLeft size={28} />
-                        </Link>
-                    </Button>
-                    <h1 className="mb-4 text-2xl font-bold">
-                        {performance.name} {formatDate(performance.date)}
-                    </h1>
-                </div>
-                <PerformanceStateToggle performanceId={performance.id} defaultState={performance.state} />
-            </div>
+            <PerformanceHeader performance={performance} backHref={"/admin"} />
             <div className={"flex justify-between gap-2"}>
                 <div className="flex gap-2">
                     <Link href={`/admin/performances/${performanceId}/add-question`}>
