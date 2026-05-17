@@ -28,7 +28,7 @@ export default async function Performances() {
                 <h1 className="text-4xl font-bold">Představení</h1>
                 <div className="flex gap-2">
                     <Button variant="outline" asChild>
-                        <Link href="/admin/players">Hráči</Link>
+                        <Link href="/admin/players">Improvizátoři</Link>
                     </Button>
                     <Button asChild>
                         <Link href="/admin/performances/new">Vytvořit představení</Link>

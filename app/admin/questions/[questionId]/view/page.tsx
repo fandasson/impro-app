@@ -117,7 +117,7 @@ export default async function QuestionDetail(props: { params: Promise<{ question
                     </header>
 
                     <div className={"grid gap-4 lg:grid-cols-2"}>
-                        <VisCard icon={<SmartphoneIcon size={14} />} title={"Hráči (telefon)"}>
+                        <VisCard icon={<SmartphoneIcon size={14} />} title={"Diváci (telefon)"}>
                             <QuestionUserStateToggle defaultState={question.state} question={question} />
                         </VisCard>
                         <VisCard icon={<ProjectorIcon size={14} />} title={"Diváci / projekce"}>

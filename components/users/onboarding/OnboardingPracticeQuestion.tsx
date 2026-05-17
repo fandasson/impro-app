@@ -69,7 +69,7 @@ export const OnboardingPracticeQuestion = ({ onComplete, hasMottoQuestion }: Pro
         <>
             <h2 className="text-2xl font-bold">Ukázka hlasování</h2>
             <Paragraph>
-                Takhle bude vypadat hlasování. Hráči se zobrazí v náhodném pořadí. Stačí kliknout. Vybraný se označí
+                Takhle bude vypadat hlasování. Improvizátoři se zobrazí v náhodném pořadí. Stačí kliknout. Vybraný se označí
                 bíle.
             </Paragraph>
             <Paragraph>Rozhodnutí můžete libovolně měnit dokud moderátor neukončí hlasování.</Paragraph>

@@ -26,7 +26,7 @@ export function PlayerForm({ initialData, action, submitLabel = "Uložit" }: Pro
     const formState = state as { error?: string; fieldErrors?: Record<string, string[]> } | null;
 
     return (
-        <form action={formAction} className="space-y-6" aria-label="Formulář hráče">
+        <form action={formAction} className="space-y-6" aria-label="Formulář improvizátora">
             {initialData && <input type="hidden" name="id" value={initialData.id} />}
             <input type="hidden" name="quest" value={quest ? "true" : "false"} />
 
@@ -70,7 +70,7 @@ export function PlayerForm({ initialData, action, submitLabel = "Uložit" }: Pro
                     onChange={(e) => setMotto(e.target.value)}
                     rows={3}
                     maxLength={500}
-                    placeholder="Krátké motto nebo bio hráče"
+                    placeholder="Krátké motto nebo bio improvizátora"
                 />
                 {formState?.fieldErrors?.motto && (
                     <p className="mt-1 text-sm text-red-600">{formState.fieldErrors.motto[0]}</p>
@@ -84,7 +84,7 @@ export function PlayerForm({ initialData, action, submitLabel = "Uložit" }: Pro
                     onCheckedChange={setQuest}
                     aria-label="Host"
                 />
-                <Label htmlFor="quest-switch">Host (označí hráče jako hostitele)</Label>
+                <Label htmlFor="quest-switch">Host (označí improvizátora jako hosta)</Label>
             </div>
 
             {formState?.error && !formState?.fieldErrors && (

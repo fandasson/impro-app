@@ -118,7 +118,7 @@ function PhotoSlot({ playerId, kind, serverUrl, label }: SlotProps) {
             />
             <div className="flex gap-2">
                 <Button variant="outline" size="sm" type="button" onClick={() => inputRef.current?.click()}>
-                    Vybrat soubor
+                    Nahrát .JPG fotku
                 </Button>
                 {selectedFile && (
                     <Button size="sm" type="button" onClick={handleUpload} disabled={isPending}>

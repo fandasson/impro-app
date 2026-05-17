@@ -506,7 +506,7 @@ export async function removePlayerFromPerformance(
       // Return Czech error message as specified in requirements
       return {
         success: false,
-        error: "Hráč nemůže být odstraněn, protože je přiřazen k otázce.",
+        error: "Improvizátor nemůže být odstraněn, protože je přiřazen k otázce.",
       };
     }
 
