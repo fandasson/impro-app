@@ -39,7 +39,7 @@ export function PlayerAvatar({ player, size = 40 }: Props) {
                 style={{ width: size, height: size, fontSize: Math.round(size * 0.45) }}
                 aria-label={player.name}
             >
-                {player.name[0].toUpperCase()}
+                {player.name?.[0]?.toUpperCase() ?? "?"}
             </div>
         );
     }

@@ -30,7 +30,7 @@ export const QuestionSidebarRow = ({ question, selected }: Props) => {
                 <SmartphoneIcon
                     size={14}
                     className={userActive ? "text-amber" : "text-muted-foreground"}
-                    aria-label={"Diváck"}
+                    aria-label={"Diváci (telefon)"}
                 />
                 <ProjectorIcon
                     size={14}

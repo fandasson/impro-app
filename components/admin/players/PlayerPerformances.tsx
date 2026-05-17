@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import type { Performance } from "@/api/types.api";
-import { Button } from "@/components/ui/Button";
 import { formatDate } from "@/utils/date.utils";
 
 type Props = {
