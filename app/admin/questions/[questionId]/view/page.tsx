@@ -2,12 +2,7 @@ import { ProjectorIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import {
-    fetchMatchingAnswers,
-    fetchOptionsAnswers,
-    fetchTextAnswers,
-    fetchVoteAnswers,
-} from "@/api/answers.api";
+import { fetchMatchingAnswers, fetchOptionsAnswers, fetchTextAnswers, fetchVoteAnswers } from "@/api/answers.api";
 import { fetchAvailablePlayers, fetchPerformance } from "@/api/performances.api";
 import { fetchQuestion, fetchQuestionOptions, fetchQuestions } from "@/api/questions.api";
 import type { Answer, QuestionOptions } from "@/api/types.api";
@@ -77,10 +72,7 @@ export default async function QuestionDetail(props: { params: Promise<{ question
 
     return (
         <>
-            <PerformanceHeader
-                performance={performance}
-                backHref={`/admin/performances/${question.performance_id}`}
-            />
+            <PerformanceHeader performance={performance} backHref={`/admin/performances/${question.performance_id}`} />
             <div className={"flex min-h-0 flex-1 gap-6"}>
                 <QuestionSidebar
                     questions={questions}
@@ -90,15 +82,22 @@ export default async function QuestionDetail(props: { params: Promise<{ question
                 <main className={"flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto"}>
                     <header className={"flex items-start justify-between gap-4 border-b border-border pb-5"}>
                         <div className={"flex min-w-0 flex-col gap-1.5"}>
-                            <h1 className={"text-2xl font-bold"}>{question.name}</h1>
+                            <div className={"flex flex-wrap items-center gap-2"}>
+                                <h1 className={"text-2xl font-bold"}>{question.name}</h1>
+                                {question.optional && (
+                                    <span className={"rounded bg-amber px-1.5 py-0.5 text-xs font-medium"}>
+                                        Volitelné
+                                    </span>
+                                )}
+                                {question.show_player_motto && (
+                                    <span className={"rounded bg-amber px-1.5 py-0.5 text-xs font-medium"}>Motto</span>
+                                )}
+                            </div>
                             <em className={"text-sm text-muted-foreground"}>{question.question}</em>
                             {followUpQuestion && (
                                 <span className={"text-sm"}>
                                     pokračuje otázkou{" "}
-                                    <Link
-                                        href={`/admin/questions/${followUpQuestion.id}/view`}
-                                        className={"underline"}
-                                    >
+                                    <Link href={`/admin/questions/${followUpQuestion.id}/view`} className={"underline"}>
                                         {followUpQuestion.name}
                                     </Link>
                                 </span>
@@ -132,11 +131,7 @@ export default async function QuestionDetail(props: { params: Promise<{ question
                     </article>
 
                     <aside>
-                        <Answers
-                            question={question}
-                            questionOptions={options}
-                            initialAnswers={initialAnswers}
-                        />
+                        <Answers question={question} questionOptions={options} initialAnswers={initialAnswers} />
                     </aside>
                 </main>
             </div>
