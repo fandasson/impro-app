@@ -11,29 +11,39 @@ const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+    allConfig: js.configs.all,
 });
 
-export default defineConfig([{
-    extends: [...nextCoreWebVitals, ...compat.extends("prettier")],
+export default defineConfig([
+    {
+        extends: [...nextCoreWebVitals, ...compat.extends("prettier")],
 
-    rules: {
-        "no-restricted-imports": ["warn", {
-            patterns: [{
-                group: [".*"],
-                message: "Relative imports are not allowed, use absolute import instead.",
-            }],
-        }],
+        rules: {
+            "no-restricted-imports": [
+                "warn",
+                {
+                    patterns: [
+                        {
+                            group: [".*"],
+                            message: "Relative imports are not allowed, use absolute import instead.",
+                        },
+                    ],
+                },
+            ],
 
-        "react/display-name": "off",
-        "import/no-absolute-path": "off",
+            "react/display-name": "off",
+            "import/no-absolute-path": "off",
 
-        "import/order": ["warn", {
-            alphabetize: {
-                order: "asc",
-            },
+            "import/order": [
+                "warn",
+                {
+                    alphabetize: {
+                        order: "asc",
+                    },
 
-            "newlines-between": "always",
-        }],
+                    "newlines-between": "always",
+                },
+            ],
+        },
     },
-}]);
+]);

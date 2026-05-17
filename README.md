@@ -21,25 +21,25 @@ This app supports the impro performance of [IMPROvariace](https://www.improvaria
 
 ### General
 
--   Vote Questions can be batched into a Question Pool.
+- Vote Questions can be batched into a Question Pool.
 
 ### As admin:
 
--   I can add a _vote-type_ Question.
--   I can manage Performance visibility.
--   I can manage Question visibility towards Users and Audience.
--   I can see users' Answers in real-time.
+- I can add a _vote-type_ Question.
+- I can manage Performance visibility.
+- I can manage Question visibility towards Users and Audience.
+- I can see users' Answers in real-time.
 
 ### As user:
 
--   I only see a Question when the admin sets its visibility.
--   I can submit an Answer to a Question.
--   I can see the results of a Question (if set by Admin).
+- I only see a Question when the admin sets its visibility.
+- I can submit an Answer to a Question.
+- I can see the results of a Question (if set by Admin).
 
 ## Current limitations
 
--   Missing CRUD operations over most of the entities (wasn't needed, Supabase's interface is used).
--   Only _vote-type_ Questions can be added via the Admin interface.
+- Missing CRUD operations over most of the entities (wasn't needed, Supabase's interface is used).
+- Only _vote-type_ Questions can be added via the Admin interface.
 
 ## Tech stack
 
@@ -55,4 +55,4 @@ The whole solution stands mainly on the following pillars:
 
 This is a standard [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). If you want to run it locally, deploy it, or customize it, follow the appropriate documentation.
 
-Database schema (possibly not up-to-date) can be found in [schema.db.sql](./schema.db.sql) file 
+Database schema (possibly not up-to-date) can be found in [schema.db.sql](./schema.db.sql) file

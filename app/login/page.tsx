@@ -46,7 +46,7 @@ export default async function Login(props: { searchParams: Promise<{ message: st
                     Sign In
                 </Button>
                 {searchParams?.message && (
-                    <p className="mt-4 bg-foreground/10 p-4 text-center text-foreground">{searchParams.message}</p>
+                    <p className="bg-foreground/10 mt-4 p-4 text-center text-foreground">{searchParams.message}</p>
                 )}
             </form>
         </MobileContainer>

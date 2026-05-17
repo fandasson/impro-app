@@ -40,7 +40,7 @@ export default async function PerformanceDetail(props: { params: Promise<{ perfo
                 </Link>
             </div>
 
-            <h2 className="text-xl font-semibold mb-4 mt-6">Otázky</h2>
+            <h2 className="mb-4 mt-6 text-xl font-semibold">Otázky</h2>
             <List>
                 {questions.map((question) => (
                     <QuestionItem key={question.id} {...question} />

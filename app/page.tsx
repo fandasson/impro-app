@@ -23,9 +23,8 @@ export default async function PerformanceView({ params }: { params: { slug: stri
     // Fetch initial active or locked question
     const { data: initialQuestion } = await fetchActiveOrLockedQuestion(performances[0].id);
 
-    const hasMottoQuestion = performances[0].state === "intro"
-        ? await fetchHasMottoQuestion(performances[0].id)
-        : false;
+    const hasMottoQuestion =
+        performances[0].state === "intro" ? await fetchHasMottoQuestion(performances[0].id) : false;
 
     return (
         <AuthUser>

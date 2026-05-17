@@ -31,10 +31,22 @@ export const Answers = ({ question, questionOptions, initialAnswers }: Props) =>
                     />
                 );
             case "options":
-                return <OptionsAnswers questionId={question.id} options={questionOptions} initialAnswers={initialAnswers as any} />;
+                return (
+                    <OptionsAnswers
+                        questionId={question.id}
+                        options={questionOptions}
+                        initialAnswers={initialAnswers as any}
+                    />
+                );
             case "voting":
             case "player-pick":
-                return <PlayersVotingAnswers questionId={question.id} players={question.players} initialAnswers={initialAnswers as any} />;
+                return (
+                    <PlayersVotingAnswers
+                        questionId={question.id}
+                        players={question.players}
+                        initialAnswers={initialAnswers as any}
+                    />
+                );
         }
     };
     return (

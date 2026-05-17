@@ -90,8 +90,8 @@ export const OptionsQuestion = ({ navigateNext, skipQuestion, isOptional, isChai
                         className={cn(
                             "cursor-pointer rounded-[12px] border-2 border-transparent px-4 py-3.5 text-sm font-medium leading-snug transition-all duration-200",
                             selectedOption === option.id
-                                ? "border-primary [background:var(--amber-dim)] text-foreground"
-                                : "border-border bg-card text-foreground hover:border-border/60",
+                                ? "border-primary text-foreground [background:var(--amber-dim)]"
+                                : "hover:border-border/60 border-border bg-card text-foreground",
                         )}
                         onClick={() =>
                             hasFollowingQuestion ? setSelectedOption(option.id) : handleAutoSubmit(option.id)

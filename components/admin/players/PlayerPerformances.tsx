@@ -21,7 +21,9 @@ export function PlayerPerformances({ performances }: Props) {
                             <Link href={`/admin/performances/${performance.id}`}>
                                 <div>
                                     <span className="font-medium">{performance.name}</span>
-                                    <span className="ml-3 text-sm text-muted-foreground">{formatDate(performance.date)}</span>
+                                    <span className="ml-3 text-sm text-muted-foreground">
+                                        {formatDate(performance.date)}
+                                    </span>
                                 </div>
                             </Link>
                         </li>

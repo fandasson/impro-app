@@ -115,12 +115,7 @@ export async function updatePlayer(input: {
         }
 
         const { id, ...updateData } = validation.data;
-        const { data, error } = await supabase
-            .from("players")
-            .update(updateData)
-            .eq("id", id)
-            .select()
-            .single();
+        const { data, error } = await supabase.from("players").update(updateData).eq("id", id).select().single();
 
         if (error) {
             return { success: false, error: error.message };
@@ -145,9 +140,7 @@ export const fetchPlayerPerformances = async (playerId: number): Promise<ServerA
         return { success: false, error: error.message };
     }
 
-    const performances = (data ?? [])
-        .map((row: any) => row.performance)
-        .filter(Boolean) as Performance[];
+    const performances = (data ?? []).map((row: any) => row.performance).filter(Boolean) as Performance[];
 
     performances.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 

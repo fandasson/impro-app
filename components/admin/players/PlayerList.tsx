@@ -34,12 +34,12 @@ export function PlayerList({ players }: Props) {
                     <TableRow key={player.id}>
                         <TableCell>
                             <Link href={`/admin/players/${player.id}/edit`}>
-                            <div className="flex items-center gap-3">
-                                <PlayerAvatar player={player} />
-                                <span>
-                                    <PlayerName player={player} />
-                                </span>
-                            </div>
+                                <div className="flex items-center gap-3">
+                                    <PlayerAvatar player={player} />
+                                    <span>
+                                        <PlayerName player={player} />
+                                    </span>
+                                </div>
                             </Link>
                         </TableCell>
                     </TableRow>
