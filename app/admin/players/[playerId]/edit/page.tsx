@@ -63,7 +63,7 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ pla
             </div>
 
             <div>
-                <h2 className="mb-4 text-xl font-semibold">Údaje hráče</h2>
+                <h2 className="mb-4 text-xl font-semibold">Údaje improvizátora</h2>
                 <PlayerForm initialData={player} action={handleUpdate} submitLabel="Uložit změny" />
             </div>
 

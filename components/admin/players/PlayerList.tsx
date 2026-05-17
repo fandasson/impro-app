@@ -14,9 +14,9 @@ export function PlayerList({ players }: Props) {
     if (players.length === 0) {
         return (
             <div className="py-12 text-center">
-                <p className="text-gray-500">Zatím žádní hráči</p>
+                <p className="text-gray-500">Zatím žádní improvizátoři</p>
                 <Button className="mt-4" asChild>
-                    <Link href="/admin/players/new">Vytvořit prvního hráče</Link>
+                    <Link href="/admin/players/new">Vytvořit prvního improvizátora</Link>
                 </Button>
             </div>
         );
@@ -26,25 +26,21 @@ export function PlayerList({ players }: Props) {
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>Hráč</TableHead>
-                    <TableHead className="text-right">Akce</TableHead>
+                    <TableHead>Improvizátor</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {players.map((player) => (
                     <TableRow key={player.id}>
                         <TableCell>
+                            <Link href={`/admin/players/${player.id}/edit`}>
                             <div className="flex items-center gap-3">
                                 <PlayerAvatar player={player} />
                                 <span>
                                     <PlayerName player={player} />
                                 </span>
                             </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                            <Button variant="outline" size="sm" asChild>
-                                <Link href={`/admin/players/${player.id}/edit`}>Upravit</Link>
-                            </Button>
+                            </Link>
                         </TableCell>
                     </TableRow>
                 ))}

@@ -55,7 +55,7 @@ export default async function EditPerformancePage({ params }: { params: Promise<
             <PerformanceForm initialData={performance} action={handleUpdate} submitLabel="Uložit změny" />
 
             <div className="mt-8 rounded-lg border border-gray-800 bg-gray-950 p-6">
-                <h2 className="mb-4 text-xl font-semibold">Správa hráčů</h2>
+                <h2 className="mb-4 text-xl font-semibold">Správa improvizátorů</h2>
                 <PlayerAssignment
                     performanceId={performance.id}
                     assignedPlayers={performance.players}

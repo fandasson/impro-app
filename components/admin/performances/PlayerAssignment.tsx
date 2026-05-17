@@ -61,7 +61,7 @@ export function PlayerAssignment({
     setIsAssigning(false);
 
     if (result.success) {
-      setMessage({ type: "success", text: "Hráč byl přiřazen" });
+      setMessage({ type: "success", text: "Improvizátor byl přiřazen" });
       setSelectedPlayerId("");
       setTimeout(() => setMessage(null), 3000);
     } else {
@@ -79,7 +79,7 @@ export function PlayerAssignment({
     setRemovingPlayerId(null);
 
     if (result.success) {
-      setMessage({ type: "success", text: "Hráč byl odstraněn" });
+      setMessage({ type: "success", text: "Improvizátor byl odstraněn" });
       setTimeout(() => setMessage(null), 3000);
     } else {
       setMessage({ type: "error", text: result.error });
@@ -112,16 +112,16 @@ export function PlayerAssignment({
 
       {/* Add Player Section */}
       <div>
-        <Label htmlFor="player-select">Přidat hráče</Label>
+        <Label htmlFor="player-select">Přidat Improvizátora</Label>
         <div className="flex gap-2 mt-2">
           <Select value={selectedPlayerId} onValueChange={setSelectedPlayerId}>
-            <SelectTrigger className="flex-1" aria-label="Výběr hráče">
-              <SelectValue placeholder="Vyberte hráče" />
+            <SelectTrigger className="flex-1" aria-label="Výběr improvizátora">
+              <SelectValue placeholder="Vyberte improvizátora" />
             </SelectTrigger>
             <SelectContent>
               {unassignedPlayers.length === 0 ? (
                 <SelectItem value="" disabled>
-                  Všichni hráči jsou již přiřazeni
+                  Všichni improvizátoři jsou již přiřazeni
                 </SelectItem>
               ) : (
                 unassignedPlayers.map((player) => (
@@ -136,7 +136,7 @@ export function PlayerAssignment({
             type="button"
             onClick={handleAssign}
             disabled={!selectedPlayerId || isAssigning}
-            aria-label="Přidat vybraného hráče"
+            aria-label="Přidat vybraného improvizátora"
           >
             {isAssigning ? "Přidávání..." : "Přidat"}
           </Button>
@@ -145,13 +145,13 @@ export function PlayerAssignment({
 
       {/* Assigned Players List */}
       <div>
-        <Label>Přiřazení hráči ({assignedPlayers.length})</Label>
+        <Label>Přiřazení improvizátora ({assignedPlayers.length})</Label>
         {assignedPlayers.length === 0 ? (
           <p className="text-sm text-gray-500 mt-2">
-            Zatím nejsou přiřazeni žádní hráči
+            Zatím nejsou přiřazeni žádní improvizátoři
           </p>
         ) : (
-          <ul className="mt-2 space-y-2" role="list" aria-label="Seznam přiřazených hráčů">
+          <ul className="mt-2 space-y-2" role="list" aria-label="Seznam přiřazených improvizátorů">
             {assignedPlayers.map((player) => (
               <li
                 key={player.id}
@@ -164,7 +164,7 @@ export function PlayerAssignment({
                   size="sm"
                   onClick={() => handleRemove(player.id)}
                   disabled={removingPlayerId === player.id}
-                  aria-label={`Odebrat hráče ${formatPlayerName(player)}`}
+                  aria-label={`Odebrat improvizátora ${formatPlayerName(player)}`}
                 >
                   {removingPlayerId === player.id ? "Odebírání..." : "Odebrat"}
                 </Button>

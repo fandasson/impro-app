@@ -19,15 +19,15 @@ export default async function Players() {
     const result = await fetchPlayers();
 
     if (!result.success) {
-        throw new Error(`Chyba při načítání hráčů: ${result.error}`);
+        throw new Error(`Chyba při načítání improvizátorů: ${result.error}`);
     }
 
     return (
         <>
             <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-4xl font-bold">Hráči</h1>
+                <h1 className="text-4xl font-bold">Improvizátoři</h1>
                 <Button asChild>
-                    <Link href="/admin/players/new">Vytvořit hráče</Link>
+                    <Link href="/admin/players/new">Přidat improvizátora</Link>
                 </Button>
             </div>
             <PlayerList players={result.data} />
