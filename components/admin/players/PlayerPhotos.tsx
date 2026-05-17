@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 
-import { uploadPlayerPhoto } from "@/api/players.api";
 import { getPlayerPhotos } from "@/api/photos.api";
+import { uploadPlayerPhoto } from "@/api/players.api";
 import type { Player } from "@/api/types.api";
 import { Button } from "@/components/ui/Button";
 

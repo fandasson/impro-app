@@ -31,7 +31,12 @@ export const DeletePoolButton = ({ pool }: Props) => {
 
     return (
         <div className={"flex flex-col gap-2"}>
-            <Button variant="outline" className={"border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"} onClick={handleDelete} disabled={loading}>
+            <Button
+                variant="outline"
+                className={"hover:bg-destructive/10 border-destructive text-destructive hover:text-destructive"}
+                onClick={handleDelete}
+                disabled={loading}
+            >
                 <Trash2 size={16} />
                 {loading ? "Mazání…" : "Smazat skupinu"}
             </Button>

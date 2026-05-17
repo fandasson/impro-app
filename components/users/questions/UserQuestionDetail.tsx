@@ -92,11 +92,7 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
     switch (question.type) {
         case "info":
             component = (
-                <InfoQuestion
-                    questionId={question.id}
-                    questionText={question.question}
-                    navigateNext={navigateNext}
-                />
+                <InfoQuestion questionId={question.id} questionText={question.question} navigateNext={navigateNext} />
             );
             break;
         case "text":
@@ -164,7 +160,7 @@ export const UserQuestionDetail = ({ question: initialQuestion }: Props) => {
     return (
         <div className="flex min-h-svh flex-col pb-10">
             {showModificationNotice && <ModificationNotice />}
-            <div className="sticky top-0 z-10 bg-gradient-to-b from-background via-background/95 to-transparent px-6 pb-4 pt-6">
+            <div className="via-background/95 sticky top-0 z-10 bg-gradient-to-b from-background to-transparent px-6 pb-4 pt-6">
                 <h2 className="text-[22px] font-bold leading-snug">{question.name}</h2>
             </div>
             <div className="flex flex-col gap-4 px-6 pt-2">{component}</div>

@@ -7,14 +7,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const UseFormattedContent = React.forwardRef<HTMLDivElement, Props>(({ className, html, ...props }, ref) => {
-    return (
-        <div
-            className={cn("text-lg", className)}
-            ref={ref}
-            {...props}
-            dangerouslySetInnerHTML={{ __html: html }}
-        />
-    );
+    return <div className={cn("text-lg", className)} ref={ref} {...props} dangerouslySetInnerHTML={{ __html: html }} />;
 });
 
 export { UseFormattedContent };

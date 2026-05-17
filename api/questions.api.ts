@@ -133,10 +133,7 @@ export const fetchQuestionCharacters = async (questionId: number): Promise<Chara
 
 export const fetchAnsweredCharacterIds = async (questionId: number): Promise<number[]> => {
     const supabase = await createClient();
-    const response = await supabase
-        .from("answers_match")
-        .select("character_id")
-        .eq("question_id", questionId);
+    const response = await supabase.from("answers_match").select("character_id").eq("question_id", questionId);
     if (!response.data) return [];
     return [...new Set(response.data.map((a) => a.character_id))];
 };
@@ -260,10 +257,7 @@ export const updateQuestion = async (questionId: number, question: QuestionUpser
 
     // sync characters for match questions
     if (characters !== undefined) {
-        const existingChars = await supabase
-            .from("characters")
-            .select("id")
-            .eq("question_id", questionId);
+        const existingChars = await supabase.from("characters").select("id").eq("question_id", questionId);
         const existingIds = new Set((existingChars.data ?? []).map((c) => c.id));
         const submittedIds = new Set(characters.filter((c) => c.id !== undefined).map((c) => c.id!));
 
@@ -395,11 +389,7 @@ export const fetchFirstQuestionInChain = async (questionId: number): Promise<num
 
     if (!foundPredecessor) {
         // Check if this question itself has a following_question_id (i.e., it's the start of a chain)
-        const { data } = await supabase
-            .from("questions")
-            .select("following_question_id")
-            .eq("id", questionId)
-            .single();
+        const { data } = await supabase.from("questions").select("following_question_id").eq("id", questionId).single();
 
         if (!data?.following_question_id) {
             return null; // Not part of any chain
@@ -418,6 +408,9 @@ export const hideAllForQuestion = async (questionId: number, performanceId: numb
 
 export const hideAllQuestionsForPerformance = async (performanceId: number) => {
     const supabase = await createClient();
-    await supabase.from("questions").update({ audience_visibility: "hidden", state: "hidden" }).eq("performance_id", performanceId);
+    await supabase
+        .from("questions")
+        .update({ audience_visibility: "hidden", state: "hidden" })
+        .eq("performance_id", performanceId);
     revalidatePath(`/admin/performances/${performanceId}`);
 };

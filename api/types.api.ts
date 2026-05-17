@@ -7,11 +7,15 @@ export type OptionInput = {
     option: string;
 };
 
-export type QuestionWithPlayersAndCharacters = Question & { players: Player[]; characters: Character[]; options: QuestionOptions[] };
+export type QuestionWithPlayersAndCharacters = Question & {
+    players: Player[];
+    characters: Character[];
+    options: QuestionOptions[];
+};
 export type QuestionWithPool = Question & { questions_pool: Pick<Tables<"questions_pool">, "id" | "name"> | null };
 export type QuestionDetail = QuestionWithPlayersAndCharacters & QuestionWithPool;
 export type CharacterInput = {
-    id?: number;  // undefined for new, present for existing
+    id?: number; // undefined for new, present for existing
     name: string;
     description?: string | null;
 };
@@ -74,17 +78,17 @@ export type PerformanceState = Enums<"performance-state">;
 
 // Performance Management Types (T008)
 export type PerformanceWithPlayers = Performance & {
-  players: Player[];
+    players: Player[];
 };
 
 export type PerformanceFormData = {
-  name: string;
-  date: string; // ISO 8601
-  intro_text?: string;
-  url_slug?: string;
-  state?: "draft" | "intro" | "life" | "finished" | "closing";
+    name: string;
+    date: string; // ISO 8601
+    intro_text?: string;
+    url_slug?: string;
+    state?: "draft" | "intro" | "life" | "finished" | "closing";
 };
 
 export type ServerActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string; fieldErrors?: Record<string, string[]> };
+    | { success: true; data: T }
+    | { success: false; error: string; fieldErrors?: Record<string, string[]> };

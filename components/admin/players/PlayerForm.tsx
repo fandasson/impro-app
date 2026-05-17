@@ -78,12 +78,7 @@ export function PlayerForm({ initialData, action, submitLabel = "Uložit" }: Pro
             </div>
 
             <div className="flex items-center gap-3">
-                <Switch
-                    id="quest-switch"
-                    checked={quest}
-                    onCheckedChange={setQuest}
-                    aria-label="Host"
-                />
+                <Switch id="quest-switch" checked={quest} onCheckedChange={setQuest} aria-label="Host" />
                 <Label htmlFor="quest-switch">Host (označí improvizátora jako hosta)</Label>
             </div>
 

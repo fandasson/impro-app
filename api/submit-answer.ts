@@ -4,7 +4,16 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import { fetchQuestionState } from "@/api/questions.api";
-import type { MatchAnswer, MatchAnswerCreate, OptionsAnswer, OptionsAnswerInsert, TextAnswer, TextAnswerInsert, VoteAnswer, VoteAnswerInsert } from "@/api/types.api";
+import type {
+    MatchAnswer,
+    MatchAnswerCreate,
+    OptionsAnswer,
+    OptionsAnswerInsert,
+    TextAnswer,
+    TextAnswerInsert,
+    VoteAnswer,
+    VoteAnswerInsert,
+} from "@/api/types.api";
 import { COOKIE_USER_ID } from "@/utils/constants.utils";
 import { createClient } from "@/utils/supabase/server";
 
@@ -53,7 +62,10 @@ export const submitOptionsAnswer = async (answer: OptionsAnswerInsert) => {
 
     let response;
     if (existing) {
-        response = await supabase.from("answers_options").update({ question_options_id: answer.question_options_id }).eq("id", existing.id);
+        response = await supabase
+            .from("answers_options")
+            .update({ question_options_id: answer.question_options_id })
+            .eq("id", existing.id);
     } else {
         response = await supabase.from("answers_options").insert({ ...answer, user_id });
     }
@@ -104,11 +116,7 @@ export const submitMatchAnswer = async (answers: MatchAnswerCreate[]) => {
 
     // Delete existing matches for this question, then insert new ones
     if (answers.length > 0) {
-        await supabase
-            .from("answers_match")
-            .delete()
-            .eq("question_id", answers[0].question_id)
-            .eq("user_id", user_id);
+        await supabase.from("answers_match").delete().eq("question_id", answers[0].question_id).eq("user_id", user_id);
     }
 
     const responses = [];
