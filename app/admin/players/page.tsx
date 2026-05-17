@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -25,7 +26,14 @@ export default async function Players() {
     return (
         <>
             <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-4xl font-bold">Improvizátoři</h1>
+                <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" asChild className="h-auto">
+                        <Link href="/admin">
+                            <ChevronLeft size={28} />
+                        </Link>
+                    </Button>
+                    <h1 className="text-4xl font-bold">Improvizátoři</h1>
+                </div>
                 <Button asChild>
                     <Link href="/admin/players/new">Přidat improvizátora</Link>
                 </Button>
