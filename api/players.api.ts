@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import type { Performance, Player, ServerActionResult } from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
+import { createServiceClient } from "@/utils/supabase/service";
 
 export const fetchPlayers = async (): Promise<ServerActionResult<Player[]>> => {
     const supabase = await createClient();
@@ -173,7 +174,8 @@ export async function uploadPlayerPhoto(
         }
 
         const path = `${playerId}-${kind}.jpg`;
-        const { error } = await supabase.storage.from("photos").upload(path, file, {
+        const serviceClient = createServiceClient();
+        const { error } = await serviceClient.storage.from("photos").upload(path, file, {
             upsert: true,
             contentType: "image/jpeg",
         });
