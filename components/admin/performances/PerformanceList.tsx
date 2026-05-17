@@ -51,7 +51,9 @@ export function PerformanceList({ performances }: PerformanceListProps) {
             <TableBody>
                 {performances.map((performance) => (
                     <TableRow key={performance.id}>
-                        <TableCell className="font-medium">{performance.name}</TableCell>
+                        <TableCell className="font-medium">
+                            <Link href={`/admin/performances/${performance.id}`}>{performance.name}</Link>
+                        </TableCell>
                         <TableCell>{formatDate(performance.date)}</TableCell>
                         <TableCell>
                             <Badge className={stateColors[performance.state] || "bg-gray-200"}>
