@@ -8,7 +8,16 @@ import { Button } from "@/components/ui/Button";
 
 type Props = QuestionWithPool;
 export const QuestionItem = (props: Props) => {
-    const { id, name, state, audience_visibility, questions_pool: pool, performance_id } = props;
+    const {
+        id,
+        name,
+        state,
+        audience_visibility,
+        questions_pool: pool,
+        performance_id,
+        optional,
+        show_player_motto,
+    } = props;
 
     const handleDelete = async (data: FormData) => {
         "use server";
@@ -48,9 +57,17 @@ export const QuestionItem = (props: Props) => {
         <div className={"flex items-center justify-between gap-4"}>
             <Link
                 href={`/admin/questions/${id}/view`}
-                className={"grid flex-grow grid-cols-7 gap-2 rounded border bg-gray-900 px-3.5 py-2"}
+                className={"grid flex-grow grid-cols-8 gap-2 rounded border bg-gray-900 px-3.5 py-2"}
             >
                 <strong className={"col-span-4"}>{name}</strong>
+                <div className={"flex flex-wrap items-center gap-2"}>
+                    {optional && (
+                        <span className={"rounded bg-amber px-1.5 py-0.5 text-xs font-medium"}>Volitelné</span>
+                    )}
+                    {show_player_motto && (
+                        <span className={"rounded bg-amber px-1.5 py-0.5 text-xs font-medium"}>Motto</span>
+                    )}
+                </div>
                 <span>{pool?.name}</span>
                 <div className={"flex items-center justify-end pr-2"}>
                     <SmartphoneIcon size={28} className={"mr-4"} />
