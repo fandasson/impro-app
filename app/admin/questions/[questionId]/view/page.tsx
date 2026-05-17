@@ -120,7 +120,7 @@ export default async function QuestionDetail(props: { params: Promise<{ question
                         <VisCard icon={<SmartphoneIcon size={14} />} title={"Diváci (telefon)"}>
                             <QuestionUserStateToggle defaultState={question.state} question={question} />
                         </VisCard>
-                        <VisCard icon={<ProjectorIcon size={14} />} title={"Diváci / projekce"}>
+                        <VisCard icon={<ProjectorIcon size={14} />} title={"Diváci (projekce)"}>
                             <QuestionAudienceStateToggle question={question} />
                         </VisCard>
                     </div>
