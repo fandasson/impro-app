@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchPerformance } from "@/api/performances.api";
 import { fetchActiveOrLockedQuestion, fetchFirstQuestionInChain, fetchQuestion } from "@/api/questions.api";
 import type { Performance, Question } from "@/api/types.api";
-import { useReconnectKey } from "@/hooks/realtime.hooks";
+import { teardownReconnectListeners, useReconnectKey } from "@/hooks/realtime.hooks";
 import { setLoading, setPerformance, setQuestion, useUsersStore } from "@/store/users.store";
 import { createClient } from "@/utils/supabase/client";
 import { createSubscriptionStatusHandler } from "@/utils/supabase/subscription";
@@ -80,6 +80,12 @@ export const usePerformance = (defaultPerformance: Performance): Performance | n
             }
         });
     }, [defaultPerformance, performance, reconnectKey]);
+
+    useEffect(() => {
+        if (performance?.state === "finished") {
+            teardownReconnectListeners();
+        }
+    }, [performance?.state]);
 
     useEffect(() => {
         const supabase = createClient();
