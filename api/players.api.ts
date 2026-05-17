@@ -132,3 +132,39 @@ export async function updatePlayer(input: {
         return { success: false, error: error instanceof Error ? error.message : "Neznámá chyba" };
     }
 }
+
+export async function uploadPlayerPhoto(
+    playerId: number,
+    kind: "profile" | "body",
+    formData: FormData,
+): Promise<ServerActionResult<null>> {
+    try {
+        const supabase = await createClient();
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        const file = formData.get("photo") as File;
+        if (!file || file.size === 0) {
+            return { success: false, error: "Žádný soubor nebyl vybrán" };
+        }
+
+        const path = `${playerId}-${kind}.jpg`;
+        const { error } = await supabase.storage.from("photos").upload(path, file, {
+            upsert: true,
+            contentType: "image/jpeg",
+        });
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        revalidatePath(`/admin/players/${playerId}/edit`);
+        return { success: true, data: null };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : "Neznámá chyba" };
+    }
+}
