@@ -18,7 +18,7 @@ export type CharacterInput = {
 
 export type QuestionUpsertRequest = Pick<
     Question,
-    "name" | "question" | "type" | "index_order" | "multiple" | "pool_id" | "optional" | "show_player_motto"
+    "name" | "question" | "type" | "index_order" | "multiple" | "pool_id" | "optional" | "show_player_motto" | "following_question_id"
 > & {
     players?: Player[];
     characters?: CharacterInput[];
