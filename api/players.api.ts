@@ -175,9 +175,12 @@ export async function uploadPlayerPhoto(
 
         const path = `${playerId}-${kind}.jpg`;
         const serviceClient = createServiceClient();
+
+        await serviceClient.storage.from("photos").remove([path]);
+
         const { error } = await serviceClient.storage.from("photos").upload(path, file, {
-            upsert: true,
             contentType: "image/jpeg",
+            cacheControl: "3600",
         });
 
         if (error) {
