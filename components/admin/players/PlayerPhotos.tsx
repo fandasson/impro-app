@@ -111,7 +111,7 @@ function PhotoSlot({ playerId, kind, serverUrl, label }: SlotProps) {
             <input
                 ref={inputRef}
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,image/jpeg"
                 className="hidden"
                 onChange={handleFileChange}
                 aria-label={`Vybrat fotografii: ${label}`}
