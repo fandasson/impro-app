@@ -62,6 +62,7 @@ export const QuestionForm = (props: Props) => {
             index_order: question?.index_order || 1,
             multiple: question?.multiple || false,
             optional: question?.optional || false,
+            show_player_motto: question?.show_player_motto || false,
             players: question?.players || [],
             characters: question?.characters?.map(({ id, name, description }) => ({ id, name, description })) || [],
             options: question?.options?.map(({ id, option }) => ({ id, option: option ?? "" })) || [],
@@ -95,6 +96,7 @@ export const QuestionForm = (props: Props) => {
     const characters = useWatch({ control, name: "characters" });
     const options = useWatch({ control, name: "options" });
     const optionalValue = useWatch({ control, name: "optional" });
+    const showPlayerMottoValue = useWatch({ control, name: "show_player_motto" });
     useEffect(() => {
         if (type === "voting" || type === "match") {
             setLoading(true);
@@ -224,15 +226,27 @@ export const QuestionForm = (props: Props) => {
                     )}
                 </div>
             </div>
-            <div className={"flex items-center gap-3"}>
-                <Switch
-                    id={"optional"}
-                    checked={optionalValue}
-                    onCheckedChange={(checked) => setValue("optional", checked)}
-                />
-                <Label htmlFor={"optional"} className={"font-medium"}>
-                    Volitelná otázka (lze přeskočit)
-                </Label>
+            <div className={"flex flex-wrap items-center gap-6"}>
+                <div className={"flex items-center gap-3"}>
+                    <Switch
+                        id={"optional"}
+                        checked={optionalValue}
+                        onCheckedChange={(checked) => setValue("optional", checked)}
+                    />
+                    <Label htmlFor={"optional"} className={"font-medium"}>
+                        Volitelná otázka (lze přeskočit)
+                    </Label>
+                </div>
+                <div className={"flex items-center gap-3"}>
+                    <Switch
+                        id={"show_player_motto"}
+                        checked={showPlayerMottoValue}
+                        onCheckedChange={(checked) => setValue("show_player_motto", checked)}
+                    />
+                    <Label htmlFor={"show_player_motto"} className={"font-medium"}>
+                        Zobrazit motto hráče
+                    </Label>
+                </div>
             </div>
             {(type === "voting" || type === "match") && (
                 <AssignPlayersToQuestion
