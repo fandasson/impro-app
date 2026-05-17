@@ -13,7 +13,7 @@ interface PerformanceListProps {
 export function PerformanceList({ performances }: PerformanceListProps) {
     return (
         <div className="flex flex-col gap-5 px-4">
-            {performances.map((performance) => (
+            {performances.map((performance, index) => (
                 <div key={performance.id} className="overflow-hidden rounded-[14px] border bg-card">
                     <Link href={performance.link} target="_blank">
                         <Image
@@ -23,6 +23,7 @@ export function PerformanceList({ performances }: PerformanceListProps) {
                             unoptimized={true}
                             alt={performance.title}
                             className="aspect-[16/5] w-full object-cover"
+                            priority={index === 0}
                         />
                     </Link>
                     <div className="p-4 pt-3.5">
