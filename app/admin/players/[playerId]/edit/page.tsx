@@ -50,7 +50,7 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ pla
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 pb-8">
             <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" asChild className="h-auto">
                     <Link href="/admin/players">
