@@ -1,4 +1,4 @@
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, Plus } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -32,6 +32,12 @@ export default async function QuestionPools(props: { params: Promise<{ performan
                         </h1>
                     </div>
                 </div>
+                <Button asChild>
+                    <Link href={`/admin/performances/${performanceId}/question-pools/new`}>
+                        <Plus size={16} />
+                        Nová skupina
+                    </Link>
+                </Button>
             </div>
             <List>
                 {pools.map((pool) => (
