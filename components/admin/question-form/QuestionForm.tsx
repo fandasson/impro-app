@@ -6,8 +6,17 @@ import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { areThereMatchAnswersForQuestion, areThereVotesForQuestion, fetchAnsweredOptionIds } from "@/api/answers.api";
 import { fetchAvailablePlayers } from "@/api/performances.api";
 import { fetchAvailablePools } from "@/api/question-pools.api";
-import { fetchAnsweredCharacterIds, getNewIndexOrder } from "@/api/questions.api";
-import type { CharacterInput, OptionInput, Player, QuestionDetail, QuestionPool, QuestionType, QuestionUpsertRequest } from "@/api/types.api";
+import { fetchAnsweredCharacterIds, fetchQuestions, getNewIndexOrder } from "@/api/questions.api";
+import type {
+    CharacterInput,
+    OptionInput,
+    Player,
+    Question,
+    QuestionDetail,
+    QuestionPool,
+    QuestionType,
+    QuestionUpsertRequest,
+} from "@/api/types.api";
 import { AssignPlayersToQuestion } from "@/components/admin/question-form/AssignPlayersToQuestion";
 import { ManageCharacters } from "@/components/admin/question-form/ManageCharacters";
 import { ManageOptions } from "@/components/admin/question-form/ManageOptions";
@@ -39,6 +48,7 @@ export const QuestionForm = (props: Props) => {
     const { performanceId, handleSubmit, question } = props;
     const [players, setPlayers] = useState<Player[]>([]);
     const [pools, setPools] = useState<QuestionPool[]>([]);
+    const [allQuestions, setAllQuestions] = useState<Question[]>([]);
     const [freezeVoting, setFreezeVoting] = useState(false);
     const [freezeMatch, setFreezeMatch] = useState(false);
     const [answeredCharacterIds, setAnsweredCharacterIds] = useState<number[]>([]);
@@ -63,6 +73,7 @@ export const QuestionForm = (props: Props) => {
             multiple: question?.multiple || false,
             optional: question?.optional || false,
             show_player_motto: question?.show_player_motto || false,
+            following_question_id: question?.following_question_id ?? null,
             players: question?.players || [],
             characters: question?.characters?.map(({ id, name, description }) => ({ id, name, description })) || [],
             options: question?.options?.map(({ id, option }) => ({ id, option: option ?? "" })) || [],
@@ -92,11 +103,21 @@ export const QuestionForm = (props: Props) => {
         getNewIndexOrder(performanceId).then((index) => setValue("index_order", index));
     }, [getFieldState, getValues, performanceId, setValue]);
 
+    useEffect(() => {
+        fetchQuestions(performanceId).then(({ data }) => {
+            if (data) {
+                // Exclude the current question from the list
+                setAllQuestions(data.filter((q) => q.id !== question?.id));
+            }
+        });
+    }, [performanceId, question?.id]);
+
     const type = useWatch({ control, name: "type" });
     const characters = useWatch({ control, name: "characters" });
     const options = useWatch({ control, name: "options" });
     const optionalValue = useWatch({ control, name: "optional" });
     const showPlayerMottoValue = useWatch({ control, name: "show_player_motto" });
+    const followingQuestionId = useWatch({ control, name: "following_question_id" });
     useEffect(() => {
         if (type === "voting" || type === "match") {
             setLoading(true);
@@ -194,7 +215,7 @@ export const QuestionForm = (props: Props) => {
                 </Label>
                 <Textarea id={"question"} {...register("question", { required: true })} />
             </div>
-            <div className={"grid grid-cols-2 gap-4"}>
+            <div className={"grid grid-cols-3 gap-4"}>
                 <div className={"flex flex-col gap-4"}>
                     <Label htmlFor={"index_order"} className={"font-medium"}>
                         Pořadí
@@ -202,16 +223,39 @@ export const QuestionForm = (props: Props) => {
                     <Input id={"index_order"} type={"number"} {...register("index_order", { required: true })} />
                 </div>
                 <div className={"flex flex-col gap-4"}>
+                    <Label htmlFor={"following_question"} className={"font-medium"}>
+                        Navazující otázka (volitelné)
+                    </Label>
+                    <Select
+                        value={followingQuestionId != null ? String(followingQuestionId) : "none"}
+                        onValueChange={(value) =>
+                            setValue("following_question_id", value === "none" ? null : parseInt(value))
+                        }
+                    >
+                        <SelectTrigger id={"following_question"} className="w-full">
+                            <SelectValue placeholder="Žádná" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="none">Žádná</SelectItem>
+                            {allQuestions.map((q) => (
+                                <SelectItem key={q.id} value={String(q.id)}>
+                                    {q.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className={"flex flex-col gap-4"}>
                     {type === "voting" && (
                         <>
-                            <Label htmlFor={"pool"} className={"font-medium"}>
+                            <Label htmlFor={"pool"} className={"font-bold"}>
                                 Skupina otázek (pro sčítání hlasů)
                             </Label>
                             <Select
                                 onValueChange={(value) => setValue("pool_id", parseInt(value))}
                                 defaultValue={String(question?.pool_id) ?? undefined}
                             >
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-[180px] border-amber">
                                     <SelectValue placeholder="Vyberte skupinu" />
                                 </SelectTrigger>
                                 <SelectContent>
