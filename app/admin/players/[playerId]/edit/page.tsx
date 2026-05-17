@@ -2,9 +2,10 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { fetchPlayer, updatePlayer } from "@/api/players.api";
+import { fetchPlayer, fetchPlayerPerformances, updatePlayer } from "@/api/players.api";
 import { PlayerForm } from "@/components/admin/players/PlayerForm";
 import { PlayerName } from "@/components/admin/players/PlayerName";
+import { PlayerPerformances } from "@/components/admin/players/PlayerPerformances";
 import { PlayerPhotos } from "@/components/admin/players/PlayerPhotos";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/utils/supabase/server";
@@ -28,6 +29,8 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ pla
     }
 
     const player = result.data;
+    const performancesResult = await fetchPlayerPerformances(player.id);
+    const performances = performancesResult.success ? performancesResult.data : [];
 
     async function handleUpdate(prevState: unknown, formData: FormData) {
         "use server";
@@ -66,6 +69,10 @@ export default async function EditPlayerPage({ params }: { params: Promise<{ pla
 
             <div className="rounded-lg border border-border p-6">
                 <PlayerPhotos player={player} />
+            </div>
+
+            <div className="rounded-lg border border-border p-6">
+                <PlayerPerformances performances={performances} />
             </div>
         </div>
     );

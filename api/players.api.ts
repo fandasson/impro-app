@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import type { Player, ServerActionResult } from "@/api/types.api";
+import type { Performance, Player, ServerActionResult } from "@/api/types.api";
 import { createClient } from "@/utils/supabase/server";
 
 export const fetchPlayers = async (): Promise<ServerActionResult<Player[]>> => {
@@ -132,6 +132,26 @@ export async function updatePlayer(input: {
         return { success: false, error: error instanceof Error ? error.message : "Neznámá chyba" };
     }
 }
+
+export const fetchPlayerPerformances = async (playerId: number): Promise<ServerActionResult<Performance[]>> => {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("performances_players")
+        .select("performance:performances(*)")
+        .eq("player_id", playerId);
+
+    if (error) {
+        return { success: false, error: error.message };
+    }
+
+    const performances = (data ?? [])
+        .map((row: any) => row.performance)
+        .filter(Boolean) as Performance[];
+
+    performances.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return { success: true, data: performances };
+};
 
 export async function uploadPlayerPhoto(
     playerId: number,
